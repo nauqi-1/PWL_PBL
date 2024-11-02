@@ -17,7 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('kompetensi_id')->index();
             $table->timestamps();
 
-            
+            $table->foreign('tugas_id')->references('tugas_id')->on('t_tugas');
+            $table->foreign('kompetensi_id')->references('kompetensi_id')->on('m_kompetensi');
         });
     }
 

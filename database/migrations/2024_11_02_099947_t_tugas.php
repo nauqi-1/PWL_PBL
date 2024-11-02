@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('tugas_desc', 500)->nullable();
             $table->integer('tugas_bobot');
             $table->string('tugas_file')->nullable();
-            $table->integer('tugas_status',1);
+            $table->char('tugas_status', 1);
             $table->date('tugas_tgl_dibuat');
             $table->date('tugas_tgl_deadline');
             $table->unsignedBigInteger('tugas_pembuat_id')->index();
