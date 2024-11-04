@@ -25,7 +25,17 @@ class TugasModel extends Model
 
     public function tugas_pembuat_id():BelongsTo
     {
-        return $this->belongsTo(UserModel::class, 'user_id', 'tugas_pembuat_id');
+        return $this->belongsTo(UserModel::class, 'tugas_pembuat_id', 'user_id');
+    }
+
+    public function kompetensi()
+    {
+        return $this->belongsToMany(KompetensiModel::class,'t_detail_kompetensi', 'tugas_id','tugas_id');
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsToMany(MahasiswaModel::class,'t_detail_mahasiswa', 'tugas_id', 'tugas_id');
     }
         
 }
