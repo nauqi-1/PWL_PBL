@@ -17,10 +17,11 @@ class TugasModel extends Model
         'tugas_desc', 
         'tugas_bobot', 
         'tugas_file', 
-        'tugas_status', 
+        'tugas_status', //O = open (belum dikerjakan), W=working(sedang dikerjakan), S = submitted (sudah dikumpulkan), D = done(sudah diterima)
         'tugas_tgl_dibuat',
         'tugas_tgl_deadline',
-        'tugas_pembuat_id'
+        'tugas_pembuat_id',
+        'tugas_progress'
     ];
 
     public function tugas_pembuat_id():BelongsTo

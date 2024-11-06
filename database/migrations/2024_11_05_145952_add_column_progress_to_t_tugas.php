@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename('t_detail_kompetensi','t_tugas_kompetensi');
+        Schema::table('t_tugas', function (Blueprint $table) {
+            $table -> string('tugas_progress',100)->nullable();
+        });
     }
 
     /**
@@ -19,7 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::rename('t_tugas_kompetensi','t_detail_kompetensi');
-
+        Schema::table('t_tugas', function (Blueprint $table) {
+            $table->dropColumn('tugas_progress');
+        });
     }
 };

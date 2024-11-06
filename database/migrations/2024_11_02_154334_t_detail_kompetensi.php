@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_detail_kompetensi', function (Blueprint $table) {
-            $table->id('detail_kompetensi_id');
+        Schema::create('t_tugas_kompetensi', function (Blueprint $table) {
+            $table->id('tugas_kompetensi_id');
             $table->unsignedBigInteger('tugas_id')->index();
             $table->unsignedBigInteger('kompetensi_id')->index();
             $table->timestamps();
