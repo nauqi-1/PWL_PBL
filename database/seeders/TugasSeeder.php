@@ -23,7 +23,8 @@ class TugasSeeder extends Seeder
                 'tugas_status'          => 'O',
                 'tugas_tgl_dibuat'      => '2024-11-05 08:00:00', // contoh date and time
                 'tugas_tgl_deadline'    => '2024-11-30 17:00:00', // contoh deadline
-                'tugas_pembuat_id'      => 1
+                'tugas_pembuat_id'      => 1,
+                'tugas_jenis'           => 'Pengabdian'
             ],
             [
                 'tugas_id'              => 2,
@@ -33,7 +34,8 @@ class TugasSeeder extends Seeder
                 'tugas_status'          => 'O',
                 'tugas_tgl_dibuat'      => '2024-11-05 08:00:00', // contoh date and time
                 'tugas_tgl_deadline'    => '2024-11-15 17:00:00', // contoh deadline
-                'tugas_pembuat_id'      => 2
+                'tugas_pembuat_id'      => 2,
+                'tugas_jenis'           => 'Teknis'
             ],
             [
                 'tugas_id'              => 3,
@@ -43,7 +45,8 @@ class TugasSeeder extends Seeder
                 'tugas_status'          => 'O',
                 'tugas_tgl_dibuat'      => '2024-11-05 08:00:00', // contoh date and time
                 'tugas_tgl_deadline'    => '2024-12-05 17:00:00', // contoh deadline
-                'tugas_pembuat_id'      => 5
+                'tugas_pembuat_id'      => 5,
+                'tugas_jenis'           => 'Penelitian'
             ]
             ];
 

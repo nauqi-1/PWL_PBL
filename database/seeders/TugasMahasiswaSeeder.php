@@ -14,11 +14,11 @@ class TugasMahasiswaSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['mahasiswa_id' => 1, 'tugas_id' => 1],
-            ['mahasiswa_id' => 2, 'tugas_id' => 1],
-            ['mahasiswa_id' => 1, 'tugas_id' => 2],
-            ['mahasiswa_id' => 2, 'tugas_id' => 3],
-            ['mahasiswa_id' => 1, 'tugas_id' => 3],
+            ['mahasiswa_id' => 1, 'tugas_id' => 1, 'status' => 'P'],
+            ['mahasiswa_id' => 2, 'tugas_id' => 1, 'status' => 'P'],
+            ['mahasiswa_id' => 1, 'tugas_id' => 2, 'status' => 'P'],
+            ['mahasiswa_id' => 2, 'tugas_id' => 3, 'status' => 'P'],
+            ['mahasiswa_id' => 1, 'tugas_id' => 3, 'status' => 'P'],
         ];
 
         DB::table('t_tugas_mahasiswa')->insert($data);
