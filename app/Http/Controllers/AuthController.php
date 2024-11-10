@@ -23,15 +23,27 @@ class AuthController extends Controller
             $credentials = $request->only('username', 'password');
 
             if (Auth::attempt($credentials)) {
+
+                $level = Auth::user();
+                
+
+                if ($level -> level_id == 1) {
+                    $nama = Auth::user()->admin->admin_nama;
                 return response()->json([
                     'status' => true,
-                    'message' => 'Login Berhasil',
+                    'message' => 'Selamat datang, ' . $nama . '.',
                     'redirect' => url('/')
                 ]);
             } else {
                 return response()->json([
                     'status' => false,
-                    'message' => 'Login Gagal'
+                    'message' => 'Web hanya bisa diakses oleh Administrator.'
+                ]);
+            }
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Login gagal, username atau password salah.'
                 ]);
             }
         }

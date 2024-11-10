@@ -21,7 +21,6 @@
                 </a>
             </li>
             <li class="nav-header">Data Master</li>
-            @if(Auth::user()->level_id == 1 || Auth::user()->level_id == 2)
 
             <li class="nav-item">
                 <a href="{{ url('/level') }}" class="nav-link {{ ($activeMenu == 'level') ? 'active' : '' }}">
@@ -41,11 +40,10 @@
                     <p>Data Supplier</p>
                 </a>
             </li>
-            @endif
             <li class="nav-item">
-                <a href="{{ url('/kategori') }}" class="nav-link {{ ($activeMenu == 'kategori') ? 'active' : '' }}">
+                <a href="{{ url('/kompetensi') }}" class="nav-link {{ ($activeMenu == 'kompetensi') ? 'active' : '' }}">
                     <i class="nav-icon far fa-bookmark"></i>
-                    <p>Kategori Barang</p>
+                    <p>Kompetensi Tugas</p>
                 </a>
             </li>
             <li class="nav-item">
