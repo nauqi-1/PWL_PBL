@@ -29,10 +29,32 @@
                     <input value="" type="password" name="password" id="password" class="form-control" required>
                     <small id="error-password" class="error-text form-text text-danger"></small>
                 </div>
+                <div class="form-group" id="admin-fields" style="display:none;">
+                    <label>Nama</label>
+                    <input value="" type="text" name="admin_nama" id="admin_nama" class="form-control" required>
+                    <small id="error-admin_nama" class="error-text form-text text-danger"></small>
+                    <label>Program Studi</label>
+                    <input value="" type="text" name="admin_prodi" id="admin_prodi" class="form-control" required>
+                    <small id="error-admin_prodi" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group" id="dosen-fields" style="display:none;">
+                    <label>Nama</label>
+                    <input value="" type="text" name="dosen_nama" id="dosen_nama" class="form-control" required>
+                    <small id="error-dosen_nama" class="error-text form-text text-danger"></small>
+                    <label>Program Studi</label>
+                    <input value="" type="text" name="dosen_prodi" id="dosen_prodi" class="form-control" required>
+                    <small id="error-dosen_prodi" class="error-text form-text text-danger"></small>
+                    <label>Nomor Handphone</label>
+                    <input value="" type="text" name="dosen_noHp" id="dosen_noHp" class="form-control" required>
+                    <small id="error-dosen_noHp" class="error-text form-text text-danger"></small>
+                    <label>Nomor Induk Pegawai</label>
+                    <input value="" type="text" name="dosen_nip" id="dosen_nip" class="form-control" required>
+                    <small id="error-dosen_nip" class="error-text form-text text-danger"></small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
-                <button type="submit" class="btn btn-primary">Lanjut</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
         </div>
     </div>

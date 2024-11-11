@@ -81,6 +81,7 @@
                     data: "DT_RowIndex",
                     className: "",
                     orderable: false,
+                    width: '5%',
                     searchable: false
                 },
                 {
@@ -107,6 +108,7 @@
                 {
                     data: "aksi",
                     className: "",
+                    width: '18%',
                     orderable: false,
                     searchable: false
                 }
