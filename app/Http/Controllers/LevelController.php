@@ -86,7 +86,6 @@ class LevelController extends Controller
     {
     if ($request->ajax() || $request->wantsJson()) {
         $rules = [
-            'level_kode'  => 'required|string|unique:m_level,level_kode',
                 'level_nama'  => 'required|string|max:100',
         ];
 

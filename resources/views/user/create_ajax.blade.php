@@ -1,4 +1,4 @@
-<form action="{{ url('/user/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/user/store_ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -42,30 +42,10 @@
     
     $(document).ready(function() {
 
-        function updateLevelFields() {
-        $(document).on('change', '.check-level', function() {
-            let levelId = $(this).data('level_id');
-            console.log(levelId);
-            if (levelId == '1') { 
-                $('#admin-fields').show();
-                $('#dosen-fields').hide();
-
-            } else if (levelId == '2') {
-                $('#dosen-fields').show();
-                $('#admin-fields').hide();
-
-            } else {
-                $('#admin-fields').hide();
-                $('#dosen-fields').hide();
-            }
-        });
-    }
-
         $("#form-tambah").validate({
             rules: {
                 level_id: { required: true, number: true },
                 username: { required: true, minlength: 3, maxlength: 20 },
-                nama: { required: true, minlength: 3, maxlength: 100 },
                 password: { required: true, minlength: 6, maxlength: 20 },
             },
             submitHandler: function(form) {
@@ -82,6 +62,9 @@
                                 text: response.message
                             });
                             dataUser.ajax.reload();
+                            $('#modal-container').html(response.html);
+
+                            $('#modal-master').modal('show');
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

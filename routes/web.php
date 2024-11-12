@@ -76,8 +76,11 @@ Route::middleware(['auth'])->group(function() {
         Route::post('/list', [UserController::class, 'list']); //menampilkan data User dalam bentuk json untuk datatables.
 
         Route::get('/create_ajax', [UserController::class, 'create_ajax']); //Buat data User w ajax
-        Route::post('/ajax', [UserController::class, 'store_ajax']); //menyimpan data User baru w ajax
-    
+        Route::post('/store_ajax', [UserController::class, 'store_ajax']); //menyimpan data User baru w ajax
+        
+        Route::get('/create_detail_ajax', [UserController::class, 'create_detail_ajax']); //buat data detail User baru w ajax
+        Route::post('/store_detail_ajax', [UserController::class, 'store_detail_ajax']); //menyimpan data User baru w ajax
+
         Route::get('/{id}/show_ajax', [UserController::class, 'show_ajax']);
     
         Route::get('/{id}/edit_ajax', [UserController::class, 'edit_ajax']); //edit data 

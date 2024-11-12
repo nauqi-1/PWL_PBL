@@ -91,6 +91,15 @@ class UserController extends Controller
         return view('user.create_ajax') -> with('level', $level);
     }
 
+    public function create_detail_ajax(Request $request) {
+        $user_id = $request->session()->get('user_id');
+        $level_id = $request->session()->get('level_id');
+
+        $user = UserModel::find($user_id); 
+
+        return view('user.create_detail_ajax', compact('user', 'level_id'));
+    }
+
     public function store_ajax(Request $request) {
 
         if ($request -> ajax() || $request -> wantsJson()) {
@@ -111,10 +120,21 @@ class UserController extends Controller
                 ]);
             }
 
-            UserModel:: create($request->all());
-            return response() -> json([
-                'status' => true,
-                'message' => 'Data berhasil disimpan!'
+            $user = UserModel::create($request->all());
+            $user_id = $user -> user_id;
+
+            if ($request->ajax()) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Lanjutkan dengan mengisi detail user.',
+                    'user_id' => $user_id,
+                    'level_id' => $request->level_id,
+                ]);
+            }
+            
+            return redirect('user/create_detail_ajax')->with([
+                'user_id'   => $user_id,
+                'level_id'  => $request->level_id
             ]);
         }
 

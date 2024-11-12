@@ -35,6 +35,10 @@
                 </div>
                 <table class="table table-sm table-bordered table-striped">
                     <tr>
+                        <th class="text-right col-3">ID User :</th>
+                        <td class="col-9">{{ $user->user_id }}</td>
+                    </tr>
+                    <tr>
                         <th class="text-right col-3">Level Pengguna :</th>
                         <td class="col-9">{{ $user->level->level_nama }}</td>
                     </tr>
@@ -42,10 +46,72 @@
                         <th class="text-right col-3">Username :</th>
                         <td class="col-9">{{ $user->username }}</td>
                     </tr>
+                    
+                    @if($user->level_id == 1)
                     <tr>
                         <th class="text-right col-3">Nama :</th>
-                        <td class="col-9">{{ $user->nama }}</td>
+                        <td class="col-9">{{ $user->admin->admin_nama }}</td>
                     </tr>
+                    <tr>
+                        <th class="text-right col-3">Program Studi :</th>
+                        <td class="col-9">{{ $user->admin->admin_prodi }}</td>
+                    </tr>
+                    @elseif($user->level_id == 2)
+                    <tr>
+                        <th class="text-right col-3">Nama :</th>
+                        <td class="col-9">{{ $user->dosen->dosen_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Program Studi :</th>
+                        <td class="col-9">{{ $user->dosen->dosen_prodi }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Nomor HP :</th>
+                        <td class="col-9">{{ $user->dosen->dosen_noHp }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Nomor Induk Pegawai :</th>
+                        <td class="col-9">{{ $user->dosen->dosen_nip }}</td>
+                    </tr>
+                    @elseif($user->level_id == 3)
+                    <tr>
+                        <th class="text-right col-3">Nama :</th>
+                        <td class="col-9">{{ $user->tendik->tendik_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Nomor HP :</th>
+                        <td class="col-9">{{ $user->tendik->tendik_noHp }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Nomor Induk Pegawai :</th>
+                        <td class="col-9">{{ $user->tendik->tendik_nip }}</td>
+                    </tr>
+                    @elseif($user->level_id == 4)
+                    <tr>
+                        <th class="text-right col-3">Nama :</th>
+                        <td class="col-9">{{ $user->mahasiswa->mahasiswa_nama }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Kelas :</th>
+                        <td class="col-9">{{ $user->mahasiswa->mahasiswa_nim }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Program Studi :</th>
+                        <td class="col-9">{{ $user->mahasiswa->mahasiswa_prodi }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Nomor HP :</th>
+                        <td class="col-9">{{ $user->mahasiswa->mahasiswa_noHp }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Jumlah Alfa Total :</th>
+                        <td class="col-9">{{ $user->mahasiswa->mahasiswa_alfa_total }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Jumlah Alfa Terbayar :</th>
+                        <td class="col-9">{{ $user->mahasiswa->mahasiswa_alfa_sisa }}</td>
+                    </tr>
+                    @endif
                 </table>
             </div>
             <div class="modal-footer">
