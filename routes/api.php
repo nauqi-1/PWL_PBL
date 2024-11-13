@@ -28,14 +28,14 @@ Route::post('/logout', \App\Http\Controllers\Api\LogoutController::class)->name(
 
 
 Route::middleware('auth:api')->group(function () {
-    Route::group(['prefix' => 'user', 'middleware' => 'authorize:ADM'], function() {
+    Route::group(['prefix' => 'user'], function() {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
         Route::get('/{user}', [UserController::class, 'show']);
         Route::put('/{user}', [UserController::class, 'update']);
         Route::delete('/{user}', [UserController::class, 'destroy']);
     });
-    Route::group(['prefix' => 'tugas', 'middleware' => 'authorize:ADM,DSN,TDK,MHS'], function() {
+    Route::group(['prefix' => 'tugas'], function() {
         Route::get('/', [TugasController::class, 'index']);
         Route::post('/', [TugasController::class, 'store']);
         Route::get('/{tugas}', [TugasController::class, 'show']);
@@ -43,7 +43,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{tugas}', [TugasController::class, 'destroy']);
     });
     
-    Route::group(['prefix' => 'kompetensi', 'middleware' => 'authorize:ADM'], function() {
+    Route::group(['prefix' => 'kompetensi'], function() {
         Route::get('/', [KompetensiController::class, 'index']);
         Route::post('/', [KompetensiController::class, 'store']);
         Route::get('/{kompetensi}', [KompetensiController::class, 'show']);
@@ -51,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{kompetensi}', [KompetensiController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'pengumpulan', 'middleware' => 'authorize:ADM,MHS'], function() {
+    Route::group(['prefix' => 'pengumpulan'], function() {
         Route::get('/', [PengumpulanController::class, 'index']);
         Route::post('/', [PengumpulanController::class, 'store']);
         Route::get('/{pengumpulan}', [PengumpulanController::class, 'show']);
@@ -67,7 +67,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{mahasiswa}', [MahasiswaController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'dosen', 'middleware' => 'authorize:ADM,DSN'], function() {
+    Route::group(['prefix' => 'dosen'], function() {
         Route::get('/', [DosenController::class, 'index']);
         Route::post('/', [DosenController::class, 'store']);
         Route::get('/{dosen}', [DosenController::class, 'show']);
@@ -75,7 +75,7 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/{dosen}', [DosenController::class, 'destroy']);
     });
 
-    Route::group(['prefix' => 'tendik', 'middleware' => 'authorize:ADM,TDK'], function() {
+    Route::group(['prefix' => 'tendik'], function() {
         Route::get('/', [TendikController::class, 'index']);
         Route::post('/', [TendikController::class, 'store']);
         Route::get('/{tendik}', [TendikController::class, 'show']);
