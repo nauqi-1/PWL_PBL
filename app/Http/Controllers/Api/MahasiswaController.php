@@ -17,8 +17,8 @@ class MahasiswaController extends Controller
         return response()->json($mahasiswa, 201);
     }
 
-    public function show(MahasiswaModel $tugas) {
-        return MahasiswaModel::find($tugas);
+    public function show(MahasiswaModel $mahasiswa) {
+        return MahasiswaModel::find($mahasiswa);
     }
 
     public function update(Request $request, MahasiswaModel $mahasiswa) {

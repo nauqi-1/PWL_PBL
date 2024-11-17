@@ -64,7 +64,7 @@ class UserModel extends Authenticatable implements JWTSubject
     }
     public function tendik() {
         return $this->hasOne(TendikModel::class, 'user_id', 'user_id');
-    }
+    } 
     public function mahasiswa() {
         return $this->hasOne(MahasiswaModel::class, 'user_id', 'user_id');
     }

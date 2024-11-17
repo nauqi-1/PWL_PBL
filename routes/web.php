@@ -3,6 +3,7 @@
 use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -19,14 +20,14 @@ use Illuminate\Support\Facades\Route;
 */
 Route::pattern('id','[0-9]+'); //meaning: ketika ada parameter "id" maka nilainya harus angka, yaitu dari 0 sampai 9.
 
-Route::get('login', [AuthController::class, 'login']) -> name('login');
+Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postLogin']);
 Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/', [WelcomeController::class,'index']);
 
-    Route::group(['prefix' => 'level'], function() { 
+    Route::group(['prefix' => 'level', 'middleware' => 'authorize:ADM'], function() { 
         Route::get('/', [LevelController::class, 'index']); //Menampilkan laman awal level
         Route::post('/list', [LevelController::class, 'list']); //menampilkan data level dalam bentuk json untuk datatables.
 
@@ -48,7 +49,7 @@ Route::middleware(['auth'])->group(function() {
     
 
     } );
-    Route::group(['prefix' => 'kompetensi'], function() { 
+    Route::group(['prefix' => 'kompetensi','middleware' => 'authorize:ADM'], function() { 
         Route::get('/', [KompetensiController::class, 'index']); //Menampilkan laman awal Kompetensi
         Route::post('/list', [KompetensiController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.
 
@@ -71,7 +72,30 @@ Route::middleware(['auth'])->group(function() {
 
     } );
 
-    Route::group(['prefix' => 'user'], function() { 
+    Route::group(['prefix' => 'mahasiswa','middleware' => 'authorize:ADM'], function() { 
+        Route::get('/', [MahasiswaController::class, 'index']); //Menampilkan laman awal Kompetensi
+        Route::post('/list', [MahasiswaController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.
+
+        Route::get('/create_ajax', [MahasiswaController::class, 'create_ajax']); //Buat data Kompetensi w ajax
+        Route::post('/ajax', [MahasiswaController::class, 'store_ajax']); //menyimpan data Kompetensi baru w ajax
+    
+        Route::get('/{id}/show_ajax', [MahasiswaController::class, 'show_ajax']);
+    
+        Route::get('/{id}/edit_ajax', [MahasiswaController::class, 'edit_ajax']); //edit data Kompetensi dengan ajax
+        Route::put('/{id}/update_ajax', [MahasiswaController::class, 'update_ajax']); //menyimpan perubahan data dengan ajax
+    
+        Route::get('/{id}/delete_ajax', [MahasiswaController::class, 'confirm_ajax']); //Munculkan pop up konfirmasi delete dengan ajax
+        Route::delete('/{id}/delete_ajax', [MahasiswaController::class, 'delete_ajax']); //Menghapus data user dengan ajax
+    
+        Route::get('/import', [MahasiswaController::class, 'import']); //import excel
+        Route::post('/import_ajax', [MahasiswaController::class, 'import_ajax']); //import excel dengan ajax
+        Route::get('/export_excel', [MahasiswaController::class, 'export_excel']); //export excel
+        Route::get('/export_pdf', [MahasiswaController::class, 'export_pdf']); //export pdf
+    
+
+    } );
+
+    Route::group(['prefix' => 'user','middleware' => 'authorize:ADM'], function() { 
         Route::get('/', [UserController::class, 'index']); //Menampilkan laman awal User
         Route::post('/list', [UserController::class, 'list']); //menampilkan data User dalam bentuk json untuk datatables.
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('t_tugas_mahasiswa', function (Blueprint $table) {
-            $table->char('status', 1);
+            $table->char('status', 1); //O = Open, R = Requested, W = Working, P = pending approval, D= Done 
         });
     }
 

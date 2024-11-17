@@ -27,19 +27,36 @@ class AuthController extends Controller
                 $level = Auth::user();
                 
 
-                if ($level -> level_id == 1) {
-                    $nama = Auth::user()->admin->admin_nama;
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Selamat datang, ' . $nama . '.',
-                    'redirect' => url('/')
-                ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Web hanya bisa diakses oleh Administrator.'
-                ]);
-            }
+                switch ($level -> level_id) {
+                    case 1:
+                        $nama = Auth::user()->admin->admin_nama;
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Selamat datang, ' . $nama . '.',
+                            'redirect' => url('/')
+                        ]);
+                    case 2:
+                        $nama = Auth::user()->dosen->dosen_nama;
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Selamat datang, ' . $nama . '.',
+                            'redirect' => url('/')
+                        ]);
+                    case 3:
+                        $nama = Auth::user()->tendik->tendik_nama;
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Selamat datang, ' . $nama . '.',
+                            'redirect' => url('/')
+                        ]);
+                    case 4:
+                        $nama = Auth::user()->mahasiswa->mahasiswa_nama;
+                        return response()->json([
+                            'status' => true,
+                            'message' => 'Selamat datang, ' . $nama . '.',
+                            'redirect' => url('/')
+                        ]);
+                 }
             } else {
                 return response()->json([
                     'status' => false,

@@ -20,6 +20,8 @@
                     <p>Dashboard</p>
                 </a>
             </li>
+            @if(Auth::user()->level->level_kode == 'ADM')
+
             <li class="nav-header">Data Master</li>
 
             <li class="nav-item">
@@ -28,12 +30,42 @@
                     <p>Level User</p>
                 </a>
             </li>
-            <li class="nav-item">
-                <a href="{{ url('/user') }}" class="nav-link {{ ($activeMenu == 'user') ? 'active' : '' }}">
-                    <i class="nav-icon far fa-user"></i>
-                    <p>Data User</p>
-                </a>
-            </li>
+            <li class="nav-item has-treeview {{ ($activeMenu == 'user') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ ($activeMenu == 'user') ? 'active' : '' }}">
+        <i class="nav-icon far fa-user"></i>
+        <p>
+            Data User
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ url('/mahasiswa') }}" class="nav-link {{$activeMenu == 'mahasiswa' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Mahasiswa</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/dosen') }}" class="nav-link {{$activeMenu == 'dosen' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Dosen</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/tendik') }}" class="nav-link {{$activeMenu == 'tendik' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Tendik</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url('/admin') }}" class="nav-link {{$activeMenu == 'admin' ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Admin</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
             <li class="nav-item">
                 <a href="{{ url('/supplier') }}" class="nav-link {{ ($activeMenu == 'supplier') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-user"></i>
@@ -52,6 +84,7 @@
                     <p>Data Barang</p>
                 </a>
             </li>
+            @endif
             <li class="nav-header">Data Transaksional</li>
             <li class="nav-item">
                 <a href="{{ url('/stok') }}" class="nav-link {{ ($activeMenu == 'stok') ? 'active' : '' }}">
