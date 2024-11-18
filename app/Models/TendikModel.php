@@ -16,6 +16,6 @@ class TendikModel extends Model
 
     public function user():BelongsTo
     {
-        return $this->belongsTo(UserModel::class, 'user_id', 'user+_id');
+        return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
     }
 }
