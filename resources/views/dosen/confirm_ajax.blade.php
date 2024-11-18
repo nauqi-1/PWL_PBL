@@ -1,4 +1,4 @@
-@empty($mahasiswa)
+@empty($dosen)
 <div id="modal-master" class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -12,18 +12,18 @@
                 <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                 Data yang anda cari tidak ditemukan
             </div>
-            <a href="{{ url('/mahasiswa') }}" class="btn btn-warning">Kembali</a>
+            <a href="{{ url('/dosen') }}" class="btn btn-warning">Kembali</a>
         </div>
     </div>
 </div>
 @else
-<form action="{{ url('/mahasiswa/' . $mahasiswa->mahasiswa_id . '/delete_ajax') }}" method="POST" id="form-delete">
+<form action="{{ url('/dosen/' . $dosen->dosen_id . '/delete_ajax') }}" method="POST" id="form-delete">
     @csrf
     @method('DELETE')
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Hapus Data Mahasiswa</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Hapus Data Dosen</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -36,33 +36,21 @@
                 <table class="table table-sm table-bordered table-striped">
 
                 <tr>
-                        <th class="text-right col-3">NIM :</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_nim }}</td>
+                        <th class="text-right col-3">NIP :</th>
+                        <td class="col-9">{{ $dosen->dosen_nip }}</td>
                     </tr>
                     
                     <tr>
                         <th class="text-right col-3">Nama:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Kelas:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_kelas }}</td>
+                        <td class="col-9">{{ $dosen->dosen_nama }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Program Studi:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_prodi }}</td>
+                        <td class="col-9">{{ $dosen->dosen_prodi }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Nomor Handphone:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_noHp }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Jam Alfa Lunas:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_alfa_sisa }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Jam Alfa Total:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_alfa_total }}</td>
+                        <td class="col-9">{{ $dosen->dosen_noHp }}</td>
                     </tr>
                 </table>
             </div>
@@ -90,7 +78,7 @@ $(document).ready(function() {
                             title: 'Berhasil',
                             text: response.message
                         });
-                        dataMahasiswa.ajax.reload();
+                        dataDosen.ajax.reload();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {

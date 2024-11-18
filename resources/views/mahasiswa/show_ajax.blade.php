@@ -31,6 +31,10 @@
             <div class="modal-body">
                 <table class="table table-sm table-bordered table-striped">
                     <tr>
+                        <th class="text-right col-3">Username :</th>
+                        <td class="col-9">{{ $mahasiswa->user->username }}</td>
+                    </tr>
+                    <tr>
                         <th class="text-right col-3">NIM :</th>
                         <td class="col-9">{{ $mahasiswa->mahasiswa_nim }}</td>
                     </tr>

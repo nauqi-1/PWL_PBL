@@ -8,7 +8,7 @@
             <button onclick="modalAction('{{ url('/kompetensi/import') }}')" class="btn btn-info">Import Kompetensi</button>
             <a href="{{ url('/kompetensi/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
             <a href="{{ url('/kompetensi/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
-            <button onclick="modalAction('{{ url('/kompetensi/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i>Tambah Ajax</button>
+            <button onclick="modalAction('{{ url('/kompetensi/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i>Tambah</button>
         </div>
     </div>
     <div class="card-body">

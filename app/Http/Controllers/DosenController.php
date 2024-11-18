@@ -10,7 +10,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\DosenModel;
+use App\Models\TugasModel;
 use App\Models\UserModel;
+use Illuminate\Support\Facades\Hash;
 
 class DosenController extends Controller
 {
@@ -78,7 +80,7 @@ class DosenController extends Controller
                 'username'              => 'required|string|unique:m_user,username|max:100',
                 'password'              => 'required|string|min:6|max:100',
                 'dosen_nama'        => 'required|string|max:100',
-                'dosen_nip'         => 'nullable|string|unique:m_dosen,dosen_nim|max:50',
+                'dosen_nip'         => 'nullable|string|unique:m_dosen,dosen_nip|max:50',
                 'dosen_prodi'       => 'required|string|max:50',
                 'dosen_noHp'        => 'required|string|max:50',
             ];
@@ -125,55 +127,64 @@ class DosenController extends Controller
 
     public function update_ajax(Request $request, $id)
     {
-    if ($request->ajax() || $request->wantsJson()) {
-        $rules = [
-            'username'              => 'nullable|string|unique:m_user,username|max:100',
-            'password'              => 'nullable|string|min:6|max:100',
-            'dosen_nama'        => 'required|string|max:100',
-            'dosen_nip'         => 'nullable|string|unique:m_dosen,dosen_nim|max:50',
-            'dosen_prodi'       => 'required|string|max:50',
-            'dosen_noHp'        => 'required|string|max:50',
-            'dosen_alfa_sisa'   => 'required|integer',
-            'dosen_alfa_total'  => 'required|integer',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validasi Gagal',
-                'msgField' => $validator->errors()
-            ]);
-        }
-
-        $check = DosenModel::find($id);
-        
-        if ($check) {
-            if (!$request->filled('username')) { 
-                $request->request->remove('username');
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'username'              => 'nullable|string|unique:m_user,username,' . $id . ',user_id|max:100', // Allow existing username for the same user
+                'password'              => 'nullable|string|min:6|max:100',
+                'dosen_nama'        => 'required|string|max:100',
+                'dosen_nip'         => 'nullable|string|unique:m_dosen,dosen_nip|max:50',
+                'dosen_prodi'       => 'required|string|max:50',
+                'dosen_noHp'        => 'required|string|max:50',
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
             }
-            if (!$request->filled('password')) { 
-                $request->request->remove('password');
+    
+            $dosen = DosenModel::find($id);
+    
+            if ($dosen) {
+                // Update Mahasiswa 
+                $dosen->update([
+                    'dosen_nama'        => $request->dosen_nama,
+                    'dosen_prodi'       => $request->dosen_prodi,
+                    'dosen_noHp'        => $request->dosen_noHp,
+                ]);
+                //update usernya
+                $user = UserModel::find($dosen->user_id);
+                if ($user) {
+                    $userData = [];
+                    if ($request->filled('username')) {
+                        $userData['username'] = $request->username;
+                    }
+                    if ($request->filled('password')) {
+                        $userData['password'] = Hash::make($request->password);
+                    }
+                    if (!empty($userData)) {
+                        $user->update($userData);
+                    }
+                }
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diupdate',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ]);
             }
-
-            $check->update($request->all());
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data berhasil diupdate'
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Data tidak ditemukan'
-            ]);
         }
+    
+        return redirect('/');
     }
-
-    return redirect('/');
-    }
-
     public function confirm_ajax(string $id) {
         $dosen = DosenModel::find($id);
 
@@ -204,8 +215,9 @@ class DosenController extends Controller
         $dosen = DosenModel::select('dosen_nama','dosen_nip','dosen_prodi','dosen_noHp', 'user_id') 
         ->with(['user' => function($query) {
             $query->select('user_id','username'); 
-        }])     
-        ->orderBy('dosen_nim')
+        }])
+        ->withCount('tugas')    
+        ->orderBy('dosen_nama')
             
             ->get();
         // use Barryvdh\DomPDF\Facade\Pdf;
@@ -216,8 +228,9 @@ class DosenController extends Controller
 
     public function show_ajax(string $id) {
         $dosen = DosenModel::find($id);
+        $tugasCount = TugasModel::where('tugas_pembuat_id', $id)->count();
 
-        return view('dosen.show_ajax', ['dosen' => $dosen]);
+        return view('dosen.show_ajax', ['dosen' => $dosen, 'tugasCount' => $tugasCount]);
     } 
 
     public function import() {

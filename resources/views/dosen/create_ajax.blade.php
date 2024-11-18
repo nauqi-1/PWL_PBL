@@ -1,9 +1,9 @@
-<form action="{{ url('/mahasiswa/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/dosen/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Mahasiswa</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Dosen</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -11,55 +11,37 @@
             <div class="modal-body">
                 
                 <div class="form-group">
-                    <label>NIM</label>
-                    <input value="" type="text" name="mahasiswa_nim" id="mahasiswa_nim" class="form-control" required>
-                    <small id="error-mahasiswa_nama" class="error-text form-text text-danger"></small>
+                    <label>NIP</label>
+                    <input value="" type="text" name="dosen_nip" id="dosen_nip" class="form-control" required>
+                    <small id="error-dosen_nip" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Nama</label>
-                    <input value="" type="text" name="mahasiswa_nama" id="mahasiswa_nama" class="form-control" required>
-                    <small id="error-mahasiswa_nama" class="error-text form-text text-danger"></small>
+                    <input value="" type="text" name="dosen_nama" id="dosen_nama" class="form-control" required>
+                    <small id="error-dosen_nama" class="error-text form-text text-danger"></small>
                 </div>
-                <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Kelas</label>
-                    <input value="" type="text" name="mahasiswa_kelas" id="mahasiswa_kelas" class="form-control" required>
-                    <small class="form-text text-muted">Contoh: 1A, 2B, 3C</small>
-                    <small id="error-mahasiswa_nama" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group col-md-6">
+                <div class="form-group ">
                     <label>Program Studi</label>
-                    <input value="" type="text" name="mahasiswa_prodi" id="mahasiswa_prodi" class="form-control" required>
-                    <small id="error-mahasiswa_prodi" class="error-text form-text text-danger"></small>
-                </div>
+                    <input value="" type="text" name="dosen_prodi" id="dosen_prodi" class="form-control" required>
+                    <small id="error-dosen_prodi" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Nomor HP</label>
-                    <input value="" type="text" name="mahasiswa_noHp" id="mahasiswa_noHp" class="form-control" required>
-                    <small id="error-mahasiswa_noHp" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Jam alfa lunas</label>
-                    <input value="" type="number" name="mahasiswa_alfa_sisa" id="mahasiswa_alfa_sisa" class="form-control" required>
-                    <small id="error-mahasiswa_alfa_sisa" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Jam alfa total</label>
-                    <input value="" type="number" name="mahasiswa_alfa_total" id="mahasiswa_alfa_total" class="form-control" required>
-                    <small id="error-mahasiswa_alfa_total" class="error-text form-text text-danger"></small>
-                </div>
+                    <input value="" type="text" name="dosen_noHp" id="dosen_noHp" class="form-control" required>
+                    <small id="error-dosen_noHp" class="error-text form-text text-danger"></small>
                 </div>
                 <hr>
-                <div class="form-group">
+                <div class="form-row">
+                <div class="form-group col-md-6">
                     <label>Username</label>
                     <input value="" type="text" name="username" id="username" class="form-control" required>
                     <small id="error-username" class="error-text form-text text-danger"></small>
                 </div>
-                <div class="form-group">
+                <div class="form-group col-md-6">
                     <label>Password</label>
                     <input value="" type="password" name="password" id="password" class="form-control" required>
                     <small id="error-password" class="error-text form-text text-danger"></small>
+                </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -75,13 +57,10 @@
         $("#form-tambah").validate({
             rules: {
                 
-                mahasiswa_nama: { required: true, maxlength: 100 },
-                mahasiswa_nim: { required: true, maxlength: 50 },
-                mahasiswa_kelas: { required: true, minlength: 2, maxlength: 2 },
-                mahasiswa_prodi: { required: true, minlength: 2, maxlength: 10 },
-                mahasiswa_noHp: { required: true, maxlength: 20 },
-                mahasiswa_alfa_sisa: { required: true, maxlength: 100 },
-                mahasiswa_alfa_total: { required: true, maxlength: 100 },
+                dosen_nama: { required: true, maxlength: 100 },
+                dosen_nip: { required: true, maxlength: 50 },
+                dosen_prodi: { required: true, minlength: 2, maxlength: 10 },
+                dosen_noHp: { required: true, maxlength: 20 },
                 username: {required: true, maxlength: 100 },
                 password: {required: true, minlength: 6, maxlength: 100 },
 
@@ -100,7 +79,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataMahasiswa.ajax.reload();
+                            dataDosen.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

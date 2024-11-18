@@ -103,7 +103,7 @@
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA MAHASISWA</h3>
+    <h3 class="text-center">LAPORAN DATA DOSEN</h3>
 
     <table class="border-all">
         <thead>
@@ -112,33 +112,22 @@
                 <th>Username</th>
                 <th>NIM</th>
                 <th>Nama</th>
-                <th>Kelas</th>
                 <th>Program Studi</th>
                 <th>Nomor Handphone</th>
-                <th>Jumlah Jam Alfa Terbayar</th>
-                <th>Jumlah Jam Alfa Total</th>
-                <th>Status</th>
+                <th>Jumlah Tugas</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($mahasiswa as $m)
+            @foreach($dosen as $d)
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
-                <td>{{ $m->user->username ?? '-' }}</td>
-                <td>{{ $m->mahasiswa_nim }}</td>
-                <td>{{ $m->mahasiswa_nama }}</td>
-                <td>{{ $m->mahasiswa_kelas }}</td>
-                <td>{{ $m->mahasiswa_prodi }}</td>
-                <td>{{ $m->mahasiswa_noHp }}</td>
-                <td>{{ $m->mahasiswa_alfa_sisa }}</td>
-                <td>{{ $m->mahasiswa_alfa_total }}</td>
-                <td class="{{ $m->mahasiswa_alfa_sisa < $m->mahasiswa_alfa_total ? 'bg-danger text-black' : 'bg-success text-black' }}">
-                    @if ($m->mahasiswa_alfa_sisa < $m->mahasiswa_alfa_total) 
-                        BELUM LUNAS
-                    @else 
-                        LUNAS
-                    @endif
-                </td>
+                <td>{{ $d->user->username ?? '-' }}</td>
+                <td>{{ $d->dosen_nip }}</td>
+                <td>{{ $d->dosen_nama }}</td>
+                <td>{{ $d->dosen_prodi }}</td>
+                <td>{{ $d->dosen_noHp }}</td>
+                <td>{{ $d->tugas_count }}</td>
+
 
             </tr>
             @endforeach
