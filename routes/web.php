@@ -117,13 +117,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/import_ajax', [DosenController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [DosenController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [DosenController::class, 'export_pdf']); //export pdf
-
-
-<<<<<<< HEAD
     });
 
-    Route::group(['prefix' => 'user', 'middleware' => 'authorize:ADM'], function () {
-=======
     Route::group(['prefix' => 'tendik','middleware' => 'authorize:ADM'], function() { 
         Route::get('/', [TendikController::class, 'index']); //Menampilkan laman awal tendik
         Route::post('/list', [TendikController::class, 'list']); //menampilkan data tendik dalam bentuk json untuk datatables.
@@ -148,7 +143,6 @@ Route::middleware(['auth'])->group(function () {
     } );
 
     Route::group(['prefix' => 'user','middleware' => 'authorize:ADM'], function() { 
->>>>>>> 92018584d9175b39e4d1ed52f2ffaa1b3ff6adea
         Route::get('/', [UserController::class, 'index']); //Menampilkan laman awal User
         Route::post('/list', [UserController::class, 'list']); //menampilkan data User dalam bentuk json untuk datatables.
 
