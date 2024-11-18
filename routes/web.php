@@ -3,6 +3,7 @@
 use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\TendikController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\UserController;
@@ -114,6 +115,29 @@ Route::middleware(['auth'])->group(function() {
         Route::post('/import_ajax', [DosenController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [DosenController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [DosenController::class, 'export_pdf']); //export pdf
+    
+
+    } );
+
+    Route::group(['prefix' => 'tendik','middleware' => 'authorize:ADM'], function() { 
+        Route::get('/', [TendikController::class, 'index']); //Menampilkan laman awal tendik
+        Route::post('/list', [TendikController::class, 'list']); //menampilkan data tendik dalam bentuk json untuk datatables.
+
+        Route::get('/create_ajax', [TendikController::class, 'create_ajax']); //Buat data tendik w ajax
+        Route::post('/ajax', [TendikController::class, 'store_ajax']); //menyimpan data tendik baru w ajax
+    
+        Route::get('/{id}/show_ajax', [TendikController::class, 'show_ajax']);
+    
+        Route::get('/{id}/edit_ajax', [TendikController::class, 'edit_ajax']); //edit data tendik dengan ajax
+        Route::put('/{id}/update_ajax', [TendikController::class, 'update_ajax']); //menyimpan perubahan data dengan ajax
+    
+        Route::get('/{id}/delete_ajax', [TendikController::class, 'confirm_ajax']); //Munculkan pop up konfirmasi delete dengan ajax
+        Route::delete('/{id}/delete_ajax', [TendikController::class, 'delete_ajax']); //Menghapus data tendik dengan ajax
+    
+        Route::get('/import', [TendikController::class, 'import']); //import excel
+        Route::post('/import_ajax', [TendikController::class, 'import_ajax']); //import excel dengan ajax
+        Route::get('/export_excel', [TendikController::class, 'export_excel']); //export excel
+        Route::get('/export_pdf', [TendikController::class, 'export_pdf']); //export pdf
     
 
     } );
