@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\MahasiswaModel;
 use App\Models\UserModel;
+use Illuminate\Support\Facades\Hash;
 
 class MahasiswaController extends Controller
 {
@@ -137,55 +138,71 @@ class MahasiswaController extends Controller
 
     public function update_ajax(Request $request, $id)
     {
-    if ($request->ajax() || $request->wantsJson()) {
-        $rules = [
-            'username'              => 'nullable|string|unique:m_user,username|max:100',
-            'password'              => 'nullable|string|min:6|max:100',
-            'mahasiswa_nama'        => 'required|string|max:100',
-            'mahasiswa_kelas'       => 'required|string|max:50',
-            'mahasiswa_nim'         => 'nullable|string|unique:m_mahasiswa,mahasiswa_nim|max:50',
-            'mahasiswa_prodi'       => 'required|string|max:50',
-            'mahasiswa_noHp'        => 'required|string|max:50',
-            'mahasiswa_alfa_sisa'   => 'required|integer',
-            'mahasiswa_alfa_total'  => 'required|integer',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validasi Gagal',
-                'msgField' => $validator->errors()
-            ]);
-        }
-
-        $check = MahasiswaModel::find($id);
-        
-        if ($check) {
-            if (!$request->filled('username')) { 
-                $request->request->remove('username');
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'username'              => 'nullable|string|unique:m_user,username,' . $id . ',user_id|max:100', // Allow existing username for the same user
+                'password'              => 'nullable|string|min:6|max:100',
+                'mahasiswa_nama'        => 'required|string|max:100',
+                'mahasiswa_kelas'       => 'required|string|max:50',
+                'mahasiswa_nim'         => 'nullable|string|unique:m_mahasiswa,mahasiswa_nim,' . $id . ',mahasiswa_id|max:50', // Allow existing NIM for the same mahasiswa
+                'mahasiswa_prodi'       => 'required|string|max:50',
+                'mahasiswa_noHp'        => 'required|string|max:50',
+                'mahasiswa_alfa_sisa'   => 'required|integer',
+                'mahasiswa_alfa_total'  => 'required|integer',
+            ];
+    
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors(),
+                ]);
             }
-            if (!$request->filled('password')) { 
-                $request->request->remove('password');
+    
+            $mahasiswa = MahasiswaModel::find($id);
+    
+            if ($mahasiswa) {
+                // Update Mahasiswa 
+                $mahasiswa->update([
+                    'mahasiswa_nama'        => $request->mahasiswa_nama,
+                    'mahasiswa_kelas'       => $request->mahasiswa_kelas,
+                    'mahasiswa_prodi'       => $request->mahasiswa_prodi,
+                    'mahasiswa_noHp'        => $request->mahasiswa_noHp,
+                    'mahasiswa_alfa_sisa'   => $request->mahasiswa_alfa_sisa,
+                    'mahasiswa_alfa_total'  => $request->mahasiswa_alfa_total,
+                ]);
+                //update usernya
+                $user = UserModel::find($mahasiswa->user_id);
+                if ($user) {
+                    $userData = [];
+                    if ($request->filled('username')) {
+                        $userData['username'] = $request->username;
+                    }
+                    if ($request->filled('password')) {
+                        $userData['password'] = Hash::make($request->password);
+                    }
+                    if (!empty($userData)) {
+                        $user->update($userData);
+                    }
+                }
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data berhasil diupdate',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ]);
             }
-
-            $check->update($request->all());
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Data berhasil diupdate'
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Data tidak ditemukan'
-            ]);
         }
+    
+        return redirect('/');
     }
-
-    return redirect('/');
-    }
+    
 
     public function confirm_ajax(string $id) {
         $mahasiswa = MahasiswaModel::find($id);
@@ -269,8 +286,8 @@ class MahasiswaController extends Controller
                     foreach ($data as $baris => $value) {
                         if ($baris > 1) { 
                             $user = UserModel::create([
-                                'username' => $value['H'], 
-                                'password' => bcrypt('H'), 
+                                'username' => $value['H'],
+                                'password' => Hash::make('H'),
                                 'level_id' => 4,
                             ]);
             

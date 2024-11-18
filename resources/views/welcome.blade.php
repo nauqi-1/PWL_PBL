@@ -4,11 +4,11 @@
 
 <div class = "card">
     <div class = "card-header">
-        <h3 class = "card-title">Halo! X3 Apa kabar??? owo hawk tuah</h3>
+        <h3 class = "card-title">Dashboard Admin</h3>
         <div class = "card-tools"></div>
     </div>
     <div class = "card-body">
-        Selamat datang semua, ini adalah laman utama website :3
+        Rencananya akan dikasih graph performa pengerjaan tugas, daftar tugas baru, daftar request, daftar tugas yang dimanage dan statusnya.
     </div>
 </div>
 @endsection

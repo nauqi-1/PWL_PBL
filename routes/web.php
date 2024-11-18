@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DosenController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\UserController;
@@ -91,6 +92,28 @@ Route::middleware(['auth'])->group(function() {
         Route::post('/import_ajax', [MahasiswaController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [MahasiswaController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [MahasiswaController::class, 'export_pdf']); //export pdf
+    
+
+    } );
+    Route::group(['prefix' => 'dosen','middleware' => 'authorize:ADM'], function() { 
+        Route::get('/', [DosenController::class, 'index']); //Menampilkan laman awal Kompetensi
+        Route::post('/list', [DosenController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.
+
+        Route::get('/create_ajax', [DosenController::class, 'create_ajax']); //Buat data Kompetensi w ajax
+        Route::post('/ajax', [DosenController::class, 'store_ajax']); //menyimpan data Kompetensi baru w ajax
+    
+        Route::get('/{id}/show_ajax', [DosenController::class, 'show_ajax']);
+    
+        Route::get('/{id}/edit_ajax', [DosenController::class, 'edit_ajax']); //edit data Kompetensi dengan ajax
+        Route::put('/{id}/update_ajax', [DosenController::class, 'update_ajax']); //menyimpan perubahan data dengan ajax
+    
+        Route::get('/{id}/delete_ajax', [DosenController::class, 'confirm_ajax']); //Munculkan pop up konfirmasi delete dengan ajax
+        Route::delete('/{id}/delete_ajax', [DosenController::class, 'delete_ajax']); //Menghapus data user dengan ajax
+    
+        Route::get('/import', [DosenController::class, 'import']); //import excel
+        Route::post('/import_ajax', [DosenController::class, 'import_ajax']); //import excel dengan ajax
+        Route::get('/export_excel', [DosenController::class, 'export_excel']); //export excel
+        Route::get('/export_pdf', [DosenController::class, 'export_pdf']); //export pdf
     
 
     } );
