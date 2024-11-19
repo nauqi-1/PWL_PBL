@@ -13,10 +13,10 @@ class TugasModel extends Model
     protected $table = 't_tugas';
     protected $primaryKey = 'tugas_id';
     protected $fillable = [
-        'tugas_nama', 
-        'tugas_desc', 
-        'tugas_bobot', 
-        'tugas_file', 
+        'tugas_nama',
+        'tugas_desc',
+        'tugas_bobot',
+        'tugas_file',
         'tugas_status', //O = open (belum dikerjakan), W=working(sedang dikerjakan), S = submitted (sudah dikumpulkan), D = done(sudah diterima)
         'tugas_tgl_dibuat',
         'tugas_tgl_deadline',
@@ -25,19 +25,18 @@ class TugasModel extends Model
         'tugas_jenis'
     ];
 
-    public function tugas_pembuat_id():BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(UserModel::class, 'tugas_pembuat_id', 'user_id');
     }
 
     public function kompetensi()
     {
-        return $this->belongsToMany(KompetensiModel::class,'t_detail_kompetensi', 'tugas_id','kompetensi_id');
+        return $this->belongsToMany(KompetensiModel::class, 't_detail_kompetensi', 'tugas_id', 'kompetensi_id');
     }
 
     public function mahasiswa()
     {
-        return $this->belongsToMany(MahasiswaModel::class,'t_detail_mahasiswa', 'tugas_id', 'mahasiswa_id');
+        return $this->belongsToMany(MahasiswaModel::class, 't_detail_mahasiswa', 'tugas_id', 'mahasiswa_id');
     }
-        
 }
