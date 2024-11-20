@@ -34,6 +34,9 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('/{user}', [UserController::class, 'show']);
     Route::put('/{user}', [UserController::class, 'update']);
     Route::delete('/{user}', [UserController::class, 'destroy']);
+    Route::get('/find_mahasiswa/{user}', [UserController::class, 'find_mahasiswa']);
+    Route::get('/find_dosen/{user}', [UserController::class, 'find_dosen']);
+
 });
 Route::group(['prefix' => 'tugas'], function () {
     Route::get('/', [TugasController::class, 'index']);
@@ -59,7 +62,7 @@ Route::group(['prefix' => 'pengumpulan'], function () {
     Route::delete('/{pengumpulan}', [PengumpulanController::class, 'destroy']);
 });
 
-Route::group(['prefix' => 'mahasiswa', 'middleware' => 'authorize:ADM,MHS'], function () {
+Route::group(['prefix' => 'mahasiswa'], function () {
     Route::get('/', [MahasiswaController::class, 'index']);
     Route::post('/', [MahasiswaController::class, 'store']);
     Route::get('/{mahasiswa}', [MahasiswaController::class, 'show']);

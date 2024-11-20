@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function find_mahasiswa($userId) {
         $mahasiswaData = MahasiswaModel::where('user_id', $userId)->first();
-        return response()->json($mahasiswaData);
+        return response()->json($mahasiswaData, );
         }
     
     public function find_dosen($userId) {
