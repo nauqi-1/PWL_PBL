@@ -20,6 +20,14 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.min.css')}}">
 
+  <style>
+    .table .nama-tugas {
+        max-width: 150px;
+        word-wrap: break-word; /* Memastikan teks dapat dibagi */
+        white-space: normal; /* Mengizinkan teks menjadi beberapa baris */
+    }
+    </style>
+    
   @stack('css')
 </head>
 <body class="hold-transition sidebar-mini">

@@ -11,26 +11,24 @@
     </div>
     <div class="card-body">
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success">{{ session('success') }}</div>
         @endif
         @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+        <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-            
+
         <table class="table table-bordered table-striped table-hover table-sm" id="table_tugaskompen">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nama</th>
-                    <th>Deskripsi</th>
-                    <th>Bobot</th>
-                    <th>File</th>
-                    <th>Status</th>
-                    <th>Tgl dibuat</th>
-                    <th>Deadline</th>
-                    <th>Pembuat</th>
-                    <th>Progres</th>
                     <th>Jenis</th>
+                    <th>Bobot</th>
+                    <th>Status</th>
+                    <th>Tgl.dibuat</th>
+                    <th>Tgl.ditutup</th>
+                    <th>Pembuat</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
         </table>
@@ -45,6 +43,7 @@
 @endpush
 
 @push('js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 <script>
     function modalAction(url = '') {
         $('#myModal').load(url, function() {
@@ -63,8 +62,7 @@
                 "dataType": "json",
                 "type": "POST",
             },
-            columns: [
-                {
+            columns: [{
                     data: "DT_RowIndex",
                     className: "",
                     width: '5%',
@@ -73,15 +71,15 @@
                 },
                 {
                     data: "tugas_nama",
-                    className: "",
+                    className: "nama-tugas",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "tugas_desc",
+                    data: "tugas_jenis",
                     className: "",
-                    orderable: true,
-                    searchable: true
+                    orderable: false,
+                    searchable: false
                 },
                 {
                     data: "tugas_bobot",
@@ -90,28 +88,42 @@
                     searchable: false
                 },
                 {
-                    data: "tugas_file",
-                    className: "",
-                    orderable: false,
-                    searchable: false
-                },
-                {
                     data: "tugas_status",
                     className: "",
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    render: function(data, type, row) {
+                        switch (data) {
+                            case 'O': // Open
+                                return '<span class="badge badge-danger">Open</span>';
+                            case 'W': // Working
+                                return '<span class="badge badge-warning">Working</span>';
+                            case 'S': // Submitted
+                                return '<span class="badge badge-primary">Submitted</span>';
+                            case 'D': // Done
+                                return '<span class="badge badge-success">Done</span>';
+                            default:
+                                return '<span class="badge badge-secondary">Unknown</span>';
+                        }
+                    }
                 },
                 {
                     data: "tugas_tgl_dibuat",
                     className: "",
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return moment(data).format('DD MMMM YYYY HH:mm');
+                    }
                 },
                 {
                     data: "tugas_tgl_deadline",
                     className: "",
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    render: function(data, type, row) {
+                        return moment(data).format('DD MMMM YYYY HH:mm');
+                    }
                 },
                 {
                     data: "pembuat",
@@ -120,18 +132,14 @@
                     searchable: false
                 },
                 {
-                    data: "tugas_progress",
+                    data: "aksi",
                     className: "",
                     orderable: false,
-                    searchable: false
-                },
-                {
-                    data: "tugas_jenis",
-                    className: "",
-                    orderable: false,
-                    searchable: false
-                },
+                    searchable: false,
+                    width: '160px'
+                }
             ]
+
         });
     });
 </script>
