@@ -50,13 +50,24 @@ class TugasKompenController extends Controller
             ->addColumn('pembuat', function ($tugas) {
                 return $tugas->user ? $tugas->user->nama_pembuat : '-';
             })
-            ->addColumn('aksi', function ($tendik) {
-                $btn = '<button onclick="modalAction(\'' . url('/tugaskompen/' . $tendik->tendik_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/tugaskompen/' . $tendik->tendik_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/tugaskompen/' . $tendik->tendik_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
+            ->addColumn('aksi', function ($tugas) {
+                $btn = '<button onclick="modalAction(\'' . url('/tugaskompen/' . $tugas->tugas_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/tugaskompen/' . $tugas->tugas_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/tugaskompen/' . $tugas->tugas_id . '/delete_ajax') . '\')" class="btn btn-danger btn-sm">Hapus</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
             ->make(true);
+    }
+    public function show_ajax(Request $request, string $id)
+    {
+        // Retrieve the tugas data with its related user and kompetensi
+        $tugas = TugasModel::with(['user', 'kompetensi'])->find($id);
+
+        if (!$tugas) {
+            return response()->json(['status' => false, 'message' => 'Tugas tidak ditemukan'], 404);
+        }
+
+        return view('tugaskompen.show_ajax', compact('tugas'));
     }
 }

@@ -32,8 +32,14 @@ class TugasModel extends Model
 
     public function kompetensi()
     {
-        return $this->belongsToMany(KompetensiModel::class, 't_detail_kompetensi', 'tugas_id', 'kompetensi_id');
+        return $this->belongsToMany(
+            KompetensiModel::class,  // The related model
+            't_tugas_kompetensi',   // The pivot table
+            'tugas_id',             // Foreign key on the pivot table referencing the current model
+            'kompetensi_id'         // Foreign key on the pivot table referencing the related model
+        );
     }
+
 
     public function mahasiswa()
     {
