@@ -110,7 +110,7 @@
             <tr>
                 <th class="text-center">No</th>
                 <th>Username</th>
-                <th>NIM</th>
+                <th>NIP</th>
                 <th>Nama</th>
                 <th>Program Studi</th>
                 <th>Nomor Handphone</th>

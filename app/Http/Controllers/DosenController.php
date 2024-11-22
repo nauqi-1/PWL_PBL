@@ -318,7 +318,11 @@ class DosenController extends Controller
     }
 
     public function export_excel() {
-        $dosen = DosenModel::select( 'dosen_nama') 
+        $dosen = DosenModel::select('dosen_nip', 'dosen_nama', 'dosen_prodi', 'dosen_noHp', 'user_id')
+                ->with(['user' => function($query) {
+                    $query->select('user_id','username'); 
+                }])
+                ->withCount('tugas')
                 -> orderBy('dosen_nama')
                 -> get();
 
@@ -326,18 +330,28 @@ class DosenController extends Controller
         $sheet = $spreadsheet-> getActiveSheet();
 
         $sheet->setCellValue('A1','No');
-        $sheet->setCellValue('B1','Dosen');
+        $sheet->setCellValue('B1','Username');
+        $sheet->setCellValue('C1','NIP');
+        $sheet->setCellValue('D1','Nama');
+        $sheet->setCellValue('E1','Program Studi');
+        $sheet->setCellValue('F1','No. HP');
+        $sheet->setCellValue('G1','Jumlah Tugas');
 
         $no = 1;
         $baris = 2;
         foreach($dosen as $key => $value) {
             $sheet->setCellValue('A'.$baris,$no);
-            $sheet->setCellValue('B'.$baris,$value -> dosen_nama);
+            $sheet->setCellValue('B'.$baris,$value->user->username);
+            $sheet->setCellValue('C'.$baris,$value -> dosen_nip);
+            $sheet->setCellValue('D'.$baris,$value -> dosen_nama);
+            $sheet->setCellValue('E'.$baris,$value -> dosen_prodi);
+            $sheet->setCellValue('F'.$baris,$value -> dosen_noHp);
+            $sheet->setCellValue('G'.$baris,$value -> tugas_count);
             $baris++;
             $no++;
         }
 
-        foreach(range('A', 'F') as $columnID) {
+        foreach(range('A', 'G') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true); //set ukuran kolom otomatis
         }
 

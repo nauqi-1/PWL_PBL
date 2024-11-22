@@ -321,7 +321,11 @@ class TendikController extends Controller
     }
 
     public function export_excel() {
-        $tendik = TendikModel::select( 'tendik_nama') 
+        $tendik = TendikModel::select('tendik_nip', 'tendik_nama', 'tendik_noHp', 'user_id')
+                ->with(['user' => function($query) {
+                    $query->select('user_id','username'); 
+                }])
+                ->withCount('tugas')
                 -> orderBy('tendik_nama')
                 -> get();
 
@@ -329,13 +333,21 @@ class TendikController extends Controller
         $sheet = $spreadsheet-> getActiveSheet();
 
         $sheet->setCellValue('A1','No');
-        $sheet->setCellValue('B1','Tendik');
+        $sheet->setCellValue('B1','Username');
+        $sheet->setCellValue('C1','NIP');
+        $sheet->setCellValue('D1','Nama');
+        $sheet->setCellValue('E1','No. HP');
+        $sheet->setCellValue('F1','Jumlah Tugas');
 
         $no = 1;
         $baris = 2;
         foreach($tendik as $key => $value) {
             $sheet->setCellValue('A'.$baris,$no);
-            $sheet->setCellValue('B'.$baris,$value -> tendik_nama);
+            $sheet->setCellValue('B'.$baris,$value->user->username);
+            $sheet->setCellValue('C'.$baris,$value -> tendik_nip);
+            $sheet->setCellValue('D'.$baris,$value -> tendik_nama);
+            $sheet->setCellValue('E'.$baris,$value -> tendik_noHp);
+            $sheet->setCellValue('F'.$baris,$value -> tugas_count);
             $baris++;
             $no++;
         }

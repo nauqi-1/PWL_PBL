@@ -335,7 +335,10 @@ class MahasiswaController extends Controller
     }
 
     public function export_excel() {
-        $mahasiswa = MahasiswaModel::select( 'mahasiswa_nama') 
+        $mahasiswa = MahasiswaModel::select('mahasiswa_nim', 'mahasiswa_nama', 'mahasiswa_kelas', 'mahasiswa_prodi', 'mahasiswa_noHp', 'user_id')
+                ->with(['user' => function($query) {
+                    $query->select('user_id','username'); 
+                }]) 
                 -> orderBy('mahasiswa_nama')
                 -> get();
 
@@ -343,18 +346,28 @@ class MahasiswaController extends Controller
         $sheet = $spreadsheet-> getActiveSheet();
 
         $sheet->setCellValue('A1','No');
-        $sheet->setCellValue('B1','Mahasiswa');
+        $sheet->setCellValue('B1','Username');
+        $sheet->setCellValue('C1','NIM');
+        $sheet->setCellValue('D1','Nama');
+        $sheet->setCellValue('E1','Kelas');
+        $sheet->setCellValue('F1','Program Studi');
+        $sheet->setCellValue('G1','No. HP');
 
         $no = 1;
         $baris = 2;
         foreach($mahasiswa as $key => $value) {
             $sheet->setCellValue('A'.$baris,$no);
-            $sheet->setCellValue('B'.$baris,$value -> mahasiswa_nama);
+            $sheet->setCellValue('B'.$baris,$value->user->username);
+            $sheet->setCellValue('C'.$baris,$value -> mahasiswa_nim);
+            $sheet->setCellValue('D'.$baris,$value -> mahasiswa_nama);
+            $sheet->setCellValue('E'.$baris,$value -> mahasiswa_kelas);
+            $sheet->setCellValue('F'.$baris,$value -> mahasiswa_prodi);
+            $sheet->setCellValue('G'.$baris,$value -> mahasiswa_noHp);
             $baris++;
             $no++;
         }
 
-        foreach(range('A', 'F') as $columnID) {
+        foreach(range('A', 'G') as $columnID) {
             $sheet->getColumnDimension($columnID)->setAutoSize(true); //set ukuran kolom otomatis
         }
 
