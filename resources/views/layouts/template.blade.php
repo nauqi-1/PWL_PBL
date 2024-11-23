@@ -19,53 +19,60 @@
   <link rel="stylesheet" href="{{asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.min.css')}}">
+<!-- Tambahkan CSS Choices -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+<!-- Tambahkan JavaScript Choices -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
-  <style>
+
+
+
+<style>
     .table .nama-tugas {
-        max-width: 150px;
-        word-wrap: break-word; /* Memastikan teks dapat dibagi */
-        white-space: normal; /* Mengizinkan teks menjadi beberapa baris */
+      max-width: 150px;
+      word-wrap: break-word; /* Memastikan teks dapat dibagi */
+      white-space: normal; /* Mengizinkan teks menjadi beberapa baris */
     }
     </style>
     
-  @stack('css')
+    @stack('css')
 </head>
 <body class="hold-transition sidebar-mini">
-<!-- Site wrapper -->
-<div class="wrapper">
-  <!-- Navbar -->
-@include('layouts.header') 
- <!-- /.navbar -->
-
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <a href="{{url('/')}}" class="brand-link">
-      <img src="{{url('images/jti-polinema-logo.png')}}" alt="JTI Logo" class="brand-image img-circle elevation-1" style="opacity: .8">
-      <span class="brand-text font-weight-light">Sistem Kompensasi</span>
-    </a>
-
-    <!-- Sidebar -->
-    @include('layouts.sidebar')
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    @include('layouts.breadcrumb')
-
-    <!-- Main content -->
-    <section class="content">
-      @yield('content')
-
-    </section>
-    <!-- /.content -->
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
+    @include('layouts.header') 
+    <!-- /.navbar -->
+    
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="{{url('/')}}" class="brand-link">
+        <img src="{{url('images/jti-polinema-logo.png')}}" alt="JTI Logo" class="brand-image img-circle elevation-1" style="opacity: .8">
+        <span class="brand-text font-weight-light">Sistem Kompensasi</span>
+      </a>
+      
+      <!-- Sidebar -->
+      @include('layouts.sidebar')
+      <!-- /.sidebar -->
+    </aside>
+    
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      @include('layouts.breadcrumb')
+      
+      <!-- Main content -->
+      <section class="content">
+        @yield('content')
+        
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    
+    @include('layouts.footer')
   </div>
-  <!-- /.content-wrapper -->
-
-@include('layouts.footer')
-</div>
 <!-- ./wrapper -->
 
 <!-- jQuery -->

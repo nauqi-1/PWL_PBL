@@ -7,6 +7,7 @@
         <div class="card-tools">
             <a href="{{ url('/tugaskompen/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
             <a href="{{ url('/tugaskompen/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
+            <button onclick="modalAction('{{ url('/tugaskompen/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
         </div>
     </div>
     <div class="card-body">
@@ -24,6 +25,7 @@
                     <th>Nama</th>
                     <th>Jenis</th>
                     <th>Bobot</th>
+                    <th>Kuota</th>
                     <th>Status</th>
                     <th>Tgl.dibuat</th>
                     <th>Tgl.ditutup</th>
@@ -76,13 +78,19 @@
                     searchable: true
                 },
                 {
-                    data: "tugas_jenis",
+                    data: "jenis",
                     className: "",
                     orderable: false,
                     searchable: false
                 },
                 {
                     data: "tugas_bobot",
+                    className: "",
+                    orderable: false,
+                    searchable: false
+                },
+                {
+                    data: "kuota",
                     className: "",
                     orderable: false,
                     searchable: false

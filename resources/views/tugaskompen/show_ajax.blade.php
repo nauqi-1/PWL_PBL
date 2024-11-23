@@ -40,7 +40,7 @@
                     </tr>
                     <tr>
                         <th class="text-right col-3">Jenis Tugas :</th>
-                        <td class="col-9">{{ $tugas->tugas_jenis }}</td>
+                        <td class="col-9">{{ $tugas->jenis }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Kompetensi :</th>
@@ -57,6 +57,10 @@
                     <tr>
                         <th class="text-right col-3">Bobot :</th>
                         <td class="col-9">{{ $tugas->tugas_bobot }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-right col-3">Kuota :</th>
+                        <td class="col-9">{{ $tugas->kuota }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Status :</th>

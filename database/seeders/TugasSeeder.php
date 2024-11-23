@@ -48,8 +48,8 @@ class TugasSeeder extends Seeder
                 'tugas_pembuat_id'      => 5,
                 'tugas_jenis'           => 'Penelitian'
             ]
-            ];
+        ];
 
-            DB::table('t_tugas')->insert($data);
+        DB::table('t_tugas')->insert($data);
     }
 }
