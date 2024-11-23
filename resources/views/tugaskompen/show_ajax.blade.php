@@ -40,7 +40,7 @@
                     </tr>
                     <tr>
                         <th class="text-right col-3">Jenis Tugas :</th>
-                        <td class="col-9">{{ $tugas->jenis }}</td>
+                        <td class="col-9">{{ $tugas->jenis->jenis_nama }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Kompetensi :</th>
@@ -98,13 +98,15 @@
                     </tr>
                     <tr>
                         <th class="text-right col-3">File Tugas :</th>
-                        <td class="col-9">
-                            @if ($tugas->tugas_file)
-                                <a href="{{ url('storage/' . $tugas->tugas_file) }}" target="_blank">Lihat File</a>
-                            @else
-                                Tidak ada file
-                            @endif
-                        </td>
+                            <td class="col-9">
+                                @if ($tugas->tugas_file)
+                                    <a href="{{ url('storage/' . $tugas->tugas_file) }}" target="_blank">
+                                        {{ basename($tugas->tugas_file) }}
+                                    </a>
+                                @else
+                                    Tidak ada file
+                                @endif
+                            </td>
                     </tr>
                 </table>
             </div>
