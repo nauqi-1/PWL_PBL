@@ -1,4 +1,4 @@
-@empty($mahasiswa)
+@empty($admin)
 <div id="modal-master" class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -12,66 +12,43 @@
                 <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                 Data yang anda cari tidak ditemukan
             </div>
-            <a href="{{ url('/mahasiswa') }}" class="btn btn-warning">Kembali</a>
+            <a href="{{ url('/admin') }}" class="btn btn-warning">Kembali</a>
         </div>
     </div>
 </div>
 @else
-<form action="{{ url('/mahasiswa/' . $mahasiswa->mahasiswa_id . '/delete_ajax') }}" method="POST" id="form-delete">
+<form action="{{ url('/admin/' . $admin->admin_id . '/delete_ajax') }}" method="POST" id="form-delete">
     @csrf
     @method('DELETE')
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Detail Data Mahasiswa</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Detail Data Admin</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <table class="table table-sm table-bordered table-striped">
-                    <tr>
+                <tr>
                         <th class="text-right col-3">Username :</th>
-                        <td class="col-9">{{ $mahasiswa->user->username }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">NIM :</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_nim }}</td>
-                    </tr>
-                    
+                        <td class="col-9">{{ $admin->user->username }}</td>
+                    </tr>    
                     <tr>
                         <th class="text-right col-3">Nama:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Kelas:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_kelas }}</td>
+                        <td class="col-9">{{ $admin->admin_nama }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Program Studi:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_prodi }}</td>
+                        <td class="col-9">{{ $admin->admin_prodi }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Nomor Handphone:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_noHp }}</td>
+                        <td class="col-9">{{ $admin->admin_noHp }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">Jam alfa yang lunas:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_alfa_lunas }} Jam</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Jam alfa total:</th>
-                        <td class="col-9">{{ $totalJumlahAlfa }} Jam</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Status:</th>
-                        <td class="col-9" style="background-color: {{ $mahasiswa->mahasiswa_alfa_lunas < $totalJumlahAlfa ? 'red' : 'green' }}; color: white;"> 
-                            @if($mahasiswa->mahasiswa_alfa_lunas < $totalJumlahAlfa)
-                                Belum lunas, tidak diperbolehkan mengikuti UAS
-                            @else
-                                Sudah lunas, mahasiswa dipersilahkan mengikuti UAS
-                            @endif
-                        </td>
+                        <th class="text-right col-3">Jumlah tugas:</th>
+                        <td class="col-9">{{ $tugasCount}}</td>
                     </tr>
                 </table>
             </div>
@@ -98,7 +75,7 @@ $(document).ready(function() {
                             title: 'Berhasil',
                             text: response.message
                         });
-                        dataMahasiswa.ajax.reload();
+                        dataAdmin.ajax.reload();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {

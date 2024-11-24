@@ -17,4 +17,8 @@ class AdminModel extends Model
     {
         return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
     }
+    public function tugas()
+    {
+        return $this->hasMany(TugasModel::class,'tugas_pembuat_id', 'user_id');
+    }
 }

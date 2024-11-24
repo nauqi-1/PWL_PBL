@@ -103,33 +103,28 @@
         </tr>
     </table>
 
-    <h3 class="text-center">LAPORAN DATA MAHASISWA</h3>
+    <h3 class="text-center">LAPORAN DATA ADMIN</h3>
 
     <table class="border-all">
         <thead>
             <tr>
                 <th class="text-center">No</th>
                 <th>Username</th>
-                <th>NIM</th>
                 <th>Nama</th>
-                <th>Kelas</th>
                 <th>Program Studi</th>
                 <th>Nomor Handphone</th>
-                <th>Jumlah Jam Alfa Terbayar</th>
-
+                <th>Jumlah Tugas</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($mahasiswa as $m)
+            @foreach($admin as $d)
             <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
-                <td>{{ $m->user->username ?? '-' }}</td>
-                <td>{{ $m->mahasiswa_nim }}</td>
-                <td>{{ $m->mahasiswa_nama }}</td>
-                <td>{{ $m->mahasiswa_kelas }}</td>
-                <td>{{ $m->mahasiswa_prodi }}</td>
-                <td>{{ $m->mahasiswa_noHp }}</td>
-                <td>{{ $m->mahasiswa_alfa_lunas }}</td>
+                <td>{{ $d->user->username ?? '-' }}</td>
+                <td>{{ $d->admin_nama }}</td>
+                <td>{{ $d->admin_prodi }}</td>
+                <td>{{ $d->admin_noHp }}</td>
+                <td>{{ $d->tugas_count }}</td>
 
 
             </tr>

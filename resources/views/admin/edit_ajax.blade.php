@@ -1,4 +1,4 @@
-@empty($tendik)
+@empty($admin)
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,18 +12,18 @@
                     <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                     Data yang anda cari tidak ditemukan
                 </div>
-                <a href="{{ url('/tendik') }}" class="btn btn-warning">Kembali</a>
+                <a href="{{ url('/admin') }}" class="btn btn-warning">Kembali</a>
             </div>
         </div>
     </div>
 @else
-    <form action="{{ url('/tendik/' . $tendik->tendik_id . '/update_ajax') }}" method="POST" id="form-edit">
+    <form action="{{ url('/admin/' . $admin->admin_id . '/update_ajax') }}" method="POST" id="form-edit">
         @csrf
         @method('PUT')
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Mahasiswa</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Admin</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -31,18 +31,18 @@
                 <div class="modal-body">
                 <div class="form-group">
                     <label>Nama</label>
-                    <input value="{{ $tendik->tendik_nama }}" type="text" name="tendik_nama" id="tendik_nama" class="form-control" required>
-                    <small id="error-tendik_nama" class="error-text form-text text-danger"></small>
+                    <input value="{{ $admin->admin_nama }}" type="text" name="admin_nama" id="admin_nama" class="form-control" required>
+                    <small id="error-admin_nama" class="error-text form-text text-danger"></small>
                 </div>
-                <!--div class="form-group">
+                <div class="form-group">
                     <label>Program Studi</label>
-                    <input value="{{-- $tendik->tendik_prodi --}}" type="text" name="tendik_prodi" id="tendik_prodi" class="form-control" required>
-                    <small id="error-tendik_prodi" class="error-text form-text text-danger"></small>
-                </div-->
+                    <input value="{{ $admin->admin_prodi }}" type="text" name="admin_prodi" id="admin_prodi" class="form-control" required>
+                    <small id="error-admin_prodi" class="error-text form-text text-danger"></small>
+                </div>
                 <div class="form-group">
                     <label>Nomor HP</label>
-                    <input value="{{ $tendik->tendik_noHp }}" type="text" name="tendik_noHp" id="tendik_noHp" class="form-control" required>
-                    <small id="error-tendik_noHp" class="error-text form-text text-danger"></small>
+                    <input value="{{ $admin->admin_noHp }}" type="text" name="admin_noHp" id="admin_noHp" class="form-control" required>
+                    <small id="error-admin_noHp" class="error-text form-text text-danger"></small>
                 </div>
                 
                 <hr>
@@ -50,7 +50,7 @@
                 <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>Username</label>
-                    <input value="" type="text" name="username" id="username" class="form-control" placeholder=" {{$tendik->user->username}}" required>
+                    <input value="" type="text" name="username" id="username" class="form-control" placeholder=" {{$admin->user->username}}" required>
                     <small id="error-username" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group col-md-6">
@@ -70,23 +70,23 @@
         $(document).ready(function() {
             $("#form-edit").validate({
                 rules: {
-                    tendik_nama: { required: true, maxlength: 100 },
-                    //tendik_prodi: { required: true, minlength: 2, maxlength: 10 },
-                    tendik_noHp: { required: true, maxlength: 20 },
+                    admin_nama: { required: true, maxlength: 100 },
+                    admin_prodi: { required: true, minlength: 2, maxlength: 10 },
+                    admin_noHp: { required: true, maxlength: 20 },
                     username: {required: false, maxlength: 100 },
                     password: {required: false, minlength: 6, maxlength: 100 },
                 },
                 messages: 
-            {tendik_nama : {
+            {admin_nama : {
                     required: "Nama harus diisi.",
                     maxlength: "Data yang diisi tidak melebihi 100 karakter."
                 },
-                tendik_nip: {
-                    required: "NIP harus diisi.",
-                    maxlength: "NIP maksimal 50 karakter.",
-                    digits: "NIM harus berupa angka saja (0-9)."
+                admin_prodi: {
+                    required: "Program studi harus diisi.",
+                    minlength: "Program studi minimal 2 karakter.",
+                    maxlength: "Program studi maksimal 10 karakter."
                 },
-                tendik_noHp: {
+                admin_noHp: {
                     required: "Nomor HP harus diisi.",
                     minlength: "Nomor HP minimal 10 karakter.",
                     maxlength: "Nomor HP maksimal 13 karakter.",
@@ -115,7 +115,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                dataMahasiswa.ajax.reload(); // memanggil dataMahasiswa utk instant reload
+                                dataAdmin.ajax.reload(); // memanggil dataMahasiswa utk instant reload
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {

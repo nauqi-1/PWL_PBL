@@ -1,9 +1,9 @@
-<form action="{{ url('/tendik/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/admin/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Tendik</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Admin</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -11,24 +11,19 @@
             <div class="modal-body">
                 
                 <div class="form-group">
-                    <label>NIP</label>
-                    <input value="" type="text" name="tendik_nip" id="tendik_nip" class="form-control" required>
-                    <small id="error-tendik_nip" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group">
                     <label>Nama</label>
-                    <input value="" type="text" name="tendik_nama" id="tendik_nama" class="form-control" required>
-                    <small id="error-tendik_nama" class="error-text form-text text-danger"></small>
+                    <input value="" type="text" name="admin_nama" id="admin_nama" class="form-control" required>
+                    <small id="error-admin_nama" class="error-text form-text text-danger"></small>
                 </div>
-                <!--div class="form-group ">
+                <div class="form-group ">
                     <label>Program Studi</label>
-                    <input value="" type="text" name="tendik_prodi" id="tendik_prodi" class="form-control" required>
-                    <small id="error-tendik_prodi" class="error-text form-text text-danger"></small>
-                </div-->
+                    <input value="" type="text" name="admin_prodi" id="admin_prodi" class="form-control" required>
+                    <small id="error-admin_prodi" class="error-text form-text text-danger"></small>
+                </div>
                 <div class="form-group">
                     <label>Nomor HP</label>
-                    <input value="" type="text" name="tendik_noHp" id="tendik_noHp" class="form-control" required>
-                    <small id="error-tendik_noHp" class="error-text form-text text-danger"></small>
+                    <input value="" type="text" name="admin_noHp" id="admin_noHp" class="form-control" required>
+                    <small id="error-admin_noHp" class="error-text form-text text-danger"></small>
                 </div>
                 <hr>
                 <div class="form-row">
@@ -57,26 +52,25 @@
         $("#form-tambah").validate({
             rules: {
                 
-                tendik_nama: { required: true, maxlength: 100 },
-                tendik_nip: { required: true, maxlength: 50, digits:true },
-                //tendik_prodi: { required: true, minlength: 2, maxlength: 10 },
-                tendik_noHp: { required: true, maxlength: 20, digits:true },
+                admin_nama: { required: true, maxlength: 100 },
+                admin_prodi: { required: true, minlength: 2, maxlength: 10 },
+                admin_noHp: { required: true, minlength: 10, maxlength: 13, digits:true },
                 username: {required: true, maxlength: 100 },
                 password: {required: true, minlength: 6, maxlength: 100 },
 
                 
             },
             messages: 
-            {tendik_nama : {
+            {admin_nama : {
                     required: "Nama harus diisi.",
                     maxlength: "Data yang diisi tidak melebihi 100 karakter."
                 },
-                tendik_nip: {
-                    required: "NIP harus diisi.",
-                    maxlength: "NIP maksimal 50 karakter.",
-                    digits: "NIM harus berupa angka saja (0-9)."
+                admin_prodi: {
+                    required: "Program studi harus diisi.",
+                    minlength: "Program studi minimal 2 karakter.",
+                    maxlength: "Program studi maksimal 10 karakter."
                 },
-                tendik_noHp: {
+                admin_noHp: {
                     required: "Nomor HP harus diisi.",
                     minlength: "Nomor HP minimal 10 karakter.",
                     maxlength: "Nomor HP maksimal 13 karakter.",
@@ -105,7 +99,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataTendik.ajax.reload();
+                            dataAdmin.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

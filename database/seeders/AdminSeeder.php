@@ -20,6 +20,7 @@ class AdminSeeder extends Seeder
                 'admin_id' => 1,
                 'admin_nama' => 'Admin Dummy',
                 'admin_prodi' => 'SIB',
+                'admin_noHp' => '08123456873',
                 'user_id' => 1
             ]
             ];

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KompetensiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
@@ -121,6 +122,27 @@ Route::middleware(['auth'])->group(function () {
 
 
     });
+    Route::group(['prefix' => 'admin', 'middleware' => 'authorize:ADM'], function () {
+        Route::get('/', [AdminController::class, 'index']); 
+        Route::post('/list', [AdminController::class, 'list']);  
+
+        Route::get('/create_ajax', [AdminController::class, 'create_ajax']); 
+        Route::post('/ajax', [AdminController::class, 'store_ajax']); 
+
+        Route::get('/{id}/show_ajax', [AdminController::class, 'show_ajax']);
+
+        Route::get('/{id}/edit_ajax', [AdminController::class, 'edit_ajax']); 
+        Route::put('/{id}/update_ajax', [AdminController::class, 'update_ajax']); 
+
+        Route::get('/{id}/delete_ajax', [AdminController::class, 'confirm_ajax']); 
+        Route::delete('/{id}/delete_ajax', [AdminController::class, 'delete_ajax']); 
+
+        Route::get('/import', [AdminController::class, 'import']); 
+        Route::post('/import_ajax', [AdminController::class, 'import_ajax']); 
+        Route::get('/export_excel', [AdminController::class, 'export_excel']); 
+        Route::get('/export_pdf', [AdminController::class, 'export_pdf']); 
+    });
+
     Route::group(['prefix' => 'dosen', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [DosenController::class, 'index']); //Menampilkan laman awal Kompetensi
         Route::post('/list', [DosenController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.

@@ -32,6 +32,13 @@
                 kompetensi_nama: { required: true, minlength: 3, maxlength: 100 },
                 
             },
+            messages: {
+                kompetensi_nama : {
+                    required: "Kolom ini harus diisi.",
+                    minlength: "Kolom ini minimal diisi 3 karakter.",
+                    maxlength: "Kolom ini maksimal diisi 100 karakter."
+                }
+            },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

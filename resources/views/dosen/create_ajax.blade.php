@@ -58,14 +58,45 @@
             rules: {
                 
                 dosen_nama: { required: true, maxlength: 100 },
-                dosen_nip: { required: true, maxlength: 50 },
+                dosen_nip: { required: true, maxlength: 50, digits:true },
                 dosen_prodi: { required: true, minlength: 2, maxlength: 10 },
-                dosen_noHp: { required: true, maxlength: 20 },
+                dosen_noHp: { required: true, minlength: 10, maxlength: 13, digits:true },
                 username: {required: true, maxlength: 100 },
                 password: {required: true, minlength: 6, maxlength: 100 },
 
                 
             },
+            messages: 
+            {dosen_nama : {
+                    required: "Nama harus diisi.",
+                    maxlength: "Data yang diisi tidak melebihi 100 karakter."
+                },
+                dosen_nip: {
+                    required: "NIP harus diisi.",
+                    maxlength: "NIP maksimal 50 karakter.",
+                    digits: "NIM harus berupa angka saja (0-9)."
+                },
+                dosen_prodi: {
+                    required: "Program studi harus diisi.",
+                    minlength: "Program studi minimal 2 karakter.",
+                    maxlength: "Program studi maksimal 10 karakter."
+                },
+                dosen_noHp: {
+                    required: "Nomor HP harus diisi.",
+                    minlength: "Nomor HP minimal 10 karakter.",
+                    maxlength: "Nomor HP maksimal 13 karakter.",
+                    digits: "Nomor HP harus berupa angka saja."
+                },
+                
+                username: {
+                    required: "Username harus diisi.",
+                    maxlength: "Username maksimal 100 karakter."
+                },
+                password: {
+                    required: "Password harus diisi.",
+                    minlength: "Password minimal 6 karakter.",
+                    maxlength: "Password maksimal 100 karakter."
+                }},
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,

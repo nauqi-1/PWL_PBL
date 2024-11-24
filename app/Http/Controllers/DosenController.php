@@ -228,7 +228,7 @@ class DosenController extends Controller
 
     public function show_ajax(string $id) {
         $dosen = DosenModel::find($id);
-        $tugasCount = TugasModel::where('tugas_pembuat_id', $id)->count();
+        $tugasCount = TugasModel::where('tugas_pembuat_id', $dosen->user_id)->count();
 
         return view('dosen.show_ajax', ['dosen' => $dosen, 'tugasCount' => $tugasCount]);
     } 

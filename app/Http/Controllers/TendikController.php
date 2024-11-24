@@ -230,7 +230,7 @@ class TendikController extends Controller
 
     public function show_ajax(string $id) {
         $tendik = TendikModel::find($id);
-        $tugasCount = TugasModel::where('tugas_pembuat_id', $id)->count();
+        $tugasCount = TugasModel::where('tugas_pembuat_id', $tendik->user_id)->count();
 
         return view('tendik.show_ajax', ['tendik' => $tendik, 'tugasCount' => $tugasCount]);
     } 

@@ -85,7 +85,7 @@ class MahasiswaController extends Controller
                 'password'              => 'required|string|min:6|max:100',
                 'mahasiswa_nama'        => 'required|string|max:100',
                 'mahasiswa_kelas'       => 'required|string|max:50',
-                'mahasiswa_nim'         => 'required|digits|unique:m_mahasiswa,mahasiswa_nim|max:50|regex:/^\d+$/',
+                'mahasiswa_nim'         => 'required|unique:m_mahasiswa,mahasiswa_nim|max:50|regex:/^\d+$/',
                 'mahasiswa_prodi'       => 'required|string|max:50',
                 'mahasiswa_noHp'        => 'required|string|max:50|regex:/^\d+$/',
                 'mahasiswa_alfa_lunas'   => 'required|integer',
@@ -202,8 +202,9 @@ class MahasiswaController extends Controller
 
     public function confirm_ajax(string $id) {
         $mahasiswa = MahasiswaModel::find($id);
+        $totalJumlahAlfa = $mahasiswa->mahasiswa_alfa->sum('jumlah_alfa');
 
-        return view('mahasiswa.confirm_ajax', ['mahasiswa' => $mahasiswa]);
+        return view('mahasiswa.confirm_ajax', ['mahasiswa' => $mahasiswa, 'totalJumlahAlfa' => $totalJumlahAlfa]);
     } 
 
     public function delete_ajax(Request $request, $id) {
@@ -227,23 +228,26 @@ class MahasiswaController extends Controller
         return redirect('/');
     }
     public function export_pdf() {
-        $mahasiswa = MahasiswaModel::select('mahasiswa_nama','mahasiswa_kelas','mahasiswa_nim','mahasiswa_prodi','mahasiswa_noHp','mahasiswa_alfa_sisa','mahasiswa_alfa_total', 'user_id') 
-        ->with(['user' => function($query) {
-            $query->select('user_id','username'); 
-        }])     
-        ->orderBy('mahasiswa_nim')
-            
+        $mahasiswa = MahasiswaModel::select('mahasiswa_nama', 'mahasiswa_kelas', 'mahasiswa_nim', 'mahasiswa_prodi', 'mahasiswa_noHp', 'mahasiswa_alfa_lunas', 'user_id')
+            ->with(['user' => function($query) {
+                $query->select('user_id', 'username'); 
+            }])
+            ->with(['mahasiswa_alfa'])
+            ->orderBy('mahasiswa_nim')
             ->get();
-        // use Barryvdh\DomPDF\Facade\Pdf;
+
+    
         $pdf = Pdf::loadView('mahasiswa.export_pdf', ['mahasiswa' => $mahasiswa]);
-        $pdf->setPaper('a4', 'landscape'); // set ukuran kertas dan orientasi $pdf->setOption("isRemoteEnabled", true); // set true jika ada gambar dari url $pdf->render();
-        return $pdf->stream ('Data Mahasiswa '.date('Y-m-d H:i:s').'.pdf');
+        $pdf->setPaper('a4', 'landscape'); 
+        return $pdf->stream('Data Mahasiswa '.date('Y-m-d H:i:s').'.pdf');
     }
+    
 
     public function show_ajax(string $id) {
         $mahasiswa = MahasiswaModel::find($id);
+        $totalJumlahAlfa = $mahasiswa->mahasiswa_alfa->sum('jumlah_alfa');
 
-        return view('mahasiswa.show_ajax', ['mahasiswa' => $mahasiswa]);
+        return view('mahasiswa.show_ajax', ['mahasiswa' => $mahasiswa, 'totalJumlahAlfa' => $totalJumlahAlfa]);
     } 
 
     public function import() {

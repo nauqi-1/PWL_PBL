@@ -20,7 +20,7 @@ class DosenModel extends Model
 
     public function tugas()
     {
-        return $this->hasMany(TugasModel::class,'tugas_pembuat_id', 'dosen_id');
+        return $this->hasMany(TugasModel::class,'tugas_pembuat_id', 'user_id');
     }
 
 

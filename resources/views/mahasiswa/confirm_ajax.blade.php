@@ -58,11 +58,11 @@
                     </tr>
                     <tr>
                         <th class="text-right col-3">Jam Alfa Lunas:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_alfa_sisa }}</td>
+                        <td class="col-9">{{ $mahasiswa->mahasiswa_alfa_lunas }} Jam</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Jam Alfa Total:</th>
-                        <td class="col-9">{{ $mahasiswa->mahasiswa_alfa_total }}</td>
+                        <td class="col-9">{{ $totalJumlahAlfa }} Jam</td>
                     </tr>
                 </table>
             </div>

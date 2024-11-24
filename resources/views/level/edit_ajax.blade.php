@@ -46,7 +46,14 @@
         $(document).ready(function() {
             $("#form-edit").validate({
                 rules: {
-                    level_nama: { required: true, minlength: 3, maxlength: 100 },
+                    level_nama: { required: true, minlength: 3, maxlength: 50 },
+                },
+                messages: {
+                    level_nama: {
+                        required: "Kolom ini harus diisi.",
+                        minlength: "Kolom ini minimal diisi 3 karakter",
+                        maxlength: "Kolom ini maksimal diisi 50 karakter"
+                    }
                 },
                 submitHandler: function(form) {
                     $.ajax({

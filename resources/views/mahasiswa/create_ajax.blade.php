@@ -41,7 +41,7 @@
                 <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>Jam alfa lunas</label>
-                    <input value="" type="number" name="mahasiswa_alfa_lunas" id="mahasiswa_alfa_lunas" class="form-control" required>
+                    <input value="0" type="number" name="mahasiswa_alfa_lunas" id="mahasiswa_alfa_lunas" class="form-control" required>
                     <small id="error-mahasiswa_alfa_lunas" class="error-text form-text text-danger"></small>
                 </div>
                 </div>
@@ -71,15 +71,57 @@
             rules: {
                 
                 mahasiswa_nama: { required: true, maxlength: 100 },
-                mahasiswa_nim: { number, required: true, maxlength: 50 },
+                mahasiswa_nim: {required: true,  minlength: 10 ,maxlength: 13, digits:true},
                 mahasiswa_kelas: { required: true, minlength: 2, maxlength: 2 },
                 mahasiswa_prodi: { required: true, minlength: 2, maxlength: 10 },
-                mahasiswa_noHp: { number, required: true, maxlength: 20 },
+                mahasiswa_noHp: {required: true, minlength:10, maxlength: 13, digits:true },
                 mahasiswa_alfa_lunas: { required: true, maxlength: 100 },
                 username: {required: true, maxlength: 100 },
                 password: {required: true, minlength: 6, maxlength: 100 },
 
                 
+            },
+            messages : {
+                mahasiswa_nama : {
+                    required: "Nama harus diisi.",
+                    maxlength: "Data yang diisi tidak melebih 100 karakter."
+                },
+                mahasiswa_nim: {
+                    required: "NIM harus diisi.",
+                    minlength: "NIM minimal 10 karakter.",
+                    maxlength: "NIM maksimal 13 karakter.",
+                    digits: "NIM harus berupa angka saja (0-9)."
+                },
+                mahasiswa_kelas: {
+                    required: "Kelas harus diisi.",
+                    minlength: "Kelas hanya terdiri dari 2 karakter.",
+                    maxlength: "Kelas hanya terdiri dari 2 karakter."
+                },
+                mahasiswa_prodi: {
+                    required: "Program studi harus diisi.",
+                    minlength: "Program studi minimal 2 karakter.",
+                    maxlength: "Program studi maksimal 10 karakter."
+                },
+                mahasiswa_noHp: {
+                    required: "Nomor HP harus diisi.",
+                    minlength: "Nomor HP minimal 10 karakter.",
+                    maxlength: "Nomor HP maksimal 13 karakter.",
+                    digits: "Nomor HP harus berupa angka saja."
+                },
+                mahasiswa_alfa_lunas: {
+                    required: "Jumlah alfa lunas harus diisi.",
+                    maxlength: "Jumlah alfa lunas maksimal 100 karakter.",
+                    digits: "Jumlah alfa lunas harus berupa angka saja."
+                },
+                username: {
+                    required: "Username harus diisi.",
+                    maxlength: "Username maksimal 100 karakter."
+                },
+                password: {
+                    required: "Password harus diisi.",
+                    minlength: "Password minimal 6 karakter.",
+                    maxlength: "Password maksimal 100 karakter."
+                }
             },
             submitHandler: function(form) {
                 $.ajax({

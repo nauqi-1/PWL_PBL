@@ -23,7 +23,7 @@
         <div id="modal-master" class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Mahasiswa</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Dosen</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -72,10 +72,36 @@
                 rules: {
                     dosen_nama: { required: true, maxlength: 100 },
                     dosen_prodi: { required: true, minlength: 2, maxlength: 10 },
-                    dosen_noHp: { required: true, maxlength: 20 },
+                    dosen_noHp: { required: true, minlength:10, maxlength: 13, digits:true },
                     username: {required: false, maxlength: 100 },
                     password: {required: false, minlength: 6, maxlength: 100 },
                 },
+                messages: 
+            {dosen_nama : {
+                    required: "Nama harus diisi.",
+                    maxlength: "Data yang diisi tidak melebihi 100 karakter."
+                },
+                dosen_prodi: {
+                    required: "Program studi harus diisi.",
+                    minlength: "Program studi minimal 2 karakter.",
+                    maxlength: "Program studi maksimal 10 karakter."
+                },
+                dosen_noHp: {
+                    required: "Nomor HP harus diisi.",
+                    minlength: "Nomor HP minimal 10 karakter.",
+                    maxlength: "Nomor HP maksimal 13 karakter.",
+                    digits: "Nomor HP harus berupa angka saja."
+                },
+                
+                username: {
+                    required: "Username harus diisi.",
+                    maxlength: "Username maksimal 100 karakter."
+                },
+                password: {
+                    required: "Password harus diisi.",
+                    minlength: "Password minimal 6 karakter.",
+                    maxlength: "Password maksimal 100 karakter."
+                }},
                 submitHandler: function(form) {
                     $.ajax({
                         url: form.action,
@@ -89,7 +115,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                dataMahasiswa.ajax.reload(); // memanggil dataMahasiswa utk instant reload
+                                dataDosen.ajax.reload();
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {
