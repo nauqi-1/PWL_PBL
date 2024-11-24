@@ -1,94 +1,118 @@
-<form action="{{ url('/tugaskompen/store_ajax') }}" method="POST" id="form-tambah-tugas" enctype="multipart/form-data">
-    @csrf
-    <div id="modal-tugas" class="modal-dialog modal-lg" role="document">
+@empty($tugas)
+    <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Data Tugas Kompensasi</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Nama Tugas -->
-                <div class="form-group">
-                    <label>Nama Tugas</label>
-                    <input type="text" name="tugas_nama" id="tugas_nama" class="form-control" required>
-                    <small id="error-tugas_nama" class="error-text form-text text-danger"></small>
+                <div class="alert alert-danger">
+                    <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
+                    Data tugas yang anda cari tidak ditemukan
                 </div>
-
-                <!-- Pembuat -->
+                <a href="{{ url('/tugaskompen') }}" class="btn btn-warning">Kembali</a>
+            </div>
+        </div>
+    </div>
+@else
+    <form action="{{ url('/tugaskompen/' . $tugas->tugas_id . '/update_ajax') }}" method="POST" id="form-edit-tugas" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <div id="modal-master" class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Data Tugas Kompensasi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Nama Tugas</label>
+                        <input value="{{ $tugas->tugas_nama }}" type="text" name="tugas_nama" id="tugas_nama" class="form-control" required>
+                        <small id="error-tugas_nama" class="error-text form-text text-danger"></small>
+                    </div>
+                    <!-- Pembuat -->
                 <div class="form-group">
                     <label>Pembuat</label>
                     <select name="tugas_pembuat_id" id="tugas_pembuat_id" class="form-control" required>
                         <option value="">-- Pilih Pembuat --</option>
                     </select>
                     <small id="error-tugas_pembuat_id" class="error-text form-text text-danger"></small>
-                </div>
-
-                <!-- Deskripsi -->
-                <div class="form-group">
-                    <label>Deskripsi</label>
-                    <textarea name="tugas_desc" id="tugas_desc" class="form-control" rows="3" required></textarea>
-                    <small id="error-tugas_desc" class="error-text form-text text-danger"></small>
-                </div>
-
-                <!-- Kuota & Bobot -->
+                </div>                    <div class="form-group">
+                        <label>Deskripsi Tugas</label>
+                        <textarea name="tugas_desc" id="tugas_desc" class="form-control" rows="4" required>{{ $tugas->tugas_desc }}</textarea>
+                        <small id="error-tugas_desc" class="error-text form-text text-danger"></small>
+                    </div>
+                    <!-- Kuota & Bobot -->
                 <div class="form-group row">
                     <div class="col-md-6">
                         <label>Kuota</label>
-                        <input type="number" name="kuota" id="kuota" class="form-control" required>
+                        <input value="{{ $tugas->kuota }}" type="number" name="kuota" id="kuota" class="form-control" required>
                         <small id="error-kuota" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="col-md-6">
                         <label>Bobot</label>
-                        <input type="number" name="tugas_bobot" id="tugas_bobot" class="form-control" required>
+                        <input value="{{ $tugas->tugas_bobot }}" type="number" name="tugas_bobot" id="tugas_bobot" class="form-control" required>
                         <small id="error-tugas_bobot" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
-
-                <!-- Jenis Tugas & Tanggal Deadline -->
+                    <!-- Jenis Tugas & Tanggal Deadline -->
                 <div class="form-group row">
                     <div class="col-md-6">
                         <label>Jenis Tugas</label>
                         <select name="jenis_id" id="jenis_id" class="form-control" required>
-                            <option value="">-- Pilih Jenis Tugas --</option>
+                            <option value="">- Pilih Jenis Tugas -</option>
+                            @foreach($jenisTugas as $jenis)
+                                <option {{ $tugas->jenis_id == $jenis->jenis_id ? 'selected' : '' }} value="{{ $jenis->jenis_id }}">
+                                    {{ $jenis->jenis_nama }}
+                                </option>
+                            @endforeach
                         </select>
                         <small id="error-jenis_id" class="error-text form-text text-danger"></small>
                     </div>
                     <div class="col-md-6">
-                        <label>Tgl. Ditutup</label>
-                        <input type="text" name="tugas_tgl_deadline" id="tugas_tgl_deadline" class="form-control" required>
+                        <label>Tanggal Deadline</label>
+                        <input type="text" name="tugas_tgl_deadline" id="tugas_tgl_deadline" class="form-control" value="{{ old('tugas_tgl_deadline', $tugas->tugas_tgl_deadline) }}" required>
                         <small id="error-tugas_tgl_deadline" class="error-text form-text text-danger"></small>
                     </div>
                 </div>
-
-                <!-- Kompetensi (Tags) -->
+                    <!-- Kompetensi (Tags) -->
                 <div class="form-group">
                     <label>Kompetensi</label>
                     <select name="kompetensi[]" id="kompetensi" class="form-control" multiple="multiple" required>
-                        <!-- Kompetensi options will be added dynamically -->
+                        @foreach($kompetensi as $kompet)
+                            <option value="{{ $kompet->kompetensi_id }}" {{ in_array($kompet->kompetensi_id, $tugas->kompetensi->pluck('kompetensi_id')->toArray()) ? 'selected' : '' }}>
+                                {{ $kompet->kompetensi_nama }}
+                            </option>
+                        @endforeach
                     </select>
                     <small id="error-kompetensi" class="error-text form-text text-danger"></small>
                 </div>
-
-                <!-- File -->
-                <div class="form-group">
-                    <label>File (JPG, PNG, PDF, DOC, DOCX, XLSX, PPT, MP4, AVI, DLL)</label>
-                    <input type="file" name="tugas_file" id="tugas_file" class="form-control">
-                    <small id="error-tugas_file" class="error-text form-text text-danger"></small>
-                </div>                
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                    <div class="form-group">
+                        <label>File Tugas</label>
+                        <input type="file" name="tugas_file" id="tugas_file" class="form-control">
+                        <!-- Jika file sudah ada, tampilkan nama file yang ada -->
+                        @if($tugas->tugas_file)
+                        <small>File Saat Ini: {{ $tugas->tugas_file }}</small>
+                        @endif
+                        <small id="error-tugas_file" class="error-text form-text text-danger"></small>
+                        @if($tugas->tugas_file)
+                            <a href="{{ asset('storage/' . $tugas->tugas_file) }}" target="_blank" class="d-block mt-2">Lihat file saat ini</a>
+                        @endif
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                </div>
             </div>
         </div>
-    </div>
-</form>
-
-<script>
-$(document).ready(function () {
-    // Initialize Choices.js for Pembuat
+    </form>
+    <script>
+        // Initialize Choices.js for Pembuat
     const pembuatData = @json($pembuat);
     const pembuatSelect = new Choices('#tugas_pembuat_id', {
         removeItemButton: true,
@@ -154,7 +178,7 @@ $(document).ready(function () {
     );
 
     // Form Validation and Submission
-    $("#form-tambah-tugas").validate({
+    $("#form-edit-tugas").validate({
         rules: {
             tugas_file: {
                 required: false,
@@ -186,36 +210,28 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     if (response.status) {
-                        $('#modal-tugas').modal('hide');
+                        $('#modal-master').modal('hide');
                         Swal.fire({
                             icon: 'success',
-                            title: 'Berhasil',
-                            text: response.message
+                            title: response.message
+                        }).then(function () {
+                            location.reload();
                         });
-                        dataTugasKompen.ajax.reload();
                     } else {
-                        if (response.msgField) {
-                            $.each(response.msgField, function (prefix, val) {
-                                $('#error-' + prefix).text(val[0]);
-                            });
-                        }
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Terjadi Kesalahan',
-                            text: response.message
+                        $.each(response.errors, function (key, value) {
+                            $('#' + key + '-error').text(value);
                         });
                     }
                 },
                 error: function () {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Gagal',
-                        text: 'Terjadi kesalahan saat menyimpan data.'
+                        title: 'Terjadi Kesalahan',
+                        text: 'Tidak dapat menyimpan data.'
                     });
                 }
             });
-            return false;
         }
     });
-});
-</script>
+    </script>
+@endempty
