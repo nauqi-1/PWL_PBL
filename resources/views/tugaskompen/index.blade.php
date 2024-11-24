@@ -8,7 +8,7 @@
             <button onclick="modalAction('{{ url('tugaskompen/import') }}')" class="btn btn-info">Import Tugas</button>
             <a href="{{ url('/tugaskompen/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
             <a href="{{ url('/tugaskompen/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
-            <button onclick="modalAction('{{ url('/tugaskompen/create_ajax') }}')" class="btn btn-sm btn-success mt-1">Tambah Ajax</button>
+            <button onclick="modalAction('{{ url('/tugaskompen/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i>Tambah</button>
         </div>
     </div>
     <div class="card-body">
