@@ -6,6 +6,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\TendikController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TugasKompenController;
 use App\Http\Controllers\WelcomeController;
@@ -72,6 +73,28 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/import_ajax', [KompetensiController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [KompetensiController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [KompetensiController::class, 'export_pdf']); //export pdf
+
+
+    });
+    Route::group(['prefix' => 'periode', 'middleware' => 'authorize:ADM'], function () {
+        Route::get('/', [PeriodeController::class, 'index']); //Menampilkan laman awal Kompetensi
+        Route::post('/list', [PeriodeController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.
+
+        Route::get('/create_ajax', [PeriodeController::class, 'create_ajax']); //Buat data Kompetensi w ajax
+        Route::post('/ajax', [PeriodeController::class, 'store_ajax']); //menyimpan data Kompetensi baru w ajax
+
+        Route::get('/{id}/show_ajax', [PeriodeController::class, 'show_ajax']);
+
+        Route::get('/{id}/edit_ajax', [PeriodeController::class, 'edit_ajax']); //edit data Kompetensi dengan ajax
+        Route::put('/{id}/update_ajax', [PeriodeController::class, 'update_ajax']); //menyimpan perubahan data dengan ajax
+
+        Route::get('/{id}/delete_ajax', [PeriodeController::class, 'confirm_ajax']); //Munculkan pop up konfirmasi delete dengan ajax
+        Route::delete('/{id}/delete_ajax', [PeriodeController::class, 'delete_ajax']); //Menghapus data user dengan ajax
+
+        Route::get('/import', [PeriodeController::class, 'import']); //import excel
+        Route::post('/import_ajax', [PeriodeController::class, 'import_ajax']); //import excel dengan ajax
+        Route::get('/export_excel', [PeriodeController::class, 'export_excel']); //export excel
+        Route::get('/export_pdf', [PeriodeController::class, 'export_pdf']); //export pdf
 
 
     });

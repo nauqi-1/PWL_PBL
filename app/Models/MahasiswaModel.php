@@ -19,8 +19,7 @@ class MahasiswaModel extends Model
         'mahasiswa_nim', 
         'mahasiswa_prodi', 
         'mahasiswa_noHp',
-        'mahasiswa_alfa_sisa',
-        'mahasiswa_alfa_total',
+        'mahasiswa_alfa_lunas',
         'user_id',
         'created_at', 'updated_at'
 
@@ -40,4 +39,8 @@ class MahasiswaModel extends Model
     {
         return $this->belongsToMany(PengumpulanModel::class, 't_pengumpulan_mahasiswa', 'mahasiswa_id', 'pengumpulan_id');
     }
+
+    public function mahasiswa_alfa() {
+        return $this->hasMany(MahasiswaAlfaModel::class, 'mahasiswa_id','mahasiswa_id');
+    } 
 }

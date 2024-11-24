@@ -41,13 +41,8 @@
                 <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>Jam alfa lunas</label>
-                    <input value="" type="number" name="mahasiswa_alfa_sisa" id="mahasiswa_alfa_sisa" class="form-control" required>
-                    <small id="error-mahasiswa_alfa_sisa" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Jam alfa total</label>
-                    <input value="" type="number" name="mahasiswa_alfa_total" id="mahasiswa_alfa_total" class="form-control" required>
-                    <small id="error-mahasiswa_alfa_total" class="error-text form-text text-danger"></small>
+                    <input value="" type="number" name="mahasiswa_alfa_lunas" id="mahasiswa_alfa_lunas" class="form-control" required>
+                    <small id="error-mahasiswa_alfa_lunas" class="error-text form-text text-danger"></small>
                 </div>
                 </div>
                 <hr>
@@ -76,12 +71,11 @@
             rules: {
                 
                 mahasiswa_nama: { required: true, maxlength: 100 },
-                mahasiswa_nim: { required: true, maxlength: 50 },
+                mahasiswa_nim: { number, required: true, maxlength: 50 },
                 mahasiswa_kelas: { required: true, minlength: 2, maxlength: 2 },
                 mahasiswa_prodi: { required: true, minlength: 2, maxlength: 10 },
-                mahasiswa_noHp: { required: true, maxlength: 20 },
-                mahasiswa_alfa_sisa: { required: true, maxlength: 100 },
-                mahasiswa_alfa_total: { required: true, maxlength: 100 },
+                mahasiswa_noHp: { number, required: true, maxlength: 20 },
+                mahasiswa_alfa_lunas: { required: true, maxlength: 100 },
                 username: {required: true, maxlength: 100 },
                 password: {required: true, minlength: 6, maxlength: 100 },
 

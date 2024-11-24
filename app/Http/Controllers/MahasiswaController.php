@@ -41,8 +41,7 @@ class MahasiswaController extends Controller
             'mahasiswa_nim',
             'mahasiswa_prodi',
             'mahasiswa_noHp',
-            'mahasiswa_alfa_sisa',
-            'mahasiswa_alfa_total',
+            'mahasiswa_alfa_lunas',
             'user_id'
 
         ) -> with('user');
@@ -86,11 +85,10 @@ class MahasiswaController extends Controller
                 'password'              => 'required|string|min:6|max:100',
                 'mahasiswa_nama'        => 'required|string|max:100',
                 'mahasiswa_kelas'       => 'required|string|max:50',
-                'mahasiswa_nim'         => 'required|string|unique:m_mahasiswa,mahasiswa_nim|max:50',
+                'mahasiswa_nim'         => 'required|digits|unique:m_mahasiswa,mahasiswa_nim|max:50|regex:/^\d+$/',
                 'mahasiswa_prodi'       => 'required|string|max:50',
-                'mahasiswa_noHp'        => 'required|string|max:50',
-                'mahasiswa_alfa_sisa'   => 'required|integer',
-                'mahasiswa_alfa_total'  => 'required|integer',
+                'mahasiswa_noHp'        => 'required|string|max:50|regex:/^\d+$/',
+                'mahasiswa_alfa_lunas'   => 'required|integer',
             ];
     
             $validator = Validator::make($request->all(), $rules);
@@ -116,8 +114,7 @@ class MahasiswaController extends Controller
             $mahasiswa->mahasiswa_nim = $request->input('mahasiswa_nim');
             $mahasiswa->mahasiswa_prodi = $request->input('mahasiswa_prodi');
             $mahasiswa->mahasiswa_noHp = $request->input('mahasiswa_noHp');
-            $mahasiswa->mahasiswa_alfa_sisa = $request->input('mahasiswa_alfa_sisa');
-            $mahasiswa->mahasiswa_alfa_total = $request->input('mahasiswa_alfa_total');
+            $mahasiswa->mahasiswa_alfa_lunas = $request->input('mahasiswa_alfa_lunas');
             $mahasiswa->save();
     
             return response()->json([
@@ -147,8 +144,8 @@ class MahasiswaController extends Controller
                 'mahasiswa_nim'         => 'nullable|string|unique:m_mahasiswa,mahasiswa_nim,' . $id . ',mahasiswa_id|max:50', // Allow existing NIM for the same mahasiswa
                 'mahasiswa_prodi'       => 'required|string|max:50',
                 'mahasiswa_noHp'        => 'required|string|max:50',
-                'mahasiswa_alfa_sisa'   => 'required|integer',
-                'mahasiswa_alfa_total'  => 'required|integer',
+                'mahasiswa_alfa_lunas'   => 'required|integer',
+
             ];
     
             $validator = Validator::make($request->all(), $rules);
@@ -170,8 +167,7 @@ class MahasiswaController extends Controller
                     'mahasiswa_kelas'       => $request->mahasiswa_kelas,
                     'mahasiswa_prodi'       => $request->mahasiswa_prodi,
                     'mahasiswa_noHp'        => $request->mahasiswa_noHp,
-                    'mahasiswa_alfa_sisa'   => $request->mahasiswa_alfa_sisa,
-                    'mahasiswa_alfa_total'  => $request->mahasiswa_alfa_total,
+                    'mahasiswa_alfa_lunas'   => $request->mahasiswa_alfa_lunas,
                 ]);
                 //update usernya
                 $user = UserModel::find($mahasiswa->user_id);
@@ -297,8 +293,7 @@ class MahasiswaController extends Controller
                                 'mahasiswa_kelas'      => $value['C'], 
                                 'mahasiswa_prodi'      => $value['D'], 
                                 'mahasiswa_noHp'       => $value['E'], 
-                                'mahasiswa_alfa_sisa'  => $value['F'], 
-                                'mahasiswa_alfa_total' => $value['G'], 
+                                'mahasiswa_alfa_lunas'  => $value['F'], 
                                 'user_id'              => $user->user_id, // Foreign key user
                                 'created_at'           => now(),
                             ]);
