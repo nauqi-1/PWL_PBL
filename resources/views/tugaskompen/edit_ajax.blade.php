@@ -80,17 +80,21 @@
                     </div>
                 </div>
                     <!-- Kompetensi (Tags) -->
-                <div class="form-group">
-                    <label>Kompetensi</label>
-                    <select name="kompetensi[]" id="kompetensi" class="form-control" multiple="multiple" required>
-                        @foreach($kompetensi as $kompet)
-                            <option value="{{ $kompet->kompetensi_id }}" {{ in_array($kompet->kompetensi_id, $tugas->kompetensi->pluck('kompetensi_id')->toArray()) ? 'selected' : '' }}>
-                                {{ $kompet->kompetensi_nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <small id="error-kompetensi" class="error-text form-text text-danger"></small>
-                </div>
+                    <div class="form-group">
+                        <label>Kompetensi</label>
+                        <select name="kompetensi[]" id="kompetensi" class="form-control" multiple="multiple" required>
+                            <!-- Loop through all available kompetensi -->
+                            @foreach($kompetensi as $k)
+                                <option value="{{ $k->kompetensi_id }}" 
+                                    @if(in_array($k->kompetensi_id, $tugas->kompetensi->pluck('kompetensi_id')->toArray())) 
+                                        selected 
+                                    @endif>
+                                    {{ $k->kompetensi_nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small id="error-kompetensi" class="error-text form-text text-danger"></small>
+                    </div>
                     <div class="form-group">
                         <label>File Tugas</label>
                         <input type="file" name="tugas_file" id="tugas_file" class="form-control">
@@ -112,7 +116,7 @@
         </div>
     </form>
     <script>
-        // Initialize Choices.js for Pembuat
+       (function() {
     const pembuatData = @json($pembuat);
     const pembuatSelect = new Choices('#tugas_pembuat_id', {
         removeItemButton: true,
@@ -131,7 +135,7 @@
         true
     );
 
-    // Initialize Choices.js for Kompetensi
+    // Initialize Kompetensi Choices
     const kompetensiData = @json($kompetensi);
     const kompetensiSelect = new Choices('#kompetensi', {
         removeItemButton: true,
@@ -150,7 +154,7 @@
         true
     );
 
-    // Initialize Flatpickr for Deadline Date
+    // Flatpickr Initialization
     flatpickr("#tugas_tgl_deadline", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
@@ -158,7 +162,7 @@
         allowInput: false
     });
 
-    // Initialize Choices.js for Jenis Tugas
+    // Jenis Tugas Choices Initialization
     const jenisTugasData = @json($jenisTugas);
     const jenisTugasSelect = new Choices('#jenis_id', {
         removeItemButton: true,
@@ -177,7 +181,7 @@
         true
     );
 
-    // Form Validation and Submission
+    // Form Validation
     $("#form-edit-tugas").validate({
         rules: {
             tugas_file: {
@@ -198,32 +202,32 @@
                 extension: "File harus memiliki format yang valid (PDF, DOCX, JPG, PNG, dll)."
             }
         },
-        submitHandler: function (form) {
+        submitHandler: function(form) {
             $.ajax({
                 url: form.action,
                 type: form.method,
                 data: new FormData(form),
                 processData: false,
                 contentType: false,
-                beforeSend: function () {
+                beforeSend: function() {
                     $('.error-text').text('');
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.status) {
                         $('#modal-master').modal('hide');
                         Swal.fire({
                             icon: 'success',
-                            title: response.message
-                        }).then(function () {
-                            location.reload();
+                            title: 'Berhasil',
+                            text: response.message
                         });
+                        dataTugasKompen.ajax.reload();
                     } else {
-                        $.each(response.errors, function (key, value) {
+                        $.each(response.errors, function(key, value) {
                             $('#' + key + '-error').text(value);
                         });
                     }
                 },
-                error: function () {
+                error: function() {
                     Swal.fire({
                         icon: 'error',
                         title: 'Terjadi Kesalahan',
@@ -231,7 +235,20 @@
                     });
                 }
             });
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function(element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
         }
     });
+})();
+
     </script>
 @endempty
