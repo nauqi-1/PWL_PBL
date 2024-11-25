@@ -93,9 +93,9 @@
             @endif
             <li class="nav-header">Data Transaksional</li>
             <li class="nav-item">
-                <a href="{{ url('/stok') }}" class="nav-link {{ ($activeMenu == 'stok') ? 'active' : '' }}">
+                <a href="{{ url('/mahasiswa_alfa') }}" class="nav-link {{ ($activeMenu == 'mahasiswa_alfa') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-cubes"></i>
-                    <p>Stok Barang</p>
+                    <p>Data Alfa Periodik</p>
                 </a>
             </li>
             <li class="nav-item">

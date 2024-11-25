@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\TendikController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\MahasiswaAlfaController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\UserController;
@@ -141,6 +142,26 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/import_ajax', [AdminController::class, 'import_ajax']); 
         Route::get('/export_excel', [AdminController::class, 'export_excel']); 
         Route::get('/export_pdf', [AdminController::class, 'export_pdf']); 
+    });
+    Route::group(['prefix' => 'mahasiswa_alfa', 'middleware' => 'authorize:ADM'], function () {
+        Route::get('/', [MahasiswaAlfaController::class, 'index']); 
+        Route::post('/list', [MahasiswaAlfaController::class, 'list']);  
+
+        Route::get('/create_ajax', [MahasiswaAlfaController::class, 'create_ajax']); 
+        Route::post('/ajax', [MahasiswaAlfaController::class, 'store_ajax']); 
+
+        Route::get('/{id}/show_ajax', [MahasiswaAlfaController::class, 'show_ajax']);
+
+        Route::get('/{id}/edit_ajax', [MahasiswaAlfaController::class, 'edit_ajax']); 
+        Route::put('/{id}/update_ajax', [MahasiswaAlfaController::class, 'update_ajax']); 
+
+        Route::get('/{id}/delete_ajax', [MahasiswaAlfaController::class, 'confirm_ajax']); 
+        Route::delete('/{id}/delete_ajax', [MahasiswaAlfaController::class, 'delete_ajax']); 
+
+        Route::get('/import', [MahasiswaAlfaController::class, 'import']); 
+        Route::post('/import_ajax', [MahasiswaAlfaController::class, 'import_ajax']); 
+        Route::get('/export_excel', [MahasiswaAlfaController::class, 'export_excel']); 
+        Route::get('/export_pdf', [MahasiswaAlfaController::class, 'export_pdf']); 
     });
 
     Route::group(['prefix' => 'dosen', 'middleware' => 'authorize:ADM'], function () {
