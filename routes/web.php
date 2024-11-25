@@ -11,6 +11,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TugasKompenController;
+use App\Http\Controllers\TugasJenisController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -124,44 +125,44 @@ Route::middleware(['auth'])->group(function () {
 
     });
     Route::group(['prefix' => 'admin', 'middleware' => 'authorize:ADM'], function () {
-        Route::get('/', [AdminController::class, 'index']); 
-        Route::post('/list', [AdminController::class, 'list']);  
+        Route::get('/', [AdminController::class, 'index']);
+        Route::post('/list', [AdminController::class, 'list']);
 
-        Route::get('/create_ajax', [AdminController::class, 'create_ajax']); 
-        Route::post('/ajax', [AdminController::class, 'store_ajax']); 
+        Route::get('/create_ajax', [AdminController::class, 'create_ajax']);
+        Route::post('/ajax', [AdminController::class, 'store_ajax']);
 
         Route::get('/{id}/show_ajax', [AdminController::class, 'show_ajax']);
 
-        Route::get('/{id}/edit_ajax', [AdminController::class, 'edit_ajax']); 
-        Route::put('/{id}/update_ajax', [AdminController::class, 'update_ajax']); 
+        Route::get('/{id}/edit_ajax', [AdminController::class, 'edit_ajax']);
+        Route::put('/{id}/update_ajax', [AdminController::class, 'update_ajax']);
 
-        Route::get('/{id}/delete_ajax', [AdminController::class, 'confirm_ajax']); 
-        Route::delete('/{id}/delete_ajax', [AdminController::class, 'delete_ajax']); 
+        Route::get('/{id}/delete_ajax', [AdminController::class, 'confirm_ajax']);
+        Route::delete('/{id}/delete_ajax', [AdminController::class, 'delete_ajax']);
 
-        Route::get('/import', [AdminController::class, 'import']); 
-        Route::post('/import_ajax', [AdminController::class, 'import_ajax']); 
-        Route::get('/export_excel', [AdminController::class, 'export_excel']); 
-        Route::get('/export_pdf', [AdminController::class, 'export_pdf']); 
+        Route::get('/import', [AdminController::class, 'import']);
+        Route::post('/import_ajax', [AdminController::class, 'import_ajax']);
+        Route::get('/export_excel', [AdminController::class, 'export_excel']);
+        Route::get('/export_pdf', [AdminController::class, 'export_pdf']);
     });
     Route::group(['prefix' => 'mahasiswa_alfa', 'middleware' => 'authorize:ADM'], function () {
-        Route::get('/', [MahasiswaAlfaController::class, 'index']); 
-        Route::post('/list', [MahasiswaAlfaController::class, 'list']);  
+        Route::get('/', [MahasiswaAlfaController::class, 'index']);
+        Route::post('/list', [MahasiswaAlfaController::class, 'list']);
 
-        Route::get('/create_ajax', [MahasiswaAlfaController::class, 'create_ajax']); 
-        Route::post('/ajax', [MahasiswaAlfaController::class, 'store_ajax']); 
+        Route::get('/create_ajax', [MahasiswaAlfaController::class, 'create_ajax']);
+        Route::post('/ajax', [MahasiswaAlfaController::class, 'store_ajax']);
 
         Route::get('/{id}/show_ajax', [MahasiswaAlfaController::class, 'show_ajax']);
 
-        Route::get('/{id}/edit_ajax', [MahasiswaAlfaController::class, 'edit_ajax']); 
-        Route::put('/{id}/update_ajax', [MahasiswaAlfaController::class, 'update_ajax']); 
+        Route::get('/{id}/edit_ajax', [MahasiswaAlfaController::class, 'edit_ajax']);
+        Route::put('/{id}/update_ajax', [MahasiswaAlfaController::class, 'update_ajax']);
 
-        Route::get('/{id}/delete_ajax', [MahasiswaAlfaController::class, 'confirm_ajax']); 
-        Route::delete('/{id}/delete_ajax', [MahasiswaAlfaController::class, 'delete_ajax']); 
+        Route::get('/{id}/delete_ajax', [MahasiswaAlfaController::class, 'confirm_ajax']);
+        Route::delete('/{id}/delete_ajax', [MahasiswaAlfaController::class, 'delete_ajax']);
 
-        Route::get('/import', [MahasiswaAlfaController::class, 'import']); 
-        Route::post('/import_ajax', [MahasiswaAlfaController::class, 'import_ajax']); 
-        Route::get('/export_excel', [MahasiswaAlfaController::class, 'export_excel']); 
-        Route::get('/export_pdf', [MahasiswaAlfaController::class, 'export_pdf']); 
+        Route::get('/import', [MahasiswaAlfaController::class, 'import']);
+        Route::post('/import_ajax', [MahasiswaAlfaController::class, 'import_ajax']);
+        Route::get('/export_excel', [MahasiswaAlfaController::class, 'export_excel']);
+        Route::get('/export_pdf', [MahasiswaAlfaController::class, 'export_pdf']);
     });
 
     Route::group(['prefix' => 'dosen', 'middleware' => 'authorize:ADM'], function () {
@@ -185,30 +186,30 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export_pdf', [DosenController::class, 'export_pdf']); //export pdf
     });
 
-    Route::group(['prefix' => 'tendik','middleware' => 'authorize:ADM'], function() { 
+    Route::group(['prefix' => 'tendik', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [TendikController::class, 'index']); //Menampilkan laman awal tendik
         Route::post('/list', [TendikController::class, 'list']); //menampilkan data tendik dalam bentuk json untuk datatables.
 
         Route::get('/create_ajax', [TendikController::class, 'create_ajax']); //Buat data tendik w ajax
         Route::post('/ajax', [TendikController::class, 'store_ajax']); //menyimpan data tendik baru w ajax
-    
+
         Route::get('/{id}/show_ajax', [TendikController::class, 'show_ajax']);
-    
+
         Route::get('/{id}/edit_ajax', [TendikController::class, 'edit_ajax']); //edit data tendik dengan ajax
         Route::put('/{id}/update_ajax', [TendikController::class, 'update_ajax']); //menyimpan perubahan data dengan ajax
-    
+
         Route::get('/{id}/delete_ajax', [TendikController::class, 'confirm_ajax']); //Munculkan pop up konfirmasi delete dengan ajax
         Route::delete('/{id}/delete_ajax', [TendikController::class, 'delete_ajax']); //Menghapus data tendik dengan ajax
-    
+
         Route::get('/import', [TendikController::class, 'import']); //import excel
         Route::post('/import_ajax', [TendikController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [TendikController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [TendikController::class, 'export_pdf']); //export pdf
-    
 
-    } );
 
-    Route::group(['prefix' => 'user','middleware' => 'authorize:ADM'], function() { 
+    });
+
+    Route::group(['prefix' => 'user', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [UserController::class, 'index']); //Menampilkan laman awal User
         Route::post('/list', [UserController::class, 'list']); //menampilkan data User dalam bentuk json untuk datatables.
 
@@ -255,6 +256,31 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/import_ajax', [TugasKompenController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [TugasKompenController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [TugasKompenController::class, 'export_pdf']); //export pdf
+
+
+    });
+    Route::group(['prefix' => 'tugasjenis', 'middleware' => 'authorize:ADM'], function () {
+        Route::get('/', [TugasJenisController::class, 'index']); //Menampilkan laman awal TugasJenis
+        Route::post('/list', [TugasJenisController::class, 'list']); //menampilkan data TugasJenis dalam bentuk json untuk datatables.
+
+        Route::get('/create_ajax', [TugasJenisController::class, 'create_ajax']); //Buat data TugasJenis w ajax
+        Route::post('/store_ajax', [TugasJenisController::class, 'store_ajax']); //menyimpan data TugasJenis baru w ajax
+
+        Route::get('/create_detail_ajax', [TugasJenisController::class, 'create_detail_ajax']); //buat data detail TugasJenis baru w ajax
+        Route::post('/store_detail_ajax', [TugasJenisController::class, 'store_detail_ajax']); //menyimpan data TugasJenis baru w ajax
+
+        Route::get('/{id}/show_ajax', [TugasJenisController::class, 'show_ajax']);
+
+        Route::get('/{id}/edit_ajax', [TugasJenisController::class, 'edit_ajax']); //edit data 
+        Route::put('/{id}/update_ajax', [TugasJenisController::class, 'update_ajax']); //simpan data 
+
+        Route::get('/{id}/delete_ajax', [TugasJenisController::class, 'confirm_ajax']); //Munculkan pop up konfirmasi delete dengan ajax
+        Route::delete('/{id}/delete_ajax', [TugasJenisController::class, 'delete_ajax']); //Menghapus data TugasJenis dengan ajax
+
+        Route::get('/import', [TugasJenisController::class, 'import']); //import excel
+        Route::post('/import_ajax', [TugasJenisController::class, 'import_ajax']); //import excel dengan ajax
+        Route::get('/export_excel', [TugasJenisController::class, 'export_excel']); //export excel
+        Route::get('/export_pdf', [TugasJenisController::class, 'export_pdf']); //export pdf
 
 
     });

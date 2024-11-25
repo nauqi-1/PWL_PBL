@@ -29,11 +29,6 @@ class MahasiswaAlfaSeeder extends Seeder
                 'mahasiswa_id'  => 1,
                 'jumlah_alfa'   => 6
             ],
-            [
-                'periode_id'    => 7,
-                'mahasiswa_id'  => 17,
-                'jumlah_alfa'   => 3
-            ],
 
         ];
 

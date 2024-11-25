@@ -67,7 +67,7 @@
 </li>
 
             <li class="nav-item">
-                <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'jenistugas') ? 'active' : '' }}">
+                <a href="{{ url('/tugasjenis') }}" class="nav-link {{ ($activeMenu == 'jenistugas') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-user"></i>
                     <p>Jenis Tugas</p>
                 </a>
