@@ -85,7 +85,8 @@ class UserModel extends Authenticatable implements JWTSubject
             return $this->admin->admin_nama;
         } elseif ($this->tendik) {
             return $this->tendik->tendik_nama;
+        } else {
+            return '-';
         }
-        return 'Unknown';
     }
 }

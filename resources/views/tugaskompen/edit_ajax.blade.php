@@ -38,7 +38,7 @@
                 <div class="form-group">
                     <label>Pembuat</label>
                     <select name="tugas_pembuat_id" id="tugas_pembuat_id" class="form-control" required>
-                        <option value="">-- Pilih Pembuat --</option>
+                        <option value="{{ $tugas->tugas_pembuat_id}}">{{$tugas->tugas_pembuat_id->user->}}</option>
                     </select>
                     <small id="error-tugas_pembuat_id" class="error-text form-text text-danger"></small>
                 </div>                    <div class="form-group">

@@ -115,4 +115,30 @@ class PeriodeController extends Controller
     return redirect('/');
     }
 
+    public function confirm_ajax(string $id) {
+        $periode = PeriodeModel::find($id);
+
+        return view('periode.confirm_ajax', ['periode' => $periode]);
+    } 
+
+    public function delete_ajax(Request $request, $id) {
+        if ($request -> ajax() || $request -> wantsJson()) {
+            $periode = PeriodeModel::find($id);
+
+            if ($periode) {
+                $periode->delete();
+                return response() -> json([
+                    'status' => true,
+                    'message' => 'Data berhasil dihapus!'
+                ]);
+            } else {
+                return response() -> json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan!'
+                ]);
+            }
+        }
+        return redirect('/');
+    }
+
 }

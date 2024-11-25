@@ -1,61 +1,40 @@
-<form action="{{ url('/mahasiswa/ajax') }}" method="POST" id="form-tambah">
+<form action="{{ url('/mahasiswa_alfa/ajax') }}" method="POST" id="form-tambah">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Mahasiswa</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Alfa Mahasiswa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label>Mahasiswa</label>
+                    <select name="mahasiswa_id" id="mahasiswa_id" class="form-control" required>
+                        <option value="">- Pilih Mahasiswa -</option>
+                        @foreach($mahasiswa as $l)
+                            <option value="{{ $l->mahasiswa_id }}">{{ $l->mahasiswa_nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-mahasiswa_id" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group">
+                    <label>Periode</label>
+                    <select name="periode_id" id="periode_id" class="form-control" required>
+                        <option value="">- Pilih Periode -</option>
+                        @foreach($periode as $l)
+                            <option value="{{ $l->periode_id }}">{{ $l->periode }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-periode_id" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah Alfa</label>
+                    <input value="0" type="text" name="jumlah_alfa" id="jumlah_alfa" class="form-control" required>
+                    <small id="error-jumlah_alfa" class="error-text form-text text-danger"></small>
+                </div>
                 
-                <div class="form-group">
-                    <label>NIM</label>
-                    <input value="" type="text" name="mahasiswa_nim" id="mahasiswa_nim" class="form-control" required>
-                    <small id="error-mahasiswa_nama" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group">
-                    <label>Nama</label>
-                    <input value="" type="text" name="mahasiswa_nama" id="mahasiswa_nama" class="form-control" required>
-                    <small id="error-mahasiswa_nama" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Kelas</label>
-                    <input value="" type="text" name="mahasiswa_kelas" id="mahasiswa_kelas" class="form-control" required>
-                    <small class="form-text text-muted">Contoh: 1A, 2B, 3C</small>
-                    <small id="error-mahasiswa_nama" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Program Studi</label>
-                    <input value="" type="text" name="mahasiswa_prodi" id="mahasiswa_prodi" class="form-control" required>
-                    <small id="error-mahasiswa_prodi" class="error-text form-text text-danger"></small>
-                </div>
-                </div>
-                <div class="form-group">
-                    <label>Nomor HP</label>
-                    <input value="" type="text" name="mahasiswa_noHp" id="mahasiswa_noHp" class="form-control" required>
-                    <small id="error-mahasiswa_noHp" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Jam alfa lunas</label>
-                    <input value="0" type="number" name="mahasiswa_alfa_lunas" id="mahasiswa_alfa_lunas" class="form-control" required>
-                    <small id="error-mahasiswa_alfa_lunas" class="error-text form-text text-danger"></small>
-                </div>
-                </div>
-                <hr>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input value="" type="text" name="username" id="username" class="form-control" required>
-                    <small id="error-username" class="error-text form-text text-danger"></small>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input value="" type="password" name="password" id="password" class="form-control" required>
-                    <small id="error-password" class="error-text form-text text-danger"></small>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
@@ -70,58 +49,24 @@
         $("#form-tambah").validate({
             rules: {
                 
-                mahasiswa_nama: { required: true, maxlength: 100 },
-                mahasiswa_nim: {required: true,  minlength: 10 ,maxlength: 13, digits:true},
-                mahasiswa_kelas: { required: true, minlength: 2, maxlength: 2 },
-                mahasiswa_prodi: { required: true, minlength: 2, maxlength: 10 },
-                mahasiswa_noHp: {required: true, minlength:10, maxlength: 13, digits:true },
-                mahasiswa_alfa_lunas: { required: true, maxlength: 100 },
-                username: {required: true, maxlength: 100 },
-                password: {required: true, minlength: 6, maxlength: 100 },
+                mahasiswa_id: { required: true },
+                periode_id: { required: true },
+                jumlah_alfa: {required: true, digits:true}
 
                 
             },
             messages : {
-                mahasiswa_nama : {
-                    required: "Nama harus diisi.",
-                    maxlength: "Data yang diisi tidak melebih 100 karakter."
+                mahasiswa_id : {
+                    required: "Kolom ini harus diisi.",
                 },
-                mahasiswa_nim: {
+                periode_id: {
                     required: "NIM harus diisi.",
-                    minlength: "NIM minimal 10 karakter.",
-                    maxlength: "NIM maksimal 13 karakter.",
-                    digits: "NIM harus berupa angka saja (0-9)."
                 },
-                mahasiswa_kelas: {
+                jumlah_alfa: {
                     required: "Kelas harus diisi.",
-                    minlength: "Kelas hanya terdiri dari 2 karakter.",
-                    maxlength: "Kelas hanya terdiri dari 2 karakter."
+                    digits: "Kolom ini hanya menerima angka (0-9)"
                 },
-                mahasiswa_prodi: {
-                    required: "Program studi harus diisi.",
-                    minlength: "Program studi minimal 2 karakter.",
-                    maxlength: "Program studi maksimal 10 karakter."
-                },
-                mahasiswa_noHp: {
-                    required: "Nomor HP harus diisi.",
-                    minlength: "Nomor HP minimal 10 karakter.",
-                    maxlength: "Nomor HP maksimal 13 karakter.",
-                    digits: "Nomor HP harus berupa angka saja."
-                },
-                mahasiswa_alfa_lunas: {
-                    required: "Jumlah alfa lunas harus diisi.",
-                    maxlength: "Jumlah alfa lunas maksimal 100 karakter.",
-                    digits: "Jumlah alfa lunas harus berupa angka saja."
-                },
-                username: {
-                    required: "Username harus diisi.",
-                    maxlength: "Username maksimal 100 karakter."
-                },
-                password: {
-                    required: "Password harus diisi.",
-                    minlength: "Password minimal 6 karakter.",
-                    maxlength: "Password maksimal 100 karakter."
-                }
+                
             },
             submitHandler: function(form) {
                 $.ajax({
@@ -136,7 +81,7 @@
                                 title: 'Berhasil',
                                 text: response.message
                             });
-                            dataMahasiswa.ajax.reload();
+                            dataMahasiswaAlfa.ajax.reload();
                         } else {
                             $('.error-text').text('');
                             $.each(response.msgField, function(prefix, val) {

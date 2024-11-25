@@ -6,6 +6,7 @@ use App\Models\MahasiswaAlfaModel;
 use App\Models\MahasiswaModel;
 use App\Models\PeriodeModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 
 class MahasiswaAlfaController extends Controller
@@ -62,5 +63,87 @@ class MahasiswaAlfaController extends Controller
             })
             ->rawColumns(['aksi'])
             ->make(true);
+    }
+    public function create_ajax() {
+        $periode = PeriodeModel::select('periode_id', 'periode') -> get();
+        $mahasiswa = MahasiswaModel::select('mahasiswa_id', 'mahasiswa_nama') ->get();        
+        return view('mahasiswa_alfa.create_ajax') -> with(['periode' => $periode, 'mahasiswa' => $mahasiswa]);
+    }
+    public function store_ajax(Request $request) {
+
+        if ($request -> ajax() || $request -> wantsJson()) {
+            $rules = [
+                'periode_id'    => 'required|integer',
+                'mahasiswa_id'     => 'required|integer',
+                'jumlah_alfa'     => 'required|integer'
+                
+            ];
+
+            $validator = Validator::make($request -> all(),$rules);
+
+            if ($validator -> fails()) {
+                return response() -> json([
+                    'status' => false,
+                    'message' => 'Validasi Gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            MahasiswaAlfaModel:: create($request->all());
+            return response() -> json([
+                'status' => true,
+                'message' => 'Data berhasil disimpan!'
+            ]);
+        }
+
+    }
+    public function edit_ajax(string $id) {
+        $mahasiswa_alfa = MahasiswaAlfaModel::find($id);
+        $periode = PeriodeModel::select('periode_id', 'periode_nama') -> get();
+        $mahasiswa = MahasiswaModel::select('mahasiswa_id', 'mahasiswa_nama') -> get();
+
+        return view('mahasiswa_alfa.edit_ajax', [
+            'mahasiswa_alfa' => $mahasiswa_alfa, 
+            'mahasiswa' => $mahasiswa,
+            'periode'   => $periode
+        ]);
+    }
+    public function update_ajax(Request $request, $id)
+    {
+    if ($request->ajax() || $request->wantsJson()) {
+        $rules = [
+            'periode_id'    => 'required|integer',
+            'mahasiswa_id'     => 'required|integer',
+            'jumlah_alfa'     => 'required|integer'
+            
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi gagal.',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        $check = MahasiswaAlfaModel::find($id);
+        
+        if ($check) {
+
+            $check->update($request->all());
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data berhasil diupdate'
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+    }
     }
 }

@@ -53,8 +53,12 @@ class TugasKompenController extends Controller
         return DataTables::of($tugass)
             ->addIndexColumn()
             ->addColumn('pembuat', function ($tugas) {
-                return $tugas->user ? $tugas->user->nama_pembuat : '-';
+                if ($tugas->user && in_array($tugas->user->level_id, [1, 2, 3])) {
+                    return $tugas->user->nama_pembuat;
+                }
+                return null; // Return null 
             })
+            
             ->addColumn('jenis', function ($tugas) {
                 return $tugas->jenis ? $tugas->jenis->jenis_nama : '-'; // Menampilkan nama jenis tugas
             })
