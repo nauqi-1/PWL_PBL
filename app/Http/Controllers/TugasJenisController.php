@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\TugasJenisModel;
+use App\Models\TugasModel;
 use Yajra\DataTables\Facades\DataTables;
 
 class TugasJenisController extends Controller
@@ -85,6 +86,14 @@ class TugasJenisController extends Controller
 
         return redirect('/');
     }
+    public function show_ajax(string $id)
+    {
+        $tugasJenis = TugasJenisModel::find($id);
+        $tugasCount = TugasModel::where('jenis_id', $tugasJenis->jenis_id)->count();
+
+        return view('tugasjenis.show_ajax', ['tugasJenis' => $tugasJenis, 'tugasCount' => $tugasCount]);
+    }
+
     public function edit_ajax(string $id)
     {
         $tugasjenis = TugasJenisModel::find($id);
