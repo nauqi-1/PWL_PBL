@@ -14,10 +14,18 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-            <li class="nav-item">
+        <li class="nav-header">Personal</li>
+    
+        <li class="nav-item">
                 <a href="{{ url('/') }}" class="nav-link {{ ($activeMenu == 'dashboard') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>Dashboard</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/penjualan') }}" class="nav-link {{ ($activeMenu == 'penjualan') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-comment-dots"></i>
+                    <p>Request</p>
                 </a>
             </li>
             @if(Auth::user()->level->level_kode == 'ADM')
@@ -90,20 +98,22 @@
                     <p>Periode Perkuliahan</p>
                 </a>
             </li>
-            @endif
+            
             <li class="nav-header">Data Transaksional</li>
             <li class="nav-item">
                 <a href="{{ url('/mahasiswa_alfa') }}" class="nav-link {{ ($activeMenu == 'mahasiswa_alfa') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-cubes"></i>
+                    <i class="nav-icon fas fa-calendar"></i>
                     <p>Data Alfa Periodik</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/penjualan') }}" class="nav-link {{ ($activeMenu == 'penjualan') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-cash-register"></i>
-                    <p>Transaksi Penjualan</p>
+                <a href="{{ url('/tugas_mahasiswa') }}" class="nav-link {{ ($activeMenu == 'mahasiswa_alfa') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-briefcase"></i>
+                    <p>Data Pekerja Tugas</p>
                 </a>
             </li>
+            @endif
+            
             
         </ul>
     </nav>
