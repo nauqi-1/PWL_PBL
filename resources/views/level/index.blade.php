@@ -4,10 +4,6 @@
 <div class="card card-outline card-primary">
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
-        <div class="card-tools">
-            <a href="{{ url('/level/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
-            <a href="{{ url('/level/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
-        </div>
     </div>
     <div class="card-body">
         @if(session('success'))
@@ -23,7 +19,6 @@
                     <th>ID</th>
                     <th>Kode Level</th>
                     <th>Nama Level</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
         </table>
@@ -76,13 +71,7 @@
                     orderable: true,
                     searchable: true
                 },
-                {
-                    data: "aksi",
-                    className: "",
-                    width: '15%',
-                    orderable: false,
-                    searchable: false
-                }
+
             ]
         });
     });

@@ -1,4 +1,4 @@
-@empty($kompetensi)
+@empty($periode)
 <div id="modal-master" class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -12,12 +12,12 @@
                 <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
                 Data yang anda cari tidak ditemukan
             </div>
-            <a href="{{ url('/kompetensi') }}" class="btn btn-warning">Kembali</a>
+            <a href="{{ url('/periode') }}" class="btn btn-warning">Kembali</a>
         </div>
     </div>
 </div>
 @else
-<form action="{{ url('/kompetensi/' . $kompetensi->kompetensi_id . '/delete_ajax') }}" method="POST" id="form-delete">
+<form action="{{ url('/periode/' . $periode->periode_id . '/delete_ajax') }}" method="POST" id="form-delete">
     @csrf
     @method('DELETE')
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
@@ -36,8 +36,8 @@
                 <table class="table table-sm table-bordered table-striped">
 
                     <tr>
-                        <th class="text-right col-3">Nama Kompetensi:</th>
-                        <td class="col-9">{{ $kompetensi->kompetensi_nama }}</td>
+                        <th class="text-right col-3">Periode:</th>
+                        <td class="col-9">{{ $periode->periode }}</td>
                     </tr>
                 </table>
             </div>
@@ -65,7 +65,7 @@ $(document).ready(function() {
                             title: 'Berhasil',
                             text: response.message
                         });
-                        dataKompetensi.ajax.reload();
+                        dataPeriode.ajax.reload();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {
