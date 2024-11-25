@@ -75,7 +75,7 @@
 </li>
 
             <li class="nav-item">
-                <a href="{{ url('/tugasjenis') }}" class="nav-link {{ ($activeMenu == 'jenistugas') ? 'active' : '' }}">
+                <a href="{{ url('/tugasjenis') }}" class="nav-link {{ ($activeMenu == 'tugasjenis') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-user"></i>
                     <p>Jenis Tugas</p>
                 </a>
