@@ -9,6 +9,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MahasiswaAlfaController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\Personal\TugasController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TugasKompenController;
 use App\Http\Controllers\TugasJenisController;
@@ -281,6 +282,32 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/import_ajax', [TugasJenisController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [TugasJenisController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [TugasJenisController::class, 'export_pdf']); //export pdf
+
+
+    });
+
+    Route::group(['prefix' => 'personal', 'middleware' => 'authorize:ADM, DSN, TDK'], function () {
+        Route::get('/', [TugasController::class, 'index']); 
+        Route::post('/list', [TugasController::class, 'list']); 
+
+        Route::get('/create_ajax', [TugasController::class, 'create_ajax']); 
+        Route::post('/store_ajax', [TugasController::class, 'store_ajax']); 
+
+        Route::get('/create_detail_ajax', [TugasController::class, 'create_detail_ajax']); 
+        Route::post('/store_detail_ajax', [TugasController::class, 'store_detail_ajax']); 
+
+        Route::get('/{id}/show_ajax', [TugasController::class, 'show_ajax']);
+
+        Route::get('/{id}/edit_ajax', [TugasController::class, 'edit_ajax']); 
+        Route::put('/{id}/update_ajax', [TugasController::class, 'update_ajax']); 
+
+        Route::get('/{id}/delete_ajax', [TugasController::class, 'confirm_ajax']); 
+        Route::delete('/{id}/delete_ajax', [TugasController::class, 'delete_ajax']); 
+
+        //Route::get('/import', [TugasJenisController::class, 'import']); //import excel
+        //Route::post('/import_ajax', [TugasJenisController::class, 'import_ajax']); //import excel dengan ajax
+        //Route::get('/export_excel', [TugasJenisController::class, 'export_excel']); //export excel
+        //Route::get('/export_pdf', [TugasJenisController::class, 'export_pdf']); //export pdf
 
 
     });

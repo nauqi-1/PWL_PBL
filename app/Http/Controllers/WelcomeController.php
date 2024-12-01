@@ -9,8 +9,8 @@ class WelcomeController extends Controller
 {
     public function index() {
         $breadcrumb = (object) [
-            'title' => 'Selamat Datang',
-            'list' => ['Home', 'Welcome']
+            'title' => 'Sistem Kompensasi JTI Polinema',
+            'list' => ['Home', 'Dashboard']
         ];
         $user = Auth::user();
         $activemenu = 'dashboard';

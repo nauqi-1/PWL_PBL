@@ -88,6 +88,9 @@
                     p.periode_id = $('#periode_id').val();
                 } 
             },
+            language: {
+                emptyTable: "Data tidak ditemukan."
+            },
             columns: [
                 {
                     data: "DT_RowIndex",

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{config('app.name'),'PWL Laravel Starter Code'}}</title>
+  <title>@yield('title', 'Sistem Kompensasi JTI')</title>
 
   <meta name="csrf-token" content="{{csrf_token()}}"> <!--Script untuk mengirimkan token csrf setiap kali request ajax-->
 

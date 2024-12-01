@@ -22,12 +22,28 @@
                     <p>Dashboard</p>
                 </a>
             </li>
+
+            @if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
+
             <li class="nav-item">
-                <a href="{{ url('/penjualan') }}" class="nav-link {{ ($activeMenu == 'penjualan') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-comment-dots"></i>
-                    <p>Request</p>
+                <a href="{{ url('/tugas_list') }}" class="nav-link {{ ($activeMenu == 'tugas_list') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-briefcase"></i>
+                    <p>Daftar Tugas</p>
                 </a>
             </li>
+            <li class="nav-item">
+                <a href="{{ url('/request_list') }}" class="nav-link {{ ($activeMenu == 'request') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-comment-dots"></i>
+                    <p>Request Tugas</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/pengumpulan_tugas') }}" class="nav-link {{ ($activeMenu == 'request') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-box"></i>
+                    <p>Pengumpulan</p>
+                </a>
+            </li>
+            @endif
             @if(Auth::user()->level->level_kode == 'ADM')
 
             <li class="nav-header">Data Master</li>
@@ -81,12 +97,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugaskompen') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-user"></i>
-                    <p>Daftar Tugas</p>
-                </a>
-            </li>
-            <li class="nav-item">
                 <a href="{{ url('/kompetensi') }}" class="nav-link {{ ($activeMenu == 'kompetensi') ? 'active' : '' }}">
                     <i class="nav-icon far fa-bookmark"></i>
                     <p>Kompetensi Tugas</p>
@@ -101,17 +111,24 @@
             
             <li class="nav-header">Data Transaksional</li>
             <li class="nav-item">
+                <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugaskompen') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-user"></i>
+                    <p>Daftar Tugas</p>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ url('/mahasiswa_alfa') }}" class="nav-link {{ ($activeMenu == 'mahasiswa_alfa') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-calendar"></i>
                     <p>Data Alfa Periodik</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/tugas_mahasiswa') }}" class="nav-link {{ ($activeMenu == 'mahasiswa_alfa') ? 'active' : '' }}">
+                <a href="{{ url('/tugas_mahasiswa') }}" class="nav-link {{ ($activeMenu == 'tugas_mahasiswa') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-briefcase"></i>
                     <p>Data Pekerja Tugas</p>
                 </a>
             </li>
+            
             @endif
             
             
