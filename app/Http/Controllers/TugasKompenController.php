@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\TugasModel;
 use App\Models\UserModel;
 use App\Models\KompetensiModel;
+use App\Models\LevelModel;
 use App\Models\TugasJenisModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -31,8 +32,9 @@ class TugasKompenController extends Controller
         ];
 
         $activeMenu = 'tugaskompen'; //set menu yang sedang aktif
+        $level = LevelModel::all();
 
-        return view('tugaskompen.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'activeMenu' => $activeMenu]);
+        return view('tugaskompen.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
     }
     public function list(Request $request)
     {
@@ -50,6 +52,13 @@ class TugasKompenController extends Controller
             'jenis_id',
             'kuota'
         )->with('user', 'jenis');
+        // Filter tugas berdasarkan level
+        if ($request->level_id) {
+            $tugass->whereHas('user', function ($query) use ($request) {
+                $query->where('level_id', $request->level_id);
+            });
+        }
+
         return DataTables::of($tugass)
             ->addIndexColumn()
             ->addColumn('pembuat', function ($tugas) {
@@ -58,7 +67,7 @@ class TugasKompenController extends Controller
                 }
                 return null; // Return null 
             })
-            
+
             ->addColumn('jenis', function ($tugas) {
                 return $tugas->jenis ? $tugas->jenis->jenis_nama : '-'; // Menampilkan nama jenis tugas
             })
@@ -171,7 +180,7 @@ class TugasKompenController extends Controller
     public function edit_ajax($id)
     {
         // Ambil data tugas berdasarkan ID
-        $tugas = TugasModel::with('kompetensi')->find($id);
+        $tugas = TugasModel::with('kompetensi', 'user')->find($id);
 
         if (!$tugas) {
             return response()->json([
@@ -183,23 +192,14 @@ class TugasKompenController extends Controller
         // Ambil data kompetensi dan jenis tugas
         $kompetensi = KompetensiModel::select('kompetensi_id', 'kompetensi_nama')->get();
         $jenisTugas = TugasJenisModel::all();
-
-        // Ambil data pembuat
-        $pembuat = UserModel::with(['dosen', 'admin', 'tendik'])
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'id' => $user->user_id,
-                    'nama' => $user->nama_pembuat,
-                ];
-            });
+        $users = UserModel::with('dosen', 'admin', 'tendik', 'mahasiswa')->get();
 
         // Return view dengan data
         return view('tugaskompen.edit_ajax', [
             'tugas' => $tugas,
             'kompetensi' => $kompetensi,
             'jenisTugas' => $jenisTugas,
-            'pembuat' => $pembuat,
+            'users' => $users,
         ]);
     }
     public function update_ajax(Request $request, $id)

@@ -1,6 +1,6 @@
 <form action="{{ url('/tugaskompen/store_ajax') }}" method="POST" id="form-tambah-tugas" enctype="multipart/form-data">
     @csrf
-    <div id="modal-tugas" class="modal-dialog modal-lg" role="document">
+    <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Tambah Data Tugas Kompensasi</h5>
@@ -186,7 +186,7 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     if (response.status) {
-                        $('#modal-tugas').modal('hide');
+                        $('#myModal').modal('hide');
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',

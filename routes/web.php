@@ -13,6 +13,7 @@ use App\Http\Controllers\Personal\TugasController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TugasKompenController;
 use App\Http\Controllers\TugasJenisController;
+use App\Http\Controllers\MhslistTugasController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -285,24 +286,31 @@ Route::middleware(['auth'])->group(function () {
 
 
     });
+    Route::group(['prefix' => 'mhs_listtugas', 'middleware' => 'authorize:MHS'], function () {
+        Route::get('/', [MhslistTugasController::class, 'index']); //Menampilkan laman awal MhslistTugas
+        Route::post('/list', [MhslistTugasController::class, 'list']); //menampilkan data MhslistTugas dalam bentuk json untuk datatables.
+        Route::get('/{id}/show_ajax', [MhslistTugasController::class, 'show_ajax']);
+        Route::get('/{id}/confirm_ajax', [MhslistTugasController::class, 'confirm_ajax']);
+        Route::post('/{id}/request_ajax', [MhslistTugasController::class, 'request_ajax']);
+    });
 
     Route::group(['prefix' => 'personal', 'middleware' => 'authorize:ADM, DSN, TDK'], function () {
-        Route::get('/', [TugasController::class, 'index']); 
-        Route::post('/list', [TugasController::class, 'list']); 
+        Route::get('/', [TugasController::class, 'index']);
+        Route::post('/list', [TugasController::class, 'list']);
 
-        Route::get('/create_ajax', [TugasController::class, 'create_ajax']); 
-        Route::post('/store_ajax', [TugasController::class, 'store_ajax']); 
+        Route::get('/create_ajax', [TugasController::class, 'create_ajax']);
+        Route::post('/store_ajax', [TugasController::class, 'store_ajax']);
 
-        Route::get('/create_detail_ajax', [TugasController::class, 'create_detail_ajax']); 
-        Route::post('/store_detail_ajax', [TugasController::class, 'store_detail_ajax']); 
+        Route::get('/create_detail_ajax', [TugasController::class, 'create_detail_ajax']);
+        Route::post('/store_detail_ajax', [TugasController::class, 'store_detail_ajax']);
 
         Route::get('/{id}/show_ajax', [TugasController::class, 'show_ajax']);
 
-        Route::get('/{id}/edit_ajax', [TugasController::class, 'edit_ajax']); 
-        Route::put('/{id}/update_ajax', [TugasController::class, 'update_ajax']); 
+        Route::get('/{id}/edit_ajax', [TugasController::class, 'edit_ajax']);
+        Route::put('/{id}/update_ajax', [TugasController::class, 'update_ajax']);
 
-        Route::get('/{id}/delete_ajax', [TugasController::class, 'confirm_ajax']); 
-        Route::delete('/{id}/delete_ajax', [TugasController::class, 'delete_ajax']); 
+        Route::get('/{id}/delete_ajax', [TugasController::class, 'confirm_ajax']);
+        Route::delete('/{id}/delete_ajax', [TugasController::class, 'delete_ajax']);
 
         //Route::get('/import', [TugasJenisController::class, 'import']); //import excel
         //Route::post('/import_ajax', [TugasJenisController::class, 'import_ajax']); //import excel dengan ajax

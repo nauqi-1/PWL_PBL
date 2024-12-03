@@ -4,12 +4,6 @@
 <div class="card card-outline card-primary">
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
-        <div class="card-tools">
-            <button onclick="modalAction('{{ url('tugaskompen/import') }}')" class="btn btn-info">Import Tugas</button>
-            <a href="{{ url('/tugaskompen/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
-            <a href="{{ url('/tugaskompen/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
-            <button onclick="modalAction('{{ url('/tugaskompen/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i>Tambah</button>
-        </div>
     </div>
     <div class="card-body">
         @if(session('success'))
@@ -41,10 +35,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Nama</th>
-                    <th>Jenis</th>
-                    <th>Bobot</th>
-                    <th>Kuota</th>
-                    <th>Status</th>
                     <th>Tgl.dibuat</th>
                     <th>Tgl.ditutup</th>
                     <th>Pembuat</th>
@@ -71,13 +61,13 @@
         });
     }
 
-    var dataTugasKompen;
+    var tableTugasKompen;
 
     $(document).ready(function() {
-        dataTugasKompen = $('#table_tugaskompen').DataTable({
+        tableTugasKompen = $('#table_tugaskompen').DataTable({
     serverSide: true,
     ajax: {
-        url: "{{ url('tugaskompen/list') }}",
+        url: "{{ url('mhs_listtugas/list') }}",
         dataType: "json",
         type: "POST",
         data: function(d) {
@@ -97,44 +87,6 @@
             className: "nama-tugas",
             orderable: true,
             searchable: true
-        },
-        {
-            data: "jenis",
-            className: "",
-            orderable: false,
-            searchable: false
-        },
-        {
-            data: "tugas_bobot",
-            className: "",
-            orderable: false,
-            searchable: false
-        },
-        {
-            data: "kuota",
-            className: "",
-            orderable: false,
-            searchable: false
-        },
-        {
-            data: "tugas_status",
-            className: "",
-            orderable: false,
-            searchable: false,
-            render: function(data, type, row) {
-                switch (data) {
-                    case 'O':
-                        return '<span class="badge badge-danger">Open</span>';
-                    case 'W':
-                        return '<span class="badge badge-warning">Working</span>';
-                    case 'S':
-                        return '<span class="badge badge-primary">Submitted</span>';
-                    case 'D':
-                        return '<span class="badge badge-success">Done</span>';
-                    default:
-                        return '<span class="badge badge-secondary">Unknown</span>';
-                }
-            }
         },
         {
             data: "tugas_tgl_dibuat",
@@ -172,7 +124,7 @@
 
 // Reload the DataTable when the filter is changed
 $('#level_id').on('change', function() {
-    dataTugasKompen.ajax.reload();
+    tableTugasKompen.ajax.reload();
 });
 
         });

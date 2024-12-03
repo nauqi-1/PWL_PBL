@@ -50,4 +50,8 @@ class TugasModel extends Model
     {
         return $this->belongsTo(TugasJenisModel::class, 'jenis_id', 'jenis_id');
     }
+    public function requests()
+    {
+        return $this->hasMany(RequestModel::class, 'tugas_id', 'tugas_id');
+    }
 }

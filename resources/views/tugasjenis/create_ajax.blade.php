@@ -1,6 +1,6 @@
 <form action="{{ url('/tugasjenis/store_ajax') }}" method="POST" id="form-tambah-tugasjenis">
     @csrf
-    <div id="modal-tugasjenis" class="modal-dialog modal-lg" role="document">
+    <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle">Tambah Jenis Tugas</h5>
@@ -39,7 +39,7 @@
                     data: $(form).serialize(),
                     success: function(response) {
                         if (response.status) {
-                            $('#modal-tugasjenis').modal('hide');
+                            $('#myModal').modal('hide');
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil',

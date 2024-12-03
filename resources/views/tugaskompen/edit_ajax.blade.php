@@ -34,18 +34,28 @@
                         <input value="{{ $tugas->tugas_nama }}" type="text" name="tugas_nama" id="tugas_nama" class="form-control" required>
                         <small id="error-tugas_nama" class="error-text form-text text-danger"></small>
                     </div>
-                    <!-- Pembuat -->
+                    <div class="form-group">
+                        <select name="tugas_pembuat_id" id="tugas_pembuat_id" class="form-control" required>
+                            <!-- Tampilkan pembuat saat ini sebagai opsi terpilih -->
+                            <option value="{{ $tugas->tugas_pembuat_id }}" selected>
+                                {{ $tugas->user->nama_pembuat }}
+                            </option>
+                            
+                            <!-- Tampilkan opsi lain untuk mengganti pembuat -->
+                            @foreach ($users as $user)
+                            @if ($user->user_id !== $tugas->tugas_pembuat_id)
+                            <option value="{{ $user->user_id }}">
+                                {{ $user->nama_pembuat }}
+                            </option>
+                            @endif
+                            @endforeach
+                        </select>
+                    </div>                     
                 <div class="form-group">
-                    <label>Pembuat</label>
-                    <select name="tugas_pembuat_id" id="tugas_pembuat_id" class="form-control" required>
-                        <option value="{{ $tugas->tugas_pembuat_id}}">{{$tugas->tugas_pembuat_id->user->}}</option>
-                    </select>
-                    <small id="error-tugas_pembuat_id" class="error-text form-text text-danger"></small>
-                </div>                    <div class="form-group">
                         <label>Deskripsi Tugas</label>
                         <textarea name="tugas_desc" id="tugas_desc" class="form-control" rows="4" required>{{ $tugas->tugas_desc }}</textarea>
                         <small id="error-tugas_desc" class="error-text form-text text-danger"></small>
-                    </div>
+                </div>
                     <!-- Kuota & Bobot -->
                 <div class="form-group row">
                     <div class="col-md-6">
@@ -214,7 +224,7 @@
                 },
                 success: function(response) {
                     if (response.status) {
-                        $('#modal-master').modal('hide');
+                        $('#myModal').modal('hide');
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',

@@ -23,6 +23,16 @@
                 </a>
             </li>
 
+            @if (Auth::user()->level->level_kode == 'MHS')
+                <li class="nav-item">
+                    <a href="{{ url('/mhs_listtugas') }}" class="nav-link {{ ($activeMenu == 'mhs_listtugas') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-briefcase"></i>
+                        <p>Daftar Tugas</p>
+                    </a>
+                </li>
+                
+            @endif
+
             @if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
 
             <li class="nav-item">
