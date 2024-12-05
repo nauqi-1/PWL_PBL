@@ -1,24 +1,24 @@
-<form action="{{ url('/mahasiswa_alfa/import_ajax') }}" method="POST" id="form-import" enctype="multipart/form-data">
+<form action="{{ url('/mahasiswa/import_ajax') }}" method="POST" id="form-import" enctype="multipart/form-data">
     @csrf
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Import Data Alfa Mahasiswa</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Import Data Mahasiswa</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <a href="{{ asset('template/template_mahasiswa_alfa.xlsx') }}" class="btn btn-info btn-sm" download>
+                    <a href="{{ asset('template/template_mahasiswa.xlsx') }}" class="btn btn-info btn-sm" download>
                         <i class="fa fa-file-excel"></i> Unduh Template
                     </a>
                     <small id="error-kategori_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
                     <label>Pilih File</label>
-                    <input type="file" name="file_mahasiswa_alfa" id="file_mahasiswa_alfa" class="form-control" required>
-                    <small id="error-file_mahasiswa_alfa" class="error-text form-text text-danger"></small>
+                    <input type="file" name="file_mahasiswa" id="file_mahasiswa" class="form-control" required>
+                    <small id="error-file_mahasiswa" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -33,7 +33,7 @@
 $(document).ready(function() {
     $("#form-import").validate({
         rules: {
-            file_mahasiswa_alfa: {
+            file_mahasiswa: {
                 required: true,
                 extension: "xlsx"
             }
