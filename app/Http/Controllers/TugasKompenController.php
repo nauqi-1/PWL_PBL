@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 
 class TugasKompenController extends Controller
@@ -24,13 +25,17 @@ class TugasKompenController extends Controller
     {
         $breadcrumb = (object) [
             'title' => 'Daftar Tugas Kompen',
-            'list' => ['Home', 'Daftar Tugas Kompen']
+            'list' => ['Home', 'Tugas']
         ];
-
-        $page = (object) [
-            'title' => 'Daftar Tugas Kompen yang ada dalam sistem'
-        ];
-
+        if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'MHS') {
+            $page = (object) [
+                'title' => 'Daftar tugas kompen yang ada dalam sistem.'
+            ];
+        } else if(Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK') {
+            $page = (object) [
+                'title' => 'Daftar tugas kompen yang telah dibuat.'
+            ];
+        }
         $activeMenu = 'tugaskompen'; //set menu yang sedang aktif
         $level = LevelModel::all();
 
@@ -59,6 +64,10 @@ class TugasKompenController extends Controller
             });
         }
 
+        if (Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK') {
+            $tugass->where('tugas_pembuat_id', Auth::user()->user_id);
+        }
+
         return DataTables::of($tugass)
             ->addIndexColumn()
             ->addColumn('pembuat', function ($tugas) {
@@ -80,6 +89,7 @@ class TugasKompenController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
     }
+
     public function show_ajax(Request $request, string $id)
     {
         // Retrieve the tugas data with its related user and kompetensi

@@ -36,7 +36,7 @@
             @if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
 
             <li class="nav-item">
-                <a href="{{ url('/tugas_list') }}" class="nav-link {{ ($activeMenu == 'tugas_list') ? 'active' : '' }}">
+                <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugas_list') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-briefcase"></i>
                     <p>Daftar Tugas</p>
                 </a>

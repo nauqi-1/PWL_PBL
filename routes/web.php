@@ -236,7 +236,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     });
-    Route::group(['prefix' => 'tugaskompen', 'middleware' => 'authorize:ADM'], function () {
+    Route::group(['prefix' => 'tugaskompen', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
         Route::get('/', [TugasKompenController::class, 'index']); //Menampilkan laman awal TugasKompen
         Route::post('/list', [TugasKompenController::class, 'list']); //menampilkan data TugasKompen dalam bentuk json untuk datatables.
 
