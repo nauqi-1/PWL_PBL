@@ -78,27 +78,29 @@
 
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <img src="{{ asset('images/pfp/' . auth()->user()->profile_picture) }}" 
-               class="img-circle" 
-               alt="Profile"
-               style="width: 40px; height: 40px; object-fit: cover; margin-top: -7px">
+    <a class="nav-link" data-toggle="dropdown" href="#">
+    @if(auth()->user()->profile_picture)
+            <img 
+                src="{{ asset('images/pfp/' . auth()->user()->profile_picture) }}" 
+                class="img-circle" 
+                alt="Profile"
+                style="width: 40px; height: 40px; object-fit: cover; margin-top: -7px">
+        @else
+            <i class="fas fa-user-circle" 
+               style="font-size: 25px; "></i>
+        @endif
+    </a>
+    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+    <a class="dropdown-item" data-widget="edit_profile" data-slide="true" href="{{ url('/edit_profile') }}" role="button">
+            <i class="fas fa-user mr-2"></i> Edit Data Diri
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a onclick="modalAction('{{url('/import_pfp')}}')" class="dropdown-item">
-            <i class="fas fa-camera mr-2"></i> Upload Photo Profil
-          </a>
         <div class="dropdown-divider"></div>
-        <a onclick="modalAction('{{url('/edit_profile')}}')" class="dropdown-item">
-          <i class="fas fa-user mr-2"></i> Edit Data Diri
+        <a class="dropdown-item" data-widget="logout" data-slide="true" href="{{ url('/logout') }}" role="button">
+            <i class="fas fa-sign-out-alt"></i> Keluar
         </a>
-        </div>
-       
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-widget="logout" data-slide="true" href="{{url('/logout')}}" role="button">
-          <i class="fas fa-sign-out-alt"></i>  
-        </a>
+    </div>
+</li>
+
         
       </li>
     </ul>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\AdminModel;
 use App\Models\DosenModel;
+use App\Models\MahasiswaAlfaModel;
 use App\Models\MahasiswaModel;
 use App\Models\TendikModel;
 use App\Models\UserModel;
@@ -27,9 +28,26 @@ class UserController extends Controller
     }
 
     public function find_mahasiswa($userId) {
+        // Fetch mahasiswa data by user_id
         $mahasiswaData = MahasiswaModel::where('user_id', $userId)->first();
-        return response()->json($mahasiswaData, );
+    
+        // Handle the case where no mahasiswa is found
+        if (!$mahasiswaData) {
+            return response()->json([
+                'error' => 'Mahasiswa not found'
+            ], 404); // 404 Not Found
         }
+    
+        // Sum jumlah_alfa for the mahasiswa
+        $mahasiswaAlfa = MahasiswaAlfaModel::where('mahasiswa_id', $mahasiswaData->mahasiswa_id)->sum('jumlah_alfa');
+    
+        // Return the data with a valid HTTP status code
+        return response()->json([
+            'mahasiswa' => $mahasiswaData,
+            'jumlah_alfa' => $mahasiswaAlfa
+        ], 200); // 200 OK
+    }
+    
     
     public function find_dosen($userId) {
         $dosenData = DosenModel::where('user_id', $userId)->first();

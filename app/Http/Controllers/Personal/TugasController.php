@@ -41,12 +41,6 @@ class TugasController extends Controller
             'page' => $page,
             'activeMenu' => $activeMenu,
         ]);
-    } elseif ($user->level->level_kode === 'MHS') {
-        return view('personal.mahasiswa.tugas_list', [
-            'breadcrumb' => $breadcrumb,
-            'page' => $page,
-            'activeMenu' => $activeMenu,
-        ]);
     } else {
         abort(403, 'Hak akses tidak sesuai. Kembali ke laman sebelumnya.');
     }
