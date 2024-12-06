@@ -34,7 +34,7 @@ class RequestModel extends Model
      */
     public function mahasiswa()
     {
-        return $this->belongsTo(MahasiswaModel::class, 'mhs_id', 'mhs_id');
+        return $this->belongsTo(MahasiswaModel::class, 'mhs_id', 'mahasiswa_id');
     }
 
     /**
@@ -42,6 +42,6 @@ class RequestModel extends Model
      */
     public function pembuat()
     {
-        return $this->belongsTo(User::class, 'tugas_pembuat_id', 'id');
+        return $this->belongsTo(UserModel::class, 'tugas_pembuat_id', 'user_id');
     }
 }

@@ -14,8 +14,17 @@
     <!-- Sidebar Menu -->
     <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+        @if (Auth::user()->level->level_kode == 'MHS')
+            <li class="nav-item">
+                <a href="{{ url('/mhs_listtugas') }}" class="nav-link {{ ($activeMenu == 'mhs_listtugas') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-briefcase"></i>
+                    <p>Daftar Tugas</p>
+                </a>
+            </li>
+            
+        @endif
         <li class="nav-header">Personal</li>
-    
         <li class="nav-item">
                 <a href="{{ url('/') }}" class="nav-link {{ ($activeMenu == 'dashboard') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -23,27 +32,18 @@
                 </a>
             </li>
 
-            @if (Auth::user()->level->level_kode == 'MHS')
-                <li class="nav-item">
-                    <a href="{{ url('/mhs_listtugas') }}" class="nav-link {{ ($activeMenu == 'mhs_listtugas') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-briefcase"></i>
-                        <p>Daftar Tugas</p>
-                    </a>
-                </li>
-                
-            @endif
 
             @if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
 
             <li class="nav-item">
-                <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugas_list') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-briefcase"></i>
+                <a href="{{ url('/tugas_list') }}" class="nav-link {{ ($activeMenu == 'tugas_list') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-tasks"></i>
                     <p>Daftar Tugas</p>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{{ url('/request_list') }}" class="nav-link {{ ($activeMenu == 'request') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-comment-dots"></i>
+                    <i class="nav-icon fas fa-envelope-open-text"></i>
                     <p>Request Tugas</p>
                 </a>
             </li>
@@ -122,8 +122,14 @@
             <li class="nav-header">Data Transaksional</li>
             <li class="nav-item">
                 <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugaskompen') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-user"></i>
+                    <i class="nav-icon fas fa-tasks"></i>
                     <p>Daftar Tugas</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/requesttugas') }}" class="nav-link {{ ($activeMenu == 'requesttugas') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-envelope-open-text"></i>
+                    <p>Request Tugas</p>
                 </a>
             </li>
             <li class="nav-item">

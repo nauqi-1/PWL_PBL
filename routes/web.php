@@ -13,6 +13,7 @@ use App\Http\Controllers\Personal\TugasController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TugasKompenController;
 use App\Http\Controllers\TugasJenisController;
+use App\Http\Controllers\RequestTugasController;
 use App\Http\Controllers\MhslistTugasController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -258,6 +259,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/import_ajax', [TugasKompenController::class, 'import_ajax']); //import excel dengan ajax
         Route::get('/export_excel', [TugasKompenController::class, 'export_excel']); //export excel
         Route::get('/export_pdf', [TugasKompenController::class, 'export_pdf']); //export pdf
+
+
+    });
+    Route::group(['prefix' => 'requesttugas', 'middleware' => 'authorize:ADM'], function () {
+        Route::get('/', [RequestTugasController::class, 'index']); //Menampilkan laman awal RequestTugas
+        Route::post('/list', [RequestTugasController::class, 'list']); //menampilkan data RequestTugas dalam bentuk json untuk datatables.
+
+        Route::get('/{id}/show_ajax', [RequestTugasController::class, 'show_ajax']);
+
+        Route::get('/{id}/accept_ajax', [RequestTugasController::class, 'accept_ajax']); //edit data 
+        Route::put('/{id}/denied_ajax', [RequestTugasController::class, 'denied_ajax']); //simpan data 
+
+        Route::get('/export_excel', [RequestTugasController::class, 'export_excel']); //export excel
+        Route::get('/export_pdf', [RequestTugasController::class, 'export_pdf']); //export pdf
 
 
     });
