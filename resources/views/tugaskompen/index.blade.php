@@ -6,9 +6,11 @@
         <h3 class="card-title">{{ $page->title }}</h3>
         @if(Auth::user()->level->level_kode != 'MHS')
         <div class="card-tools">
+            @if(Auth::user()->level->level_kode == 'ADM')
             <button onclick="modalAction('{{ url('tugaskompen/import') }}')" class="btn btn-info">Import Tugas</button>
             <a href="{{ url('/tugaskompen/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
             <a href="{{ url('/tugaskompen/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
+            @endif
             <button onclick="modalAction('{{ url('/tugaskompen/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i>Tambah</button>
         </div>
         @endif
@@ -22,6 +24,8 @@
         @endif
         <div class="row">
             <div class="col-md-12">
+            @if(Auth:: user()->level->level_kode =='ADM')
+
                 <div class="form-group row">
                     <label class="col-1 control-labe; col-form-label">Filter:</label>
                     <div class="col-3">
@@ -36,6 +40,8 @@
                         <small class="form-text text-muted">Level Pembuat</small>
                     </div>
                 </div>
+                @endif
+
             </div>
         </div>
         <table class="table table-bordered table-striped table-hover table-sm" id="table_tugaskompen">
