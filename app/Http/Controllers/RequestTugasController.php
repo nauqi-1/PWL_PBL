@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\TugasModel;
@@ -39,12 +40,12 @@ class RequestTugasController extends Controller
                 if ($requesttugas->pembuat && in_array($requesttugas->pembuat->level_id, [1, 2, 3])) {
                     return $requesttugas->pembuat->nama_pembuat;
                 }
-                return null; // Return null 
+                return null; // Return null r
             })
             ->addColumn('aksi', function ($requesttugas) {
-                $btn = '<button onclick="modalAction(\'' . url('/requesttugas/' . $requesttugas->request_id . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/requesttugas/' . $requesttugas->request_id . '/accept_ajax') . '\')" class="btn btn-success btn-sm">Terima</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/requesttugas/' . $requesttugas->request_id . '/denied_ajax') . '\')" class="btn btn-danger btn-sm">Tolak</button> ';
+                $btn = '<button onclick="modalAction(\'' . url('/requesttugas/' . $requesttugas->id_request . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/requesttugas/' . $requesttugas->id_request . '/confirm_accept_ajax') . '\')" class="btn btn-success btn-sm">Terima</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/requesttugas/' . $requesttugas->id_request . '/confirm_denied_ajax') . '\')" class="btn btn-danger btn-sm">Tolak</button> ';
 
                 return $btn;
             })
@@ -61,5 +62,114 @@ class RequestTugasController extends Controller
         }
 
         return view('requesttugas.show_ajax', compact('requests'));
+    }
+    public function accept_confirm_ajax(string $id)
+    {
+        // Find the task (tugaskompen) by ID
+        $requests = RequestModel::find($id);
+
+        // If task is found, return the confirmation view with the task data
+        if ($requests) {
+            return view('requesttugas.accept_confirm_ajax', ['requests' => $requests]);
+        }
+
+        // If task is not found, return a response indicating failure
+        return response()->json([
+            'status' => false,
+            'message' => 'Tugas tidak ditemukan'
+        ]);
+    }
+    public function accept_ajax(Request $request, string $id_request)
+    {
+        $requestData = RequestModel::find($id_request);
+
+        if ($requestData) {
+            // Cek kuota pada tugas
+            $tugas = TugasModel::find($requestData->tugas_id);
+            $acceptedCount = RequestModel::where('tugas_id', $requestData->tugas_id)
+                ->where('status_request', 'accepted')
+                ->count();
+
+            if ($acceptedCount < $tugas->kuota) {
+                // Terima request ini
+                $requestData->update([
+                    'status_request' => 'accepted',
+                    'tgl_update_status' => now(),
+                ]);
+
+                // Periksa jika kuota penuh setelah menerima request ini
+                $acceptedCount++; // Tambahkan request yang baru saja diterima
+                if ($acceptedCount >= $tugas->kuota) {
+                    $this->deny_remaining_requests($tugas->id); // Deny semua pending lainnya
+                }
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Request berhasil diterima.',
+                ]);
+            }
+
+            // Jika kuota sudah penuh
+            return response()->json([
+                'status' => false,
+                'message' => 'Kuota untuk tugas ini sudah penuh.',
+            ]);
+        }
+
+        // Jika request tidak ditemukan
+        return response()->json([
+            'status' => false,
+            'message' => 'Request tidak ditemukan.',
+        ]);
+    }
+
+    private function deny_remaining_requests(int $tugas_id)
+    {
+        RequestModel::where('tugas_id', $tugas_id)
+            ->where('status_request', 'pending')
+            ->update([
+                'status_request' => 'rejected',
+                'tgl_update_status' => now(),
+            ]);
+    }
+
+    public function denied_confirm_ajax(string $id)
+    {
+        // Find the task (tugaskompen) by ID
+        $requests = RequestModel::find($id);
+
+        // If task is found, return the confirmation view with the task data
+        if ($requests) {
+            return view('requesttugas.denied_confirm_ajax', ['requests' => $requests]);
+        }
+
+        // If task is not found, return a response indicating failure
+        return response()->json([
+            'status' => false,
+            'message' => 'Tugas tidak ditemukan'
+        ]);
+    }
+    public function denied_ajax(Request $request, string $id_request)
+    {
+        $requestData = RequestModel::find($id_request);
+
+        if ($requestData) {
+            // Update status menjadi denied
+            $requestData->update([
+                'status_request' => 'rejected',
+                'tgl_update_status' => now(),
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Request berhasil ditolak.',
+            ]);
+        }
+
+        // Jika request tidak ditemukan
+        return response()->json([
+            'status' => false,
+            'message' => 'Request tidak ditemukan.',
+        ]);
     }
 }

@@ -17,7 +17,7 @@
     </div>
 </div>
 @else
-<form action="{{ url('/requesttugas/' . $requests->request_id . '/delete_ajax') }}" method="POST" id="form-delete">
+<form action="{{ url('/requesttugas/' . $requests->id_request . '/delete_ajax') }}" method="POST" id="form-delete">
     @csrf
     @method('DELETE')
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
@@ -32,69 +32,27 @@
                 <table class="table table-sm table-bordered table-striped">
                     <tr>
                         <th class="text-right col-3">Nama Tugas :</th>
-                        <td class="col-9">{{ $requests->requests_nama }}</td>
+                        <td class="col-9">{{ $requests->tugas->tugas_nama }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Deskripsi :</th>
-                        <td class="col-9">{{ $requests->requests_desc }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Jenis requests :</th>
-                        <td class="col-9">{{ $requests->jenis->jenis_nama }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">Bobot :</th>
-                        <td class="col-9">{{ $requests->requests_bobot }}</td>
+                        <td class="col-9">{{ $requests->tugas->tugas_desc }}</td>
                     </tr>
                     <tr>
                         <th class="text-right col-3">Kuota :</th>
-                        <td class="col-9">{{ $requests->kuota }}</td>
+                        <td class="col-9">{{ $requests->tugas->kuota }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">Status :</th>
-                        <td class="col-9">
-                            @switch($requests->requests_status)
-                                @case('O')
-                                    <span class="badge badge-danger">Open</span>
-                                    @break
-                                @case('W')
-                                    <span class="badge badge-warning">Working</span>
-                                    @break
-                                @case('S')
-                                    <span class="badge badge-primary">Submitted</span>
-                                    @break
-                                @case('D')
-                                    <span class="badge badge-success">Done</span>
-                                    @break
-                                @default
-                                    <span class="badge badge-secondary">Unknown</span>
-                            @endswitch
-                        </td>
-                    </tr>
-                    
-                    <tr>
-                        <th class="text-right col-3">Tanggal Dibuat :</th>
-                        <td class="col-9">{{ \Carbon\Carbon::parse($requests->requests_tgl_dibuat)->format('d M Y H:i') }}</td>
+                        <th class="text-right col-3">Mahasiswa :</th>
+                        <td class="col-9">{{ $requests->mahasiswa->mahasiswa_nama }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">Tanggal Deadline :</th>
-                        <td class="col-9">{{ \Carbon\Carbon::parse($requests->requests_tgl_deadline)->format('d M Y H:i') }}</td>
+                        <th class="text-right col-3">Program Studi :</th>
+                        <td class="col-9">{{ $requests->mahasiswa->mahasiswa_prodi }}</td>
                     </tr>
                     <tr>
-                        <th class="text-right col-3">Pembuat :</th>
-                        <td class="col-9">{{ $requests->user->nama_pembuat ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th class="text-right col-3">File requests :</th>
-                            <td class="col-9">
-                                @if ($requests->requests_file)
-                                    <a href="{{ url('storage/' . $requests->requests_file) }}" target="_blank">
-                                        {{ basename($requests->requests_file) }}
-                                    </a>
-                                @else
-                                    Tidak ada file
-                                @endif
-                            </td>
+                        <th class="text-right col-3">Kelas :</th>
+                        <td class="col-9">{{ $requests->mahasiswa->mahasiswa_kelas }}</td>
                     </tr>
                 </table>
             </div>
@@ -121,7 +79,7 @@ $(document).ready(function() {
                             title: 'Berhasil',
                             text: response.message
                         });
-                        datarequestsKompen.ajax.reload();
+                        dataRequest.ajax.reload();
                     } else {
                         $('.error-text').text('');
                         $.each(response.msgField, function(prefix, val) {

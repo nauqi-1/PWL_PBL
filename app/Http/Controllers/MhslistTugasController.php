@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -40,7 +41,9 @@ class MhslistTugasController extends Controller
     }
     public function list(Request $request)
     {
-        $mhsId = auth()->user()->id; // ID mahasiswa login
+        $mhsId = auth()->user()->mahasiswa->mahasiswa_id; // ID mahasiswa login
+        Log::info('Mahasiswa yang Login:', ['user_id' => $mhsId]);
+
 
         $tugass = TugasModel::where('tugas_status', 'o') // Filter tugas status open
             ->whereDoesntHave('requests', function ($query) use ($mhsId) {
@@ -48,6 +51,9 @@ class MhslistTugasController extends Controller
             })
             ->with(['user', 'jenis'])
             ->get();
+        $debug = RequestModel::where('mhs_id', $mhsId)->pluck('tugas_id');
+        Log::info('Daftar Tugas yang Sudah Direquest oleh Mahasiswa:', $debug->toArray());
+
         // Filter tugas berdasarkan level
         if ($request->level_id) {
             $tugass->whereHas('user', function ($query) use ($request) {
@@ -75,6 +81,27 @@ class MhslistTugasController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
     }
+    public function listrequest(Request $request)
+    {
+        // Ambil ID mahasiswa login
+        $mhsId = auth()->user()->mahasiswa->mahasiswa_id;
+
+        // Ambil data request tugas hanya untuk mahasiswa login
+        $requesttugass = RequestModel::with(['tugas', 'pembuat', 'mahasiswa'])
+            ->where('mhs_id', $mhsId) // Filter berdasarkan mahasiswa yang login
+            ->get();
+
+        return DataTables::of($requesttugass)
+            ->addIndexColumn()
+            ->addColumn('pembuat', function ($requesttugas) {
+                if ($requesttugas->pembuat && in_array($requesttugas->pembuat->level_id, [1, 2, 3])) {
+                    return $requesttugas->pembuat->nama_pembuat;
+                }
+                return null;
+            })
+            ->make(true);
+    }
+
     public function show_ajax(Request $request, string $id)
     {
         // Retrieve the tugas data with its related user and kompetensi

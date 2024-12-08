@@ -268,7 +268,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/{id}/show_ajax', [RequestTugasController::class, 'show_ajax']);
 
-        Route::get('/{id}/accept_ajax', [RequestTugasController::class, 'accept_ajax']); //edit data 
+        Route::get('/{id}/confirm_accept_ajax', [RequestTugasController::class, 'accept_confirm_ajax']); //edit data 
+        Route::get('/{id}/confirm_denied_ajax', [RequestTugasController::class, 'denied_confirm_ajax']); //edit data 
+        Route::put('/{id}/accept_ajax', [RequestTugasController::class, 'accept_ajax']); //simpan data 
         Route::put('/{id}/denied_ajax', [RequestTugasController::class, 'denied_ajax']); //simpan data 
 
         Route::get('/export_excel', [RequestTugasController::class, 'export_excel']); //export excel
@@ -304,6 +306,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'mhs_listtugas', 'middleware' => 'authorize:MHS'], function () {
         Route::get('/', [MhslistTugasController::class, 'index']); //Menampilkan laman awal MhslistTugas
         Route::post('/list', [MhslistTugasController::class, 'list']); //menampilkan data MhslistTugas dalam bentuk json untuk datatables.
+        Route::post('/listrequest', [MhslistTugasController::class, 'listrequest']); //menampilkan data MhslistTugas dalam bentuk json untuk datatables.
         Route::get('/{id}/show_ajax', [MhslistTugasController::class, 'show_ajax']);
         Route::get('/{id}/confirm_ajax', [MhslistTugasController::class, 'confirm_ajax']);
         Route::post('/{id}/request_ajax', [MhslistTugasController::class, 'request_ajax']);
