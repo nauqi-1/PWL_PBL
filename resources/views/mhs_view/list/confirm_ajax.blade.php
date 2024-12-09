@@ -69,6 +69,7 @@
                             text: response.message
                         });
                         tableTugasKompen.ajax.reload(); // Refresh DataTable
+                        tableStatusRequest.ajax.reload(); // Refresh DataTable
                     } else {
                         Swal.fire({
                             icon: 'error',

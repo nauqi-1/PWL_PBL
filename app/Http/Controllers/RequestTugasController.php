@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\TugasModel;
+use App\Models\TugasMahasiswaModel;
 use App\Models\RequestModel;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -33,7 +34,9 @@ class RequestTugasController extends Controller
 
     public function list(Request $request)
     {
-        $requesttugass = RequestModel::with(['tugas', 'pembuat', 'mahasiswa'])->get();
+        $requesttugass = RequestModel::with(['tugas', 'pembuat', 'mahasiswa'])
+            ->where('status_request', 'pending') // Filter hanya yang status_request = 'pending'
+            ->get();
         return DataTables::of($requesttugass)
             ->addIndexColumn()
             ->addColumn('pembuat', function ($requesttugas) {
@@ -96,11 +99,24 @@ class RequestTugasController extends Controller
                     'status_request' => 'accepted',
                     'tgl_update_status' => now(),
                 ]);
+                // Buat entri di TugasMahasiswaModel
+                TugasMahasiswaModel::create([
+                    'tugas_id' => $requestData->tugas_id,
+                    'mahasiswa_id' => $requestData->mhs_id,
+                    'status' => 'W', // Status default
+                    'file_path' => null,   // Nullable, tidak perlu diisi
+                    'progress' => 0,        // Default progres
+                ]);
 
                 // Periksa jika kuota penuh setelah menerima request ini
                 $acceptedCount++; // Tambahkan request yang baru saja diterima
                 if ($acceptedCount >= $tugas->kuota) {
-                    $this->deny_remaining_requests($tugas->id); // Deny semua pending lainnya
+                    $this->deny_remaining_requests($tugas->tugas_id); // Deny semua pending lainnya
+
+                    // Jika kuota sudah penuh, ubah status tugas menjadi 'w' (working)
+                    $tugas->update([
+                        'tugas_status' => 'w',  // Ubah status tugas menjadi 'working'
+                    ]);
                 }
 
                 return response()->json([

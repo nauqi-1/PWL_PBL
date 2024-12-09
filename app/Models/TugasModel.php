@@ -54,4 +54,8 @@ class TugasModel extends Model
     {
         return $this->hasMany(RequestModel::class, 'tugas_id', 'tugas_id');
     }
+    public function pengumpulan()
+    {
+        return $this->hasMany(TugasMahasiswaModel::class, 'tugas_id', 'tugas_id');
+    }
 }

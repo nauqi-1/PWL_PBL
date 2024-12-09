@@ -19,7 +19,7 @@
                 <!-- Pembuat -->
                 <div class="form-group">
                     <label>Pembuat</label>
-                    <select name="tugas_pembuat_id" id="tugas_pembuat_id" class="form-control" required disabled > 
+                    <select name="tugas_pembuat_id" id="tugas_pembuat_id" class="form-control" required > 
                         <option value="">-- Pilih Pembuat --</option>
                     </select>
                     <small id="error-tugas_pembuat_id" class="error-text form-text text-danger"></small>

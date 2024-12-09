@@ -18,8 +18,14 @@
         @if (Auth::user()->level->level_kode == 'MHS')
             <li class="nav-item">
                 <a href="{{ url('/mhs_listtugas') }}" class="nav-link {{ ($activeMenu == 'mhs_listtugas') ? 'active' : '' }}">
-                    <i class="nav-icon fas fa-briefcase"></i>
+                    <i class="nav-icon fas fa-tasks"></i>
                     <p>Daftar Tugas</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url('/mhs_kumpultugas') }}" class="nav-link {{ ($activeMenu == 'mhs_kumpultugas') ? 'active' : '' }}">
+                    <i class="nav-icon fas fa-upload"></i>
+                    <p>Pengumpulan Tugas</p>
                 </a>
             </li>
             

@@ -46,9 +46,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama</th>
-                            <th>Tgl. dibuat</th>
-                            <th>Tgl. ditutup</th>
+                            <th>Tugas</th>
+                            <th>Tenggat</th>
+                            <th>Progres</th>
                             <th>Pembuat</th>
                             <th>Aksi</th>
                         </tr>
@@ -104,7 +104,7 @@
         tableTugasKompen = $('#table_tugaskompen').DataTable({
             serverSide: true,
             ajax: {
-                url: "{{ url('mhs_listtugas/list') }}",
+                url: "{{ url('mhs_kumpultugas/list') }}",
                 dataType: "json",
                 type: "POST",
                 data: function(d) {
@@ -119,24 +119,36 @@
                     searchable: false
                 },
                 {
-                    data: "tugas_nama",
+                    data: "tugas.tugas_nama",
                     className: "", 
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "tugas_tgl_dibuat",
+                    data: "tugas.tugas_tgl_deadline",
                     className: "", 
                     render: function(data) {
                         return moment(data).format('DD MMMM YYYY HH:mm');
                     }
                 },
                 {
-                    data: "tugas_tgl_deadline",
-                    className: "", 
-                    render: function(data) {
-                        return moment(data).format('DD MMMM YYYY HH:mm');
-                    }
+                data: "progress",
+                className: "progress-column",
+                render: function(data, type, row) {
+                    // Pastikan nilai data tidak null, gunakan default 0 jika null
+                    let progressValue = data !== null ? data : 0;
+
+                    return `
+                        <td class="project_progress">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-green" role="progressbar" aria-valuenow="${progressValue}" aria-valuemin="0" aria-valuemax="100" style="width: ${progressValue}%">
+                                </div>
+                            </div>
+                            <small>
+                                ${progressValue}% Complete
+                            </small>
+                        </td>`;
+                }
                 },
                 {
                     data: "pembuat",
@@ -160,6 +172,23 @@
         });
 
     });
+    function updateProgress(tugasMahasiswaId, value) {
+    $.ajax({
+        url: `{{ url('mhs_kumpultugas/update-progress') }}/${tugasMahasiswaId}`,
+        type: 'PUT',
+        data: {
+            progress: value,
+            _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
+        },
+        success: function(response) {
+            alert('Progress berhasil diperbarui!');
+        },
+        error: function(xhr) {
+            alert('Terjadi kesalahan. Coba lagi.');
+        }
+    });
+    }
+
     // DataTables for Status Request
     $(document).ready(function() {
     tableStatusRequest = $('#table_statusrequest').DataTable({

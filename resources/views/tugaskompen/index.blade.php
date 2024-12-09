@@ -133,7 +133,7 @@
                 switch (data) {
                     case 'O':
                         return '<span class="badge badge-danger">Open</span>';
-                    case 'W':
+                    case 'w':
                         return '<span class="badge badge-warning">Working</span>';
                     case 'S':
                         return '<span class="badge badge-primary">Submitted</span>';

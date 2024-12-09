@@ -15,6 +15,7 @@ use App\Http\Controllers\TugasKompenController;
 use App\Http\Controllers\TugasJenisController;
 use App\Http\Controllers\RequestTugasController;
 use App\Http\Controllers\MhslistTugasController;
+use App\Http\Controllers\MhsKumpulTugasController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -310,6 +311,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/show_ajax', [MhslistTugasController::class, 'show_ajax']);
         Route::get('/{id}/confirm_ajax', [MhslistTugasController::class, 'confirm_ajax']);
         Route::post('/{id}/request_ajax', [MhslistTugasController::class, 'request_ajax']);
+    });
+    Route::group(['prefix' => 'mhs_kumpultugas', 'middleware' => 'authorize:MHS'], function () {
+        Route::get('/', [MhsKumpulTugasController::class, 'index']); //Menampilkan laman awal MhsKumpulTugas
+        Route::post('/list', [MhsKumpulTugasController::class, 'list']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
+        Route::get('/{id}/edit_ajax', [MhsKumpulTugasController::class, 'edit_ajax']); //edit data 
+        Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
+
     });
 
     Route::group(['prefix' => 'personal', 'middleware' => 'authorize:ADM, DSN, TDK'], function () {
