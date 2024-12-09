@@ -319,6 +319,13 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
 
     });
+    Route::group(['prefix' => 'pengumpulan_tugas', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
+        Route::get('/', [MhsKumpulTugasController::class, 'index']); //Menampilkan laman awal MhsKumpulTugas
+        Route::post('/list', [MhsKumpulTugasController::class, 'list']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
+        Route::get('/{id}/edit_ajax', [MhsKumpulTugasController::class, 'edit_ajax']); //edit data 
+        Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
+
+    });
 
     Route::group(['prefix' => 'personal', 'middleware' => 'authorize:ADM, DSN, TDK'], function () {
         Route::get('/', [TugasController::class, 'index']);

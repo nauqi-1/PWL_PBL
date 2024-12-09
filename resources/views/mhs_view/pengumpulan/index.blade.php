@@ -8,9 +8,9 @@
             <li class="nav-item">
                 <a class="nav-link active" id="data-tugas-tab" data-toggle="pill" href="#data-tugas" role="tab" aria-controls="data-tugas" aria-selected="true">Daftar Tugas</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link" id="data-request-tab" data-toggle="pill" href="#data-request" role="tab" aria-controls="data-request" aria-selected="false">Status Request</a>
-            </li>
+            </li> --}}
         </ul>
     </div>
     <div class="card-body">
