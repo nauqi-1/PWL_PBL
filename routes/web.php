@@ -16,6 +16,7 @@ use App\Http\Controllers\TugasJenisController;
 use App\Http\Controllers\RequestTugasController;
 use App\Http\Controllers\MhslistTugasController;
 use App\Http\Controllers\MhsKumpulTugasController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,9 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
+    
+    Route::get('user/{id}/edit_ajax', [UserController::class, 'edit_ajax']); //edit data 
+    Route::put('user/{id}/update_ajax', [UserController::class, 'update_ajax']); //simpan data 
 
     Route::group(['prefix' => 'level', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [LevelController::class, 'index']); //Menampilkan laman awal level
@@ -213,7 +217,7 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-    Route::group(['prefix' => 'user', 'middleware' => 'authorize:ADM'], function () {
+    /*Route::group(['prefix' => 'user', 'middleware' => 'authorize:ADM'], function () {
         Route::get('/', [UserController::class, 'index']); //Menampilkan laman awal User
         Route::post('/list', [UserController::class, 'list']); //menampilkan data User dalam bentuk json untuk datatables.
 
@@ -237,7 +241,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export_pdf', [UserController::class, 'export_pdf']); //export pdf
 
 
-    });
+    });*/
     Route::group(['prefix' => 'tugaskompen', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
         Route::get('/', [TugasKompenController::class, 'index']); //Menampilkan laman awal TugasKompen
         Route::post('/list', [TugasKompenController::class, 'list']); //menampilkan data TugasKompen dalam bentuk json untuk datatables.

@@ -16,7 +16,7 @@
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-      <!-- Navbar Search -->
+      <!-- Navbar Search 
       <li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="fas fa-search"></i>
@@ -37,6 +37,7 @@
           </form>
         </div>
       </li>
+      -->
 
       
       <!-- Notifications Dropdown Menu -->
@@ -66,43 +67,39 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
       </li>
+      
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+          @if (Auth::user()->level->level_kode == 'ADM')
+          {{Auth::user()->admin->admin_nama}}
+          @elseif (Auth::user()->level->level_kode == 'DSN')
+          {{Auth::user()->dosen->dosen_nama}}
+          @elseif (Auth::user()->level->level_kode == 'TDK')
+          {{Auth::user()->tendik->tendik_nama}}
+          @elseif (Auth::user()->level->level_kode == 'MHS')
+          {{Auth::user()->mahasiswa->mahasiswa_nama}}
+          @endif
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <a onclick="modalAction('{{url('/user/'.Auth::user()->user_id.'/edit_ajax')}}')" class="dropdown-item">
+          <i class="fas fa-user mr-2"></i> Edit Data Diri
+        </a>
+        <div class="dropdown-divider"></div>
+
+        <a class="nav-link" data-widget="logout" data-slide="true" href="{{url('/logout')}}" role="button">
+          <i class="fas fa-sign-out-alt"></i> Log Out
+        </a>
+        </div>
+      </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-          <i class="fas fa-th-large"></i>
-        </a>
-
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <img src="{{ asset('images/pfp/' . auth()->user()->profile_picture) }}" 
-               class="img-circle" 
-               alt="Profile"
-               style="width: 40px; height: 40px; object-fit: cover; margin-top: -7px">
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a onclick="modalAction('{{url('/import_pfp')}}')" class="dropdown-item">
-            <i class="fas fa-camera mr-2"></i> Upload Photo Profil
-          </a>
-        <div class="dropdown-divider"></div>
-        <a onclick="modalAction('{{url('/edit_profile')}}')" class="dropdown-item">
-          <i class="fas fa-user mr-2"></i> Edit Data Diri
-        </a>
-        </div>
-       
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-widget="logout" data-slide="true" href="{{url('/logout')}}" role="button">
-          <i class="fas fa-sign-out-alt"></i>  
-        </a>
-        
-      </li>
     </ul>
   </nav>
+  <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+
   <script>
     function modalAction(url = '') {
         $.ajax({

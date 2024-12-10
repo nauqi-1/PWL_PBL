@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\AdminModel;
+use App\Models\DosenModel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\LevelModel;
+use App\Models\MahasiswaModel;
+use App\Models\TendikModel;
 use App\Models\UserModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -144,57 +147,122 @@ class UserController extends Controller
         $level = LevelModel::select('level_id', 'level_nama') -> get();
         return view('user.show_ajax', ['user' => $user, 'level' => $level]);
     }
+    
+
+
     public function edit_ajax(string $id) {
         $user = UserModel::with(['admin', 'dosen', 'tendik','mahasiswa'])->find($id);
-        $level = LevelModel::select('level_id', 'level_nama') -> get();
+        $level = LevelModel::select('level_id', 'level_nama', 'level_kode') -> get();
 
         return view('user.edit_ajax', ['user' => $user, 'level' => $level]);
     }
 
     public function update_ajax(Request $request, $id)
     {
-    if ($request->ajax() || $request->wantsJson()) {
-        $rules = [
-            'level_id' => 'required|integer',
-            'username' => 'required|max:20|unique:m_user,username',
-            'password' => 'nullable|min:6|max:20',
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validasi gagal.',
-                'msgField' => $validator->errors()
-            ]);
-        }
-
-        $check = UserModel::find($id);
-        
-        if ($check) {
-            if (!$request->filled('password')) { 
-                $request->request->remove('password');
+        if ($request->ajax() || $request->wantsJson()) {
+            $user = UserModel::find($id);
+            $role = null;
+            $rules = [];
+    
+            if ($user) {
+                $levelKode = $user->level->level_kode;
+    
+                if ($levelKode === 'ADM') {
+                    $role = AdminModel::where('user_id', $user->user_id)->first();
+                    $rules = [
+                        'password' => 'nullable|min:6|max:20',
+                        'admin_prodi' => 'required',
+                        'admin_noHp' => 'required'
+                    ];
+                } elseif ($levelKode === 'DSN') {
+                    $role = DosenModel::where('user_id', $user->user_id)->first();
+                    $rules = [
+                        'password' => 'nullable|min:6|max:20',
+                        'dosen_noHp' => 'required'
+                    ];
+                } elseif ($levelKode === 'TDK') {
+                    $role = TendikModel::where('user_id', $user->user_id)->first();
+                    $rules = [
+                        'password' => 'nullable|min:6|max:20',
+                        'tendik_noHp' => 'required'
+                    ];
+                } elseif ($levelKode === 'MHS') {
+                    $role = MahasiswaModel::where('user_id', $user->user_id)->first();
+                    $rules = [
+                        'password' => 'nullable|min:6|max:20',
+                        'mahasiswa_noHp' => 'required'
+                    ];
+                }
             }
-
-            $request['password'] = Hash::make($request->password);
-
-            $check->update($request->all());
-
+    
+            // If rules are empty, it means no valid level_kode was found, exit early
+            if (empty($rules)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Level tidak dikenali atau data tidak ditemukan.',
+                ]);
+            }
+    
+            // Validate the request
+            $validator = Validator::make($request->all(), $rules);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal.',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+    
+            // Update Role Data
+            if ($role) {
+                $updateData = [];
+                
+                if ($levelKode === 'ADM') {
+                    $updateData = [
+                        'admin_nama'  => $request->admin_nama,
+                        'admin_prodi' => $request->admin_prodi,
+                        'admin_noHp'  => $request->admin_noHp,
+                    ];
+                } elseif ($levelKode === 'DSN') {
+                    $updateData = [
+                        'dosen_noHp'  => $request->dosen_noHp,
+                    ];
+                } elseif ($levelKode === 'TDK') {
+                    $updateData = [
+                        'tendik_noHp' => $request->tendik_noHp,
+                    ];
+                } elseif ($levelKode === 'MHS') {
+                    $updateData = [
+                        'mahasiswa_noHp' => $request->mahasiswa_noHp,
+                    ];
+                }
+    
+                $role->update($updateData);
+            }
+    
+            // Update User Data
+            $userData = [];
+            if ($request->filled('username')) {
+                $userData['username'] = $request->username;
+            }
+            if ($request->filled('password')) {
+                $userData['password'] = Hash::make($request->password);
+            }
+    
+            if (!empty($userData)) {
+                $user->update($userData);
+            }
+    
             return response()->json([
                 'status' => true,
-                'message' => 'Data berhasil diupdate'
-            ]);
-        } else {
-            return response()->json([
-                'status' => false,
-                'message' => 'Data tidak ditemukan'
+                'message' => 'Data berhasil diupdate',
             ]);
         }
+    
+        return redirect('/');
     }
-
-    return redirect('/');
-    }
+    
 
     public function confirm_ajax(string $id) {
         $user = UserModel::find($id);

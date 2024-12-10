@@ -11,7 +11,7 @@ class AdminModel extends Model
     use HasFactory;
     protected $table = 'm_admin';
     protected $primaryKey = 'admin_id';
-    protected $fillable = ['admin_nama', 'admin_prodi', 'user_id', 'created_at', 'updated_at'];
+    protected $fillable = ['admin_nama', 'admin_prodi', 'user_id', 'created_at', 'updated_at', 'admin_noHp'];
 
     public function user():BelongsTo
     {
