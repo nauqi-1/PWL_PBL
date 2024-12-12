@@ -25,6 +25,7 @@ Route::post('/register', \App\Http\Controllers\Api\RegisterController::class)->n
 Route::post('/login', \App\Http\Controllers\Api\LoginController::class)->name('login');
 Route::post('/logout', \App\Http\Controllers\Api\LogoutController::class)->name('logout');
 
+Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update']);
 
 
 // Route::middleware('auth:api')->group(function () {
@@ -66,7 +67,7 @@ Route::group(['prefix' => 'mahasiswa'], function () {
     Route::get('/', [MahasiswaController::class, 'index']);
     Route::post('/', [MahasiswaController::class, 'store']);
     Route::get('/{mahasiswa}', [MahasiswaController::class, 'show']);
-    Route::put('/{mahasiswa}', [MahasiswaController::class, 'update']);
+    //Route::put('/{mahasiswa}', [MahasiswaController::class, 'update']);
     Route::delete('/{mahasiswa}', [MahasiswaController::class, 'destroy']);
 });
 

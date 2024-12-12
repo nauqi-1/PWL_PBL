@@ -21,10 +21,37 @@ class MahasiswaController extends Controller
         return MahasiswaModel::find($mahasiswa);
     }
 
-    public function update(Request $request, MahasiswaModel $mahasiswa) {
-        $mahasiswa->update($request->all());
-        return MahasiswaModel::find($mahasiswa);
+    public function update(Request $request, $mahasiswaId)
+{
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'mahasiswa_noHp' => 'required|string|max:15|regex:/^\d+$/'  // Assuming phone number has max length
+    ]);
+
+    try {
+        // Find the specific mahasiswa (student) record by ID
+        $mahasiswa = MahasiswaModel::findOrFail($mahasiswaId);
+
+        // Update the phone number
+        $mahasiswa->mahasiswa_noHp = $validatedData['mahasiswa_noHp'];
+
+        // Save the updated record
+        $mahasiswa->save();
+
+        // Return a success response
+        return response()->json([
+            'message' => 'Phone number updated successfully',
+            'mahasiswa' => $mahasiswa
+        ], 200);
+
+    } catch (\Exception $e) {
+        // Handle any errors that might occur during the update process
+        return response()->json([
+            'message' => 'Error updating phone number',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     public function destroy(MahasiswaModel $mahasiswa) {
         $mahasiswa->delete();
