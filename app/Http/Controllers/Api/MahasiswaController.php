@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\MahasiswaModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class MahasiswaController extends Controller
 {
@@ -22,37 +21,37 @@ class MahasiswaController extends Controller
         return MahasiswaModel::find($mahasiswa);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $mahasiswaId)
 {
-    Log::info('Request body:', $request->all());
-    // Validate the input data
-    $request->validate([
-        'mahasiswa_noHp' => 'required|string|max:15', // Adjust max length as needed
+    // Validate the incoming request data
+    $validatedData = $request->validate([
+        'mahasiswa_noHp' => 'required|string|max:15|regex:/^\d+$/'  // Assuming phone number has max length
     ]);
 
-    // Find the Mahasiswa record by ID
-    $mahasiswa = MahasiswaModel::find($id);
+    try {
+        // Find the specific mahasiswa (student) record by ID
+        $mahasiswa = MahasiswaModel::findOrFail($mahasiswaId);
 
-    // Check if Mahasiswa exists
-    if (!$mahasiswa) {
+        // Update the phone number
+        $mahasiswa->mahasiswa_noHp = $validatedData['mahasiswa_noHp'];
+
+        // Save the updated record
+        $mahasiswa->save();
+
+        // Return a success response
         return response()->json([
-            'message' => 'Mahasiswa not found'
-        ], 404);
+            'message' => 'Phone number updated successfully',
+            'mahasiswa' => $mahasiswa
+        ], 200);
+
+    } catch (\Exception $e) {
+        // Handle any errors that might occur during the update process
+        return response()->json([
+            'message' => 'Error updating phone number',
+            'error' => $e->getMessage()
+        ], 500);
     }
-
-    // Update the mahasiswa_noHp field
-    $mahasiswa->mahasiswa_noHp = $request->input('mahasiswa_noHp');
-    
-    // Save the changes
-    $mahasiswa->save();
-
-    // Return a success response
-    return response()->json([
-        'message' => 'Data successfully updated',
-        'data' => $mahasiswa
-    ], 200);
 }
-
 
     public function destroy(MahasiswaModel $mahasiswa) {
         $mahasiswa->delete();
