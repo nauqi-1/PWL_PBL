@@ -1,366 +1,409 @@
 @extends('layouts.template')
 
 @section('content')
+    <div class = "card">
+        <div class = "card-header">
+            <h3 class = "card-title"><strong>Dashboard</strong></h3>
+            <div class = "card-tools"></div>
+        </div>
+        <div class = "card-body">
+            Rencananya akan dikasih graph performa pengerjaan tugas, daftar tugas baru, daftar request, daftar tugas yang
+            dimanage dan statusnya.
+        </div>
+        <div>
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <!-- Small boxes (Stat box) -->
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                                <div class="inner">
+                                    <h3>{{ $totalTugas }}</h3>
 
-<div class = "card">
-    <div class = "card-header">
-        <h3 class = "card-title">Dashboard Admin</h3>
-        <div class = "card-tools"></div>
+                                    <p><strong>Jumlah Seluruh<br>Tugas Kompensasi</strong></p>
+                                </div>
+                                <div class="icon">
+                                    <i class="nav-icon fas fa-tasks" style="font-size: 84px"></i>
+                                </div>
+                                <a href="{{ url('/tugaskompen') }}" class="small-box-footer">Info selengkapnya <i
+                                        class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                                <div class="inner">
+                                    <h3>{{ $totalTugasUser }}</h3>
+
+                                    <p><strong>Jumlah Tugas<br>Kompensasi</strong></p>
+                                </div>
+                                <div class="icon">
+                                    <i class="nav-icon fas fa-tasks" style="font-size: 84px; color:white; opacity: 0.4"></i>
+                                </div>
+                                <a href="{{ url('/tugaskompen') }}" class="small-box-footer">Info selengkapnya <i
+                                        class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-warning">
+                                <div class="inner">
+                                    <h3>{{ $totalRequest }}</h3>
+
+                                    <p><strong>Jumlah Request<br>Tugas Kompensasi</strong></p>
+                                </div>
+                                <div class="icon">
+                                    <i class="nav-icon fas fa-envelope-open-text" style="font-size: 84px"></i>
+                                </div>
+                                <a href="{{ url('/requesttugas') }}" class="small-box-footer">Info selengkapnya <i
+                                        class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-danger">
+                                <div class="inner">
+                                    <h3>{{ $totalMhsAlfa }}</h3>
+
+                                    <p><strong>Jumlah Mahasiswa<br>Alfa</strong></p>
+                                </div>
+                                <div class="icon">
+                                    <i class="nav-icon fas fa-calendar" style="font-size: 84px"></i>
+                                </div>
+                                <a href="{{ url('/mahasiswa_alfa') }}" class="small-box-footer">Info selengkapnya <i
+                                        class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- ./col -->
+                    </div>
+                    <!-- /.row -->
+                    <!-- Main row -->
+                    <!--div class="row"-->
+                    <!-- Left col -->
+                    <!--section class="col-lg-7 connectedSortable">
+                                                              
+                                                            </section-->
+                    <!-- right col -->
+                    <!--/div-->
+                    <!-- /.row (main row) -->
+                </div><!-- /.container-fluid -->
+
+                <!-- /.content -->
+        </div>
     </div>
-    <div class = "card-body">
-        Rencananya akan dikasih graph performa pengerjaan tugas, daftar tugas baru, daftar request, daftar tugas yang dimanage dan statusnya.
-    </div>
-    <div>
-        <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-          <!-- Small boxes (Stat box) -->
-          <div class="row">
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-info">
-                <div class="inner">
-                  <h3>150</h3>
-  
-                  <p>Jumlah Tugas Kompensasi</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-bag"></i>
-                </div>
-                <a href="#" class="small-box-footer">Info selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-success">
-                <div class="inner">
-                  <h3>53<sup style="font-size: 20px">%</sup></h3>
-  
-                  <p>Jumlah Request Tugas Kompensasi</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-stats-bars"></i>
-                </div>
-                <a href="#" class="small-box-footer">Info selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-warning">
-                <div class="inner">
-                  <h3>44</h3>
-  
-                  <p>User Registrations</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-person-add"></i>
-                </div>
-                <a href="#" class="small-box-footer">Info selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-              <!-- small box -->
-              <div class="small-box bg-danger">
-                <div class="inner">
-                  <h3>65</h3>
-  
-                  <p>Jumlah Mahasiswa Alfa</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">Info selengkapnya <i class="fas fa-arrow-circle-right"></i></a>
-              </div>
-            </div>
-            <!-- ./col -->
-          </div>
-          <!-- /.row -->
-          <!-- Main row -->
-          <div class="row">
-            <!-- Left col -->
-            <section class="col-lg-7 connectedSortable">
-              <!-- Custom tabs (Charts with tabs)-->
-              <div class="card">
+    <div class="row">
+        <section class="col-lg-6 connectedSortable">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="card" style="max-width: 675px;">
                 <div class="card-header">
-                  <h3 class="card-title">
-                    <i class="fas fa-chart-pie mr-1"></i>
-                    Sales
-                  </h3>
-                  <div class="card-tools">
-                    <ul class="nav nav-pills ml-auto">
-                      <li class="nav-item">
-                        <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                      </li>
-                    </ul>
-                  </div>
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-pie mr-1"></i>
+                        Grafik Jenis & Status Tugas
+                    </h3>
+                    <div class="card-tools">
+                        <ul class="nav nav-pills ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#jenis-chart" data-toggle="tab"
+                                    style="padding-block: 5px">Jenis</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#status-chart" data-toggle="tab"
+                                    style="padding-block: 5px">Status</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div><!-- /.card-header -->
                 <div class="card-body">
-                  <div class="tab-content p-0">
-                    <!-- Morris chart - Sales -->
-                    <div class="chart tab-pane active" id="revenue-chart"
-                         style="position: relative; height: 300px;">
-                        <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                     </div>
-                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                      <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
+                    <div class="tab-content p-0">
+                        <!-- Morris chart - Sales -->
+                        <div class="chart tab-pane active" id="jenis-chart" style="position: relative; height: 300px;">
+                            <canvas id="jenis-chart-canvas" height="300" style="height: 300px;"></canvas>
+                        </div>
+                        <div class="chart tab-pane" id="status-chart" style="position: relative; height: 300px;">
+                            <canvas id="status-chart-canvas" height="300" style="height: 300px;"></canvas>
+                        </div>
                     </div>
-                  </div>
                 </div><!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-  
-              <!-- TO DO List -->
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">
-                    <i class="ion ion-clipboard mr-1"></i>
-                    To Do List
-                  </h3>
-  
-                  <div class="card-tools">
-                    <ul class="pagination pagination-sm">
-                      <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
-                      <li class="page-item"><a href="#" class="page-link">1</a></li>
-                      <li class="page-item"><a href="#" class="page-link">2</a></li>
-                      <li class="page-item"><a href="#" class="page-link">3</a></li>
-                      <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-                    </ul>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                  <ul class="todo-list" data-widget="todo-list">
-                    <li>
-                      <!-- drag handle -->
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <!-- checkbox -->
-                      <div  class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo1" id="todoCheck1">
-                        <label for="todoCheck1"></label>
-                      </div>
-                      <!-- todo text -->
-                      <span class="text">Design a nice theme</span>
-                      <!-- Emphasis label -->
-                      <small class="badge badge-danger"><i class="far fa-clock"></i> 2 mins</small>
-                      <!-- General tools such as edit or delete-->
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div  class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>
-                        <label for="todoCheck2"></label>
-                      </div>
-                      <span class="text">Make the theme responsive</span>
-                      <small class="badge badge-info"><i class="far fa-clock"></i> 4 hours</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div  class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo3" id="todoCheck3">
-                        <label for="todoCheck3"></label>
-                      </div>
-                      <span class="text">Let theme shine like a star</span>
-                      <small class="badge badge-warning"><i class="far fa-clock"></i> 1 day</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div  class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo4" id="todoCheck4">
-                        <label for="todoCheck4"></label>
-                      </div>
-                      <span class="text">Let theme shine like a star</span>
-                      <small class="badge badge-success"><i class="far fa-clock"></i> 3 days</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div  class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo5" id="todoCheck5">
-                        <label for="todoCheck5"></label>
-                      </div>
-                      <span class="text">Check your messages and notifications</span>
-                      <small class="badge badge-primary"><i class="far fa-clock"></i> 1 week</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="handle">
-                        <i class="fas fa-ellipsis-v"></i>
-                        <i class="fas fa-ellipsis-v"></i>
-                      </span>
-                      <div  class="icheck-primary d-inline ml-2">
-                        <input type="checkbox" value="" name="todo6" id="todoCheck6">
-                        <label for="todoCheck6"></label>
-                      </div>
-                      <span class="text">Let theme shine like a star</span>
-                      <small class="badge badge-secondary"><i class="far fa-clock"></i> 1 month</small>
-                      <div class="tools">
-                        <i class="fas fa-edit"></i>
-                        <i class="fas fa-trash-o"></i>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer clearfix">
-                  <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add item</button>
-                </div>
-              </div>
-              <!-- /.card -->
-            </section>
-            <!-- /.Left col -->
-            <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <section class="col-lg-5 connectedSortable">
-  
-              <!-- solid sales graph -->
-              <div class="card bg-gradient-info">
-                <div class="card-header border-0">
-                  <h3 class="card-title">
-                    <i class="fas fa-th mr-1"></i>
-                    Sales Graph
-                  </h3>
-  
-                  <div class="card-tools">
-                    <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer bg-transparent">
-                  <div class="row">
-                    <div class="col-3 text-center">
-                      <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
-                             data-fgColor="#39CCCC">
-  
-                      <div class="text-white">Mail-Orders</div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-3 text-center">
-                      <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"
-                             data-fgColor="#39CCCC">
-  
-                      <div class="text-white">Online</div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-3 text-center">
-                      <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"
-                             data-fgColor="#39CCCC">
-  
-                      <div class="text-white">In-Store</div>
-                    </div>
-                    <!-- ./col -->
-                  </div>
-                  <!-- /.row -->
-                </div>
-                <!-- /.card-footer -->
-              </div>
-              <!-- /.card -->
-  
-              <!-- Calendar -->
-              <div class="card bg-gradient-success">
-                <div class="card-header border-0">
-  
-                  <h3 class="card-title">
-                    <i class="far fa-calendar-alt"></i>
-                    Calendar
-                  </h3>
-                  <!-- tools card -->
-                  <div class="card-tools">
-                    <!-- button with a dropdown -->
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                        <i class="fas fa-bars"></i>
-                      </button>
-                      <div class="dropdown-menu" role="menu">
-                        <a href="#" class="dropdown-item">Add new event</a>
-                        <a href="#" class="dropdown-item">Clear events</a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">View calendar</a>
-                      </div>
-                    </div>
-                    <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                      <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
-                      <i class="fas fa-times"></i>
-                    </button>
-                  </div>
-                  <!-- /. tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body pt-0">
-                  <!--The calendar -->
-                  <div id="calendar" style="width: 100%"></div>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </section>
-            <!-- right col -->
-          </div>
-          <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-      </section>
-      <!-- /.content -->
-    </div>
-</div>
-<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
+            </div>
 
+            <!-- /.card -->
+        </section>
+
+        <!-- STACKED BAR CHART -->
+        <section class="col-lg-6 connectedSortable">
+            <div class="card card-danger" style="max-width: 675px;">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-chart-bar mr-1"></i>
+                        Grafik Mahasiswa Alfa & Kompen per Periodik
+                    </h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart">
+                        <canvas id="alfaKompenChart"
+                            style="min-height: 250px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </section>
+
+        <!-- /.Left col -->
+        <!-- right col (We are only adding the ID to make the widgets sortable)-->
+        <section class="col-lg-6 connectedSortable">
+
+            <!-- solid sales graph -->
+            <div class="card bg-gradient-info">
+                <div class="card-header border-0">
+                    <h3 class="card-title">
+                        <i class="fas fa-th mr-1"></i>
+                        Grafik Data Tugas Baru
+                    </h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas class="chart" id="tugas-baru-chart"
+                        style="min-height: 250px; height: 300px; max-height: 300px; max-width: 100%;"></canvas>
+                </div>
+                <!-- /.card-body -->
+
+            </div>
+            <!-- /.card -->
+        </section>
+        <!--/section-->
+    </div>
+    <div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static"
+        data-keyboard="false" data-width="75%" aria-hidden="true"></div>
 @endsection
 @push('css')
-    
 @endpush
 @push('js')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function modalAction(url = '') {
-        $('#myModal').load(url,function() {
-            $('#myModal').modal('show');
+            $('#myModal').load(url, function() {
+                $('#myModal').modal('show');
+            });
+        }
+        // Data grafik Status Tugas
+        const totalTugasStatus = @json($totalTugasStatus);
+
+        // Membuat format untuk Chart.js
+        const donutLabels = ["Open", "Working", "Submitted", "Done"];
+        const donutData = [
+            totalTugasStatus["O"] || 0,
+            totalTugasStatus["W"] || 0,
+            totalTugasStatus["S"] || 0,
+            totalTugasStatus["D"] || 0
+        ];
+
+        // Konfigurasi Grafik Status Tugas
+        const ctx = document.getElementById('status-chart-canvas').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: donutLabels,
+                datasets: [{
+                    data: donutData,
+                    backgroundColor: ['#f56954', '#f39c12', '#00c0ef', '#00a65a'],
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+            }
         });
-    }
+
+        // Data untuk Grafik Jumlah Tugas Baru
+        const totalTugasBulan = @json($totalTugasBulan);
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const labelTugasBulan = Object.keys(totalTugasBulan).map(month => months[month - 1]);
+        const dataTugasBulan = Object.values(totalTugasBulan);
+
+        // Konfigurasi Grafik Jumlah Tugas Baru
+        const ctx2 = document.getElementById('tugas-baru-chart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: labelTugasBulan,
+                datasets: [{
+                    label: 'Jumlah Tugas Baru',
+                    data: dataTugasBulan,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: '#ffffff',
+                    borderWidth: 2,
+                    pointRadius: 5,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 16, // Ukuran font untuk label legend
+                                weight: 'bold', // Ketebalan font
+                            },
+                            color: '#ffffff' // Warna font putih (menyesuaikan contoh)
+                        }
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Bulan',
+                            font: {
+                                size: 14, // Ukuran font untuk sumbu X
+                                weight: 'bold', // Ketebalan font
+                            },
+                            color: '#ffffff' // Warna font putih
+                        },
+                        ticks: {
+                            font: {
+                                size: 12, // Ukuran font untuk label ticks
+                                weight: 'normal'
+                            },
+                            color: '#ffffff' // Warna font putih
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Jumlah Tugas',
+                            font: {
+                                size: 14, // Ukuran font untuk sumbu Y
+                                weight: 'bold', // Ketebalan font
+                            },
+                            color: '#ffffff' // Warna font putih
+                        },
+                        ticks: {
+                            stepSize: 1,
+                            beginAtZero: true,
+                            font: {
+                                size: 12, // Ukuran font untuk label ticks
+                                weight: 'normal'
+                            },
+                            color: '#ffffff' // Warna font putih
+                        }
+                    }
+                }
+            }
+        });
+
+        // Data untuk Grafik Jenis Tugas
+        const totalTugasJenis = @json($totalTugasJenis);
+        const labelTugasJenis = Object.keys(totalTugasJenis);
+        const dataTugasJenis = Object.values(totalTugasJenis);
+
+        // Konfigurasi Grafik Jenis Tugas
+        const ctx3 = document.getElementById('jenis-chart-canvas').getContext('2d');
+        new Chart(ctx3, {
+            type: 'doughnut',
+            data: {
+                labels: labelTugasJenis,
+                datasets: [{
+                    label: 'Jenis Tugas',
+                    data: dataTugasJenis,
+                    backgroundColor: [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#F7464A'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+            }
+        });
+
+        // Data untuk Grafik Mahasiswa Alfa & Kompen per Periodik
+        const totalAlfaKompen = @json($totalAlfaKompen);
+        const labels = totalAlfaKompen.map(item => item.periode);
+        const dataAlfa = totalAlfaKompen.map(item => item.alfa);
+        const dataKompen = totalAlfaKompen.map(item => item.kompen);
+
+        // Konfigurasi Grafik Mahasiswa Alfa & Kompen per Periodik
+        const ctx4 = document.getElementById('alfaKompenChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                        label: 'Mahasiswa Alfa',
+                        data: dataAlfa,
+                        backgroundColor: 'rgba(255, 0, 0, 0.6)',
+                    },
+                    {
+                        label: 'Mahasiswa Kompen',
+                        data: dataKompen,
+                        backgroundColor: 'rgba(11, 156, 49, 0.6)',
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top', // Posisi legend
+                    },
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Periode',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                            }
+                        },
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Mahasiswa',
+                            font: {
+                                size: 14,
+                                weight: 'bold',
+                            }
+                        },
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
     </script>
 @endpush

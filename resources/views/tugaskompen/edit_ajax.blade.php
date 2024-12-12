@@ -215,7 +215,7 @@
         submitHandler: function(form) {
             $.ajax({
                 url: form.action,
-                type: 'PUT',
+                type: form.method,
                 data: new FormData(form),
                 processData: false,
                 contentType: false,

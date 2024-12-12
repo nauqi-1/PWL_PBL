@@ -54,7 +54,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/pengumpulan_tugas') }}" class="nav-link {{ ($activeMenu == 'request') ? 'active' : '' }}">
+                <a href="{{ url('/pengumpulan_tugas') }}" class="nav-link {{ ($activeMenu == 'pengumpulan_tugas') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-box"></i>
                     <p>Pengumpulan</p>
                 </a>

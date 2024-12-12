@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 
 class TugasKompenController extends Controller
@@ -27,11 +28,11 @@ class TugasKompenController extends Controller
             'title' => 'Daftar Tugas Kompen',
             'list' => ['Home', 'Tugas']
         ];
-        if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'MHS') {
+        if (Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'MHS') {
             $page = (object) [
                 'title' => 'Daftar tugas kompen yang ada dalam sistem.'
             ];
-        } else if(Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK') {
+        } else if (Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK') {
             $page = (object) [
                 'title' => 'Daftar tugas kompen yang telah dibuat.'
             ];
@@ -203,34 +204,50 @@ class TugasKompenController extends Controller
         $kompetensi = KompetensiModel::select('kompetensi_id', 'kompetensi_nama')->get();
         $jenisTugas = TugasJenisModel::all();
         $users = UserModel::with('dosen', 'admin', 'tendik', 'mahasiswa')->get();
-
+        $pembuat = UserModel::with(['dosen', 'admin', 'tendik'])
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'id' => $user->user_id,
+                    'nama' => $user->nama_pembuat,
+                ];
+            });
         // Return view dengan data
         return view('tugaskompen.edit_ajax', [
             'tugas' => $tugas,
             'kompetensi' => $kompetensi,
             'jenisTugas' => $jenisTugas,
             'users' => $users,
+            'pembuat' => $pembuat
+
         ]);
     }
     public function update_ajax(Request $request, $id)
     {
+        Log::info('Memulai update_ajax dengan ID tugas: ' . $id);
+
         if ($request->ajax() || $request->wantsJson()) {
+            Log::info('Permintaan diterima dalam format AJAX/JSON', $request->all());
+
             $rules = [
                 'tugas_nama' => 'required|string|max:255',
                 'tugas_desc' => 'required|string',
                 'tugas_bobot' => 'required|integer',
-                'tugas_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,gif,mp4,avi,mkv,txt,zip|max:51200', // Maksimum 50MB
+                'tugas_file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,gif,mp4,avi,mkv,txt,zip|max:51200',
                 'tugas_tgl_deadline' => 'required|date',
                 'jenis_id' => 'required|string',
                 'kuota' => 'required|integer',
                 'tugas_pembuat_id' => 'required|exists:m_user,user_id',
-                'kompetensi' => 'required', // Kompetensi harus berupa array
-                'kompetensi.*' => 'exists:m_kompetensi,kompetensi_id', // Setiap ID harus valid
+                'kompetensi' => 'required',
+                'kompetensi.*' => 'exists:m_kompetensi,kompetensi_id',
             ];
+            Log::info('Data request yang diterima:', $request->all());
 
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
+                Log::error('Validasi gagal', $validator->errors()->toArray());
+
                 return response()->json([
                     'status' => false,
                     'message' => 'Validasi Gagal',
@@ -241,35 +258,47 @@ class TugasKompenController extends Controller
             try {
                 DB::beginTransaction();
 
-                // Ambil tugas yang ingin diperbarui
+                Log::info('Mencari tugas dengan ID: ' . $id);
                 $tugas = TugasModel::find($id);
 
                 if (!$tugas) {
+                    Log::error('Tugas tidak ditemukan dengan ID: ' . $id);
+
                     return response()->json([
                         'status' => false,
                         'message' => 'Tugas tidak ditemukan',
                     ]);
                 }
 
+                Log::info('Tugas ditemukan', $tugas->toArray());
+
                 // Update data tugas
-                $tugas->update($request->except('tugas_file', 'kompetensi'));
+                $updateData = $request->except('tugas_file', 'kompetensi');
+                $tugas->update($updateData);
+
+                Log::info('Data tugas berhasil diperbarui', $updateData);
 
                 // Update file jika ada file baru
                 if ($request->hasFile('tugas_file')) {
-                    // Hapus file lama jika ada
+                    Log::info('File baru ditemukan, proses update file dimulai');
                     if ($tugas->tugas_file && Storage::exists('public/' . $tugas->tugas_file)) {
                         Storage::delete('public/' . $tugas->tugas_file);
+                        Log::info('File lama berhasil dihapus: ' . $tugas->tugas_file);
                     }
 
-                    // Simpan file baru
                     $file = $request->file('tugas_file');
                     $filename = time() . '_' . $file->getClientOriginalName();
                     $filePath = $file->storeAs('uploads/tugas', $filename, 'public');
                     $tugas->update(['tugas_file' => $filePath]);
+
+                    Log::info('File baru berhasil diupload dan disimpan', ['file_path' => $filePath]);
                 }
 
                 // Update kompetensi di tabel pivot
-                $tugas->kompetensi()->sync($request->kompetensi);
+                $kompetensi = $request->kompetensi;
+                $tugas->kompetensi()->sync($kompetensi);
+
+                Log::info('Kompetensi berhasil diperbarui', $kompetensi);
 
                 DB::commit();
 
@@ -281,6 +310,11 @@ class TugasKompenController extends Controller
             } catch (\Exception $e) {
                 DB::rollBack();
 
+                Log::error('Kesalahan saat memperbarui tugas', [
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+
                 return response()->json([
                     'status' => false,
                     'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage(),
@@ -288,8 +322,11 @@ class TugasKompenController extends Controller
             }
         }
 
+        Log::warning('Permintaan bukan AJAX/JSON');
+
         return redirect('/');
     }
+
     public function confirm_ajax(string $id)
     {
         // Find the task (tugaskompen) by ID
