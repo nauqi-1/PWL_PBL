@@ -17,6 +17,7 @@ use App\Http\Controllers\RequestTugasController;
 use App\Http\Controllers\MhslistTugasController;
 use App\Http\Controllers\MhsKumpulTugasController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PengumpulanController;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,7 +40,7 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [WelcomeController::class, 'index']);
-    
+
     Route::get('user/{id}/edit_ajax', [UserController::class, 'edit_ajax']); //edit data 
     Route::put('user/{id}/update_ajax', [UserController::class, 'update_ajax']); //simpan data 
 
@@ -320,14 +321,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [MhsKumpulTugasController::class, 'index']); //Menampilkan laman awal MhsKumpulTugas
         Route::post('/list', [MhsKumpulTugasController::class, 'list']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
         Route::get('/{id}/edit_ajax', [MhsKumpulTugasController::class, 'edit_ajax']); //edit data 
+        Route::get('/{id}/confirm_submit_ajax', [MhsKumpulTugasController::class, 'confirm_submit_ajax']); //edit data 
         Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
+        Route::put('/{id}/submit_ajax', [MhsKumpulTugasController::class, 'submit_ajax']); //simpan data 
 
     });
     Route::group(['prefix' => 'pengumpulan_tugas', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
-        Route::get('/', [MhsKumpulTugasController::class, 'index']); //Menampilkan laman awal MhsKumpulTugas
-        Route::post('/list', [MhsKumpulTugasController::class, 'list']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
-        Route::get('/{id}/edit_ajax', [MhsKumpulTugasController::class, 'edit_ajax']); //edit data 
-        Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
+        Route::get('/', [PengumpulanController::class, 'index']); //Menampilkan laman awal PengumpulanController::post('/list', [PengumpulanController::class, 'list']); //menampilkan data PengumpulanController bentuk json untuk datatables.
+        Route::get('/{id}/edit_ajax', [PengumpulanController::class, 'edit_ajax']); //edit data 
+        Route::put('/{id}/update_progress', [PengumpulanController::class, 'update_progress']); //simpan data 
 
     });
 

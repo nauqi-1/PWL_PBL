@@ -22,7 +22,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 
-class MhsKumpulTugasController extends Controller
+class PengumpulanController extends Controller
 {
     public function index()
     {
@@ -35,10 +35,10 @@ class MhsKumpulTugasController extends Controller
             'title' => 'Daftar Tugas Kompen yang ada dalam sistem'
         ];
 
-        $activeMenu = 'mhs_kumpultugas'; //set menu yang sedang aktif
+        $activeMenu = 'pengumpulan_tugas'; //set menu yang sedang aktif
         $level = LevelModel::all();
 
-        return view('mhs_view.pengumpulan.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
+        return view('pengumpulan.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
     }
     public function list(Request $request)
     {
@@ -99,6 +99,29 @@ class MhsKumpulTugasController extends Controller
         ]);
     }
 
+
+
+    public function listrequest(Request $request)
+    {
+        // Ambil ID mahasiswa login
+        $mhsId = auth()->user()->mahasiswa->mahasiswa_id;
+
+        // Ambil data request tugas hanya untuk mahasiswa login
+        $requesttugass = RequestModel::with(['tugas', 'pembuat', 'mahasiswa'])
+            ->where('mhs_id', $mhsId) // Filter berdasarkan mahasiswa yang login
+            ->get();
+
+        return DataTables::of($requesttugass)
+            ->addIndexColumn()
+            ->addColumn('pembuat', function ($requesttugas) {
+                if ($requesttugas->pembuat && in_array($requesttugas->pembuat->level_id, [1, 2, 3])) {
+                    return $requesttugas->pembuat->nama_pembuat;
+                }
+                return null;
+            })
+            ->make(true);
+    }
+
     public function edit_ajax(Request $request, string $id)
     {
         $tugas = TugasMahasiswaModel::with(['tugas.user', 'tugas.pengumpulan'])->find($id);
@@ -109,84 +132,45 @@ class MhsKumpulTugasController extends Controller
 
         return view('mhs_view.pengumpulan.edit_ajax', compact('tugas'));
     }
-    public function confirm_submit_ajax(Request $request, string $id)
+    public function confirm_ajax(string $id)
     {
-        // DB::enableQueryLog();
-        $tugasMahasiswa = TugasMahasiswaModel::with('tugas.jenis', 'tugas.user')->find($id);
-        Log::info('Executed Query', DB::getQueryLog());
+        // Find the task (tugaskompen) by ID
+        $tugas = TugasModel::find($id);
 
-        // Ambil data kompetensi dan jenis tugas
-        $kompetensi = KompetensiModel::select('kompetensi_id', 'kompetensi_nama')->get();
-        $jenisTugas = TugasJenisModel::all();
-        $users = UserModel::with('dosen', 'admin', 'tendik', 'mahasiswa')->get();
-        $pembuat = UserModel::with(['dosen', 'admin', 'tendik'])
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'id' => $user->user_id,
-                    'nama' => $user->nama_pembuat,
-                ];
-            });
-        return view('mhs_view.pengumpulan.confirm_submit_ajax', [
-            'tugasMahasiswa' => $tugasMahasiswa,
-            'kompetensi' => $kompetensi,
-            'jenisTugas' => $jenisTugas,
-            'users' => $users,
-            'pembuat' => $pembuat
+        // If task is found, return the confirmation view with the task data
+        if ($tugas) {
+            return view('mhs_view.list.confirm_ajax', ['tugas' => $tugas]);
+        }
 
+        // If task is not found, return a response indicating failure
+        return response()->json([
+            'status' => false,
+            'message' => 'Tugas tidak ditemukan'
         ]);
     }
-    public function submit_ajax(Request $request, $id)
+    public function request_ajax(Request $request, $id)
     {
-        try {
-            // Validasi input file
-            $request->validate([
-                'file_path' => 'nullable|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,gif,mp4,avi,mkv,txt,zip|max:20480', // Maks 20MB
-            ]);
+        $tugas = TugasModel::find($id);
 
-            // Cari data tugas mahasiswa berdasarkan ID
-            $tugasMahasiswa = TugasMahasiswaModel::findOrFail($id);
-            Log::info('Tugas ditemukan', ['id' => $id, 'data' => $tugasMahasiswa]);
-
-            // Handle file upload
-            if ($request->hasFile('file_path')) {
-                Log::info('File ditemukan pada request');
-
-                // Hapus file lama jika ada
-                if ($tugasMahasiswa->file_path && Storage::exists($tugasMahasiswa->file_path)) {
-                    Log::info('Menghapus file lama', ['file_path' => $tugasMahasiswa->file_path]);
-                    Storage::delete($tugasMahasiswa->file_path);
-                }
-
-                // Simpan file baru
-                $filePath = $request->file('file_path')->store('tugas_mahasiswa_files', 'public');
-                Log::info('File berhasil diupload', ['file_path' => $filePath]);
-
-                // Update file_path di database
-                $tugasMahasiswa->update(['file_path' => $filePath]);
-                Log::info('file_path diupdate di database', ['file_path' => $filePath]);
-            } else {
-                Log::warning('Tidak ada file yang diupload');
-            }
-
-            // Berhasil
-            return response()->json([
-                'status' => true,
-                'message' => 'Tugas berhasil dikumpulkan',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Validasi gagal', ['errors' => $e->errors()]);
-            return response()->json([
-                'status' => false,
-                'message' => 'Validasi gagal',
-                'msgField' => $e->errors(),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Kesalahan server', ['error' => $e->getMessage()]);
-            return response()->json([
-                'status' => false,
-                'message' => 'Terjadi kesalahan pada server',
-            ], 500);
+        if (!$tugas) {
+            return response()->json(['status' => false, 'message' => 'Tugas tidak ditemukan']);
         }
+
+        // Ambil mhs_id berdasarkan user_id dari mahasiswa yang sedang login
+        $mahasiswa = MahasiswaModel::where('user_id', auth()->user()->user_id)->first();
+
+        if (!$mahasiswa) {
+            return response()->json(['status' => false, 'message' => 'Data mahasiswa tidak ditemukan']);
+        }
+        // Simpan data request ke tabel `t_request`
+        RequestModel::create([
+            'tugas_id' => $tugas->tugas_id,
+            'mhs_id' => $mahasiswa->mahasiswa_id,
+            'tugas_pembuat_id' => $tugas->tugas_pembuat_id,
+            'status_request' => 'pending',
+            'tgl_request' => now(),
+        ]);
+
+        return response()->json(['status' => true, 'message' => 'Request berhasil diajukan']);
     }
 }
