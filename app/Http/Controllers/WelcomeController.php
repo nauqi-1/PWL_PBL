@@ -24,12 +24,14 @@ class WelcomeController extends Controller
         ->where('tugas_pembuat_id', $user->user_id)
         ->count();
 
-        //menghitung tugas per status
-        $totalTugasStatus = DB::table('t_tugas')
-        ->where('tugas_pembuat_id', $user->user_id)
-        ->select(DB::raw("tugas_status, COUNT(*) as count"))
-        ->groupBy('tugas_status')
-        ->pluck('count', 'tugas_status');
+        //menghitung tugas per level
+        $totalTugasLevel = DB::table('m_level')
+        ->leftJoin('m_user', 'm_level.level_id', '=', 'm_user.level_id')
+        ->leftJoin('t_tugas', 'm_user.user_id', '=', 't_tugas.tugas_pembuat_id')
+        ->select('m_level.level_nama', DB::raw('COALESCE(COUNT(t_tugas.tugas_id), 0) as total'))
+        ->groupBy('m_level.level_nama')
+        ->get();
+
 
         //menghitung tugas baru dibuat per bulan
         $totalTugasBulan = DB::table('t_tugas')
@@ -41,15 +43,24 @@ class WelcomeController extends Controller
 
         //menghitung tugas per jenis
         $totalTugasJenis = DB::table('t_tugas_jenis')
+        ->where('tugas_pembuat_id', $user->user_id)
         ->leftJoin('t_tugas', 't_tugas_jenis.jenis_id', '=', 't_tugas.jenis_id')
         ->select('t_tugas_jenis.jenis_nama', DB::raw('COUNT(t_tugas.tugas_id) as total'))
         ->groupBy('t_tugas_jenis.jenis_nama')
-        ->pluck('total', 't_tugas_jenis.jenis_nama');
-        //->toArray();
+        ->pluck('total', 't_tugas_jenis.jenis_nama')
+        ->toArray();
+
+        //menghitung tugas per status
+        $totalTugasStatus = DB::table('t_tugas')
+        ->where('tugas_pembuat_id', $user->user_id)
+        ->select(DB::raw("tugas_status, COUNT(*) as count"))
+        ->groupBy('tugas_status')
+        ->pluck('count', 'tugas_status');
 
         //menghitung request tugas
         $totalRequest = DB::table('t_request')
-        ->where('status_request', 'P')
+        ->where('tugas_pembuat_id', $user->user_id)
+        ->where('status_request', 'pending')
         ->count();
 
         //menghitung mhs alfa
@@ -82,9 +93,9 @@ class WelcomeController extends Controller
             case 1:
                 return view('welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalTugas' => $totalTugas, 'totalTugasUser' => $totalTugasUser, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasBulan' => $totalTugasBulan, 'totalTugasJenis' => $totalTugasJenis, 'totalRequest' => $totalRequest, 'totalMhsAlfa' => $totalMhsAlfa, 'totalAlfaKompen' => $totalAlfaKompen]);
             case 2:
-                return view('dosen.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu]);
+                return view('dosen.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalTugasLevel' => $totalTugasLevel, 'totalTugasUser' => $totalTugasUser, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasBulan' => $totalTugasBulan, 'totalTugasJenis' => $totalTugasJenis, 'totalRequest' => $totalRequest]);
             case 3:
-                return view('tendik.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu]);
+                return view('tendik.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalTugasLevel' => $totalTugasLevel, 'totalTugasUser' => $totalTugasUser, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasBulan' => $totalTugasBulan, 'totalTugasJenis' => $totalTugasJenis, 'totalRequest' => $totalRequest]);
             case 4:
                 return view('mahasiswa.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu]);
             

@@ -20,11 +20,11 @@
                             <div class="small-box bg-info">
                                 <div class="inner">
                                     @foreach ($totalTugasLevel as $data)
-                                        @if ($data->level_nama == 'Dosen')
+                                        @if ($data->level_nama == 'Tendik')
                                             <h3>{{ $data->total }}</h3>
                                         @endif
                                     @endforeach
-                                    <p><strong>Jumlah Tugas<br>Kompensasi Dosen</strong></p>
+                                    <p><strong>Jumlah Tugas<br>Kompensasi Tendik</strong></p>
                                 </div>
                                 <div class="icon">
                                     <i class="nav-icon fas fa-tasks" style="font-size: 84px"></i>
