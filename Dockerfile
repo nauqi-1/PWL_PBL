@@ -37,8 +37,8 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 RUN mkdir -p /var/log/supervisor
 
 # KHUSUS KELOMPOK 6/KELOMPOK YANG SYMNLINKNYA RUSAK(CUKUP DI UNCOMMMENT)
-RUN mkdir -p /var/www/html/storage/app/public \
-     && mv /var/www/html/public/storage/* /var/www/html/storage/app/public/
+# RUN mkdir -p /var/www/html/storage/app/public \
+#     && mv /var/www/html/public/storage/* /var/www/html/storage/app/public/
 
 # Symlink handling and permissions
 RUN mkdir -p /var/www/html/public/storage \
