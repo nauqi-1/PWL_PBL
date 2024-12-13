@@ -77,7 +77,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                tableTugas.ajax.reload(); // Reload data table jika digunakan
+                                tableTugasKompen.ajax.reload(); // Reload data table jika digunakan
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {

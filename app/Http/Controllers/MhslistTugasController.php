@@ -100,6 +100,7 @@ class MhslistTugasController extends Controller
                 }
                 return null;
             })
+            ->rawColumns(['pembuat'])
             ->make(true);
     }
 

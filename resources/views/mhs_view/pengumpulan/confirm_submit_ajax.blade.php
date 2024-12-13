@@ -81,7 +81,12 @@
                     $.ajax({
                         url: form.action,
                         type: form.method,
-                        data: $(form).serialize(),
+                        data: new FormData(form),
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function() {
+                            $('.error-text').text('');
+                        },
                         success: function(response) {
                             if (response.status) {
                                 $('#myModal').modal('hide');

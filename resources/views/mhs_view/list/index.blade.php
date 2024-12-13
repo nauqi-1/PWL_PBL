@@ -164,12 +164,12 @@
     $(document).ready(function() {
     tableStatusRequest = $('#table_statusrequest').DataTable({
         serverSide: true,
+        autoWidth: false,  // Disable auto width calculation by DataTables
         responsive: true,     
         ajax: {
             url: "{{ url('mhs_listtugas/listrequest') }}",
-            "type": "POST", 
+            type: "POST",
             dataType: "json",
-            type: "POST"
         },
         columns: [
             {

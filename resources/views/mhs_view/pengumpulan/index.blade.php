@@ -6,18 +6,18 @@
         <!-- Nav Pills -->
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a class="nav-link active" id="data-tugas-tab" data-toggle="pill" href="#data-tugas" role="tab" aria-controls="data-tugas" aria-selected="true">Daftar Tugas</a>
+                <a class="nav-link active" id="data-pengumpulan-tab" data-toggle="pill" href="#data-pengumpulan" role="tab" aria-controls="data-pengumpulan" aria-selected="true">Pengumpulan</a>
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link" id="data-request-tab" data-toggle="pill" href="#data-request" role="tab" aria-controls="data-request" aria-selected="false">Status Request</a>
-            </li> --}}
+            <li class="nav-item">
+                <a class="nav-link" id="data-status-pengumpulan-tab" data-toggle="pill" href="#data-status-pengumpulan" role="tab" aria-controls="data-status-pengumpulan" aria-selected="false">Status Pengumpulan</a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
         <!-- Tab Content -->
         <div class="tab-content">
             <!-- Tab for Data Tugas -->
-            <div class="tab-pane fade show active" id="data-tugas" role="tabpanel" aria-labelledby="data-tugas-tab">
+            <div class="tab-pane fade show active" id="data-pengumpulan" role="tabpanel" aria-labelledby="data-pengumpulan-tab">
                 @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-bordered table-striped table-hover table-sm" id="table_tugaskompen">
+                <table class="table table-bordered table-striped table-hover table-sm" id="table_pengumpulan">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -57,14 +57,14 @@
             </div>
 
             <!-- Tab for Status Request -->
-            <div class="tab-pane fade" id="data-request" role="tabpanel" aria-labelledby="data-request-tab">
+            <div class="tab-pane fade" id="data-status-pengumpulan" role="tabpanel" aria-labelledby="data-status-pengumpulan-tab">
                 @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
                 @if(session('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
-                <table class="table table-bordered table-striped table-hover table-sm" id="table_statusrequest">
+                <table class="table table-bordered table-striped table-hover table-sm" id="table_statuspengumpulan">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -97,11 +97,11 @@
         });
     }
 
-    var tableTugasKompen;
-    var tableStatusRequest;
+    var tablePengumpulan;
+    var tableStatusPengumpulan;
     $(document).ready(function() {
         // DataTables for Tugas Kompensasi
-        tableTugasKompen = $('#table_tugaskompen').DataTable({
+        tablePengumpulan = $('#table_pengumpulan').DataTable({
             serverSide: true,
             ajax: {
                 url: "{{ url('mhs_kumpultugas/list') }}",
@@ -168,7 +168,7 @@
         // Reload DataTable when filter is changed
         $('#level_id').on('change', function() {
             console.log('Filter changed');
-            tableTugasKompen.ajax.reload(); // Memanggil reload pada DataTable
+            tablePengumpulan.ajax.reload(); // Memanggil reload pada DataTable
         });
 
     });
@@ -191,14 +191,14 @@
 
     // DataTables for Status Request
     $(document).ready(function() {
-    tableStatusRequest = $('#table_statusrequest').DataTable({
+    tableStatusPengumpulan = $('#table_statuspengumpulan').DataTable({
         serverSide: true,
-        responsive: true,     
+        autoWidth: false,  // Disable auto width calculation by DataTables
+        responsive: true, 
         ajax: {
             url: "{{ url('mhs_listtugas/listrequest') }}",
-            "type": "POST", 
+            type: "POST", 
             dataType: "json",
-            type: "POST"
         },
         columns: [
             {
@@ -235,7 +235,6 @@
                 className: "", 
                 orderable: false,
                 searchable: false,
-                width: '15%',
                 render: function(data, type, row) {
                     switch (data) {
                         case 'rejected':
