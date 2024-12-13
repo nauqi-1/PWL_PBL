@@ -42,7 +42,6 @@ RUN mkdir -p /var/log/supervisor
 
 # Symlink handling and permissions
 RUN mkdir -p /var/www/html/public/storage \
-    && rm -rf /var/www/html/public/storage \
     && php artisan storage:unlink \
     && php artisan storage:link \
     && ln -s /var/www/html/storage/app/public /var/html/public/storage \
