@@ -36,14 +36,15 @@ COPY docker/supervisord.conf /etc/supervisord.conf
 # Create the log directory for Supervisor
 RUN mkdir -p /var/log/supervisor
 
-# KHUSUS KELOMPOK 6/KELOMPOK YANG SYMNLINKNYA RUSAK(CUKUP DI UNCOMMMENT)
-#RUN mkdir -p /var/www/html/storage/app/public \
-#    && mv /var/www/html/public/storage /var/www/html/storage/app/public/
+# Ensure the storage directories exist
+RUN mkdir -p /var/www/html/storage/app/public/tugas_mahasiswa_files \
+    && php artisan storage:unlink \
+    && php artisan storage:link \
+    && chown -R www-data:www-data /var/www/html/storage /var/www/html/public/storage \
+    && chmod -R 775 /var/www/html/storage /var/www/html/public/storage
 
 # Symlink handling and permissions
 RUN mkdir -p /var/www/html/public/storage \
-    && php artisan storage:unlink \
-    && php artisan storage:link \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/public/storage \
     && chmod -R 775 /var/www/html/storage /var/www/html/public/storage
 
