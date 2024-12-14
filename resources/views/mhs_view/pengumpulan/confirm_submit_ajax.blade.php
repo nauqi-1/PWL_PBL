@@ -57,7 +57,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-dismiss="modal" class="btn btn-warning">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 
             </div>
@@ -95,7 +95,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                tableTugas.ajax.reload(); // Reload data table jika digunakan
+                                tablePengumpulan.ajax.reload(); // Reload data table jika digunakan
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {

@@ -103,7 +103,6 @@ class RequestTugasController extends Controller
                 TugasMahasiswaModel::create([
                     'tugas_id' => $requestData->tugas_id,
                     'mahasiswa_id' => $requestData->mhs_id,
-                    'status' => 'W', // Status default
                     'file_path' => null,   // Nullable, tidak perlu diisi
                     'progress' => 0,        // Default progres
                 ]);
@@ -115,7 +114,7 @@ class RequestTugasController extends Controller
 
                     // Jika kuota sudah penuh, ubah status tugas menjadi 'w' (working)
                     $tugas->update([
-                        'tugas_status' => 'w',  // Ubah status tugas menjadi 'working'
+                        'tugas_status' => 'W',  // Ubah status tugas menjadi 'working'
                     ]);
                 }
 

@@ -320,16 +320,23 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'mhs_kumpultugas', 'middleware' => 'authorize:MHS'], function () {
         Route::get('/', [MhsKumpulTugasController::class, 'index']); //Menampilkan laman awal MhsKumpulTugas
         Route::post('/list', [MhsKumpulTugasController::class, 'list']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
+        Route::post('/liststatuspengumpulan', [MhsKumpulTugasController::class, 'liststatuspengumpulan']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
         Route::get('/{id}/edit_ajax', [MhsKumpulTugasController::class, 'edit_ajax']); //edit data 
         Route::get('/{id}/confirm_submit_ajax', [MhsKumpulTugasController::class, 'confirm_submit_ajax']); //edit data 
         Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
         Route::put('/{id}/submit_ajax', [MhsKumpulTugasController::class, 'submit_ajax']); //simpan data 
+        Route::get('/{id}/export_pdf', [MhsKumpulTugasController::class, 'export_pdf']); //edit data 
 
     });
     Route::group(['prefix' => 'pengumpulan_tugas', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
         Route::get('/', [PengumpulanController::class, 'index']); //Menampilkan laman awal PengumpulanController::post('/list', [PengumpulanController::class, 'list']); //menampilkan data PengumpulanController bentuk json untuk datatables.
-        Route::get('/{id}/edit_ajax', [PengumpulanController::class, 'edit_ajax']); //edit data 
-        Route::put('/{id}/update_progress', [PengumpulanController::class, 'update_progress']); //simpan data 
+        Route::post('/list', [PengumpulanController::class, 'list']);
+        Route::get('/{id}/show_ajax', [PengumpulanController::class, 'show_ajax']);
+
+        Route::get('/{id}/confirm_accept_ajax', [PengumpulanController::class, 'accept_confirm_ajax']); //edit data 
+        Route::get('/{id}/confirm_denied_ajax', [PengumpulanController::class, 'denied_confirm_ajax']); //edit data 
+        Route::put('/{id}/accept_ajax', [PengumpulanController::class, 'accept_ajax']); //simpan data 
+        Route::put('/{id}/denied_ajax', [PengumpulanController::class, 'denied_ajax']); //simpan data 
 
     });
 

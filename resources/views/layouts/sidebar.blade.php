@@ -38,7 +38,6 @@
                 </a>
             </li>
 
-
             @if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
 
             <li class="nav-item">

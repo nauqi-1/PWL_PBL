@@ -46,6 +46,9 @@ class MhsKumpulTugasController extends Controller
 
         // Ambil data dari TugasMahasiswaModel berdasarkan mahasiswa yang login
         $tugass = TugasMahasiswaModel::where('mahasiswa_id', $mhsId)
+            ->whereHas('tugas', function ($query) {
+                $query->where('tugas_status', 'W'); // Filter hanya status 'W' di tabel tugas
+            })
             ->with(['tugas.user', 'tugas.pengumpulan']) // Menampilkan relasi tugas dan atribut lainnya
             ->get();
 
@@ -67,6 +70,40 @@ class MhsKumpulTugasController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
     }
+    public function liststatuspengumpulan(Request $request)
+    {
+        $mhsId = auth()->user()->mahasiswa->mahasiswa_id; // ID mahasiswa login
+
+        // Ambil data dari TugasMahasiswaModel berdasarkan mahasiswa yang login
+        $tugass = TugasMahasiswaModel::where('mahasiswa_id', $mhsId)
+            ->whereHas('tugas', function ($query) {
+                // Filter hanya status tugas yang bukan 'W' dan 'O'
+                $query->whereNotIn('tugas_status', ['W', 'O']);
+            })
+            ->with(['tugas.user', 'tugas.pengumpulan']) // Menampilkan relasi tugas dan atribut lainnya
+            ->get();
+
+        return DataTables::of($tugass)
+            ->addIndexColumn()
+            ->addColumn('pembuat', function ($tugasMahasiswa) {
+                $user = $tugasMahasiswa->tugas->user ?? null;
+                if ($user && in_array($user->level_id, [1, 2, 3])) {
+                    return $user->nama_pembuat; // Pastikan nama_pembuat ada di user model
+                }
+                return null; // Return null jika tidak ada pembuat
+            })
+            ->addColumn('cetak', function ($tugasMahasiswa) {
+                // Check if tugas_status is 'D' (Done) and return the link/button with dynamic URL
+                if ($tugasMahasiswa->tugas->tugas_status == 'D') {
+                    // Generate the URL dynamically using route() or url() helper
+                    $url = url("mhs_tugaskumpul/{$tugasMahasiswa->tugas_mahasiswa_id}/export_pdf");
+                    return '<a href="' . $url . '" class="btn btn-primary" target="_blank">Cetak</a>';
+                }
+                return ''; // Return empty if status is not 'D'
+            })
+            ->rawColumns(['cetak']) // Allow raw HTML in the cetak column
+            ->make(true);
+    }
 
     public function update_progress(Request $request, $id)
     {
@@ -74,6 +111,7 @@ class MhsKumpulTugasController extends Controller
         // Validate the progress input
         $validated = $request->validate([
             'progress' => 'required|numeric|between:0,100',
+            'progress_deskripsi' => 'required|string|max:255',
         ]);
 
         // Find the task (tugas) by the provided ID
@@ -90,6 +128,7 @@ class MhsKumpulTugasController extends Controller
         // Update the progress value
         // $tugas->progress = $request->input('progress');
         $tugas->progress = $validated['progress'];
+        $tugas->progress_deskripsi = $validated['progress_deskripsi'];
         $tugas->save();
 
         // Return a success response
@@ -162,9 +201,28 @@ class MhsKumpulTugasController extends Controller
                 $filePath = $request->file('file_path')->store('tugas_mahasiswa_files', 'public');
                 Log::info('File berhasil diupload', ['file_path' => $filePath]);
 
-                // Update file_path di database
-                $tugasMahasiswa->update(['file_path' => $filePath]);
-                Log::info('file_path diupdate di database', ['file_path' => $filePath]);
+                // Update file_path, status, dan tanggal_disubmit di database
+                $tugasMahasiswa->update([
+                    'file_path' => $filePath,
+                    'tanggal_disubmit' => now(), // Set tanggal_disubmit ke waktu saat ini
+                ]);
+                // Update status di TugasModel menjadi 'S' jika semua tugas mahasiswa sudah submit
+                $tugasModel = $tugasMahasiswa->tugas; // Relasi ke model Tugas
+                if ($tugasModel) {
+                    $mahasiswaBelumSubmit = $tugasModel->pengumpulan()
+                        ->whereNull('tanggal_disubmit')
+                        ->count();
+
+                    // Jika semua mahasiswa sudah submit, update status tugas menjadi 'S'
+                    $tugasModel->update([
+                        'tugas_status' => $mahasiswaBelumSubmit === 0 ? 'S' : 'W', // 'S' jika semua selesai, 'W' jika masih ada yang belum
+                    ]);
+                }
+                Log::info('Data berhasil diupdate', [
+                    'file_path' => $filePath,
+                    'status' => 'S',
+                    'tanggal_disubmit' => now(),
+                ]);
             } else {
                 Log::warning('Tidak ada file yang diupload');
             }

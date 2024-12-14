@@ -11,36 +11,38 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class MahasiswaModel extends Model
 {
     use HasFactory;
-    protected $table= 'm_mahasiswa';
+    protected $table = 'm_mahasiswa';
     protected $primaryKey = 'mahasiswa_id';
     protected $fillable = [
-        'mahasiswa_nama', 
-        'mahasiswa_kelas', 
-        'mahasiswa_nim', 
-        'mahasiswa_prodi', 
+        'mahasiswa_nama',
+        'mahasiswa_kelas',
+        'mahasiswa_nim',
+        'mahasiswa_prodi',
         'mahasiswa_noHp',
         'mahasiswa_alfa_lunas',
         'user_id',
-        'created_at', 'updated_at'
+        'created_at',
+        'updated_at'
 
     ];
 
-    public function user() 
+    public function user()
     {
         return $this->belongsTo(UserModel::class, 'user_id', 'user_id');
     }
 
-    public function tugas():BelongsToMany
+    public function tugas(): BelongsToMany
     {
-        return $this->belongsToMany(TugasModel::class, 't_tugas_mahasiswa', 'mahasiswa_id','tugas_id');
+        return $this->belongsToMany(TugasModel::class, 't_tugas_mahasiswa', 'mahasiswa_id', 'tugas_id');
     }
 
-    public function pengumpulan(): BelongsToMany
+    public function pengumpulan()
     {
-        return $this->belongsToMany(PengumpulanModel::class, 't_pengumpulan_mahasiswa', 'mahasiswa_id', 'pengumpulan_id');
+        return $this->hasMany(TugasMahasiswaModel::class, 'mahasiswa_id', 'mahasiswa_id');
     }
 
-    public function mahasiswa_alfa() {
-        return $this->hasMany(MahasiswaAlfaModel::class, 'mahasiswa_id','mahasiswa_id');
-    } 
+    public function mahasiswa_alfa()
+    {
+        return $this->hasMany(MahasiswaAlfaModel::class, 'mahasiswa_id', 'mahasiswa_id');
+    }
 }

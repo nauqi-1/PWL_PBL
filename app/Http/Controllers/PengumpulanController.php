@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -32,114 +33,59 @@ class PengumpulanController extends Controller
         ];
 
         $page = (object) [
-            'title' => 'Daftar Tugas Kompen yang ada dalam sistem'
+            'title' => 'Pengumpulan Tugas'
         ];
 
         $activeMenu = 'pengumpulan_tugas'; //set menu yang sedang aktif
         $level = LevelModel::all();
+        $mahasiswa = MahasiswaModel::all();
 
-        return view('pengumpulan.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'activeMenu' => $activeMenu]);
+        return view('pengumpulan.index', ['breadcrumb' => $breadcrumb, 'page' => $page, 'level' => $level, 'mahasiswa' => $mahasiswa, 'activeMenu' => $activeMenu]);
     }
     public function list(Request $request)
     {
-        $mhsId = auth()->user()->mahasiswa->mahasiswa_id; // ID mahasiswa login
+        $pembuatId = auth()->user()->user_id; // ID user yang sedang login
 
-        // Ambil data dari TugasMahasiswaModel berdasarkan mahasiswa yang login
-        $tugass = TugasMahasiswaModel::where('mahasiswa_id', $mhsId)
-            ->with(['tugas.user', 'tugas.pengumpulan']) // Menampilkan relasi tugas dan atribut lainnya
+        // Query TugasMahasiswaModel untuk tugas yang dibuat oleh user yang login
+        $tugass = TugasMahasiswaModel::whereHas('tugas', function ($query) use ($pembuatId) {
+            $query->where('tugas_pembuat_id', $pembuatId) // Filter tugas berdasarkan pembuat
+                ->whereIn('tugas_status', ['W', 'S']); // Filter status tugas pada tabel t_tugas
+        })
+            ->with(['tugas.user', 'mahasiswa']) // Eager load relasi untuk mengurangi query tambahan
             ->get();
+
 
         return DataTables::of($tugass)
             ->addIndexColumn()
-            ->addColumn('pembuat', function ($tugasMahasiswa) {
-                $user = $tugasMahasiswa->tugas->user ?? null;
-                if ($user && in_array($user->level_id, [1, 2, 3])) {
-                    return $user->nama_pembuat; // Pastikan nama_pembuat ada di user model
-                }
-                return null; // Return null jika tidak ada pembuat
-            })
             ->addColumn('aksi', function ($tugasMahasiswa) {
                 $tugasId = $tugasMahasiswa->tugas_mahasiswa_id;
-                $btn = '<button onclick="modalAction(\'' . url('/mhs_kumpultugas/' . $tugasId . '/edit_ajax') . '\')" class="btn btn-info btn-sm">Edit</button> ';
-                $btn .= '<button onclick="modalAction(\'' . url('/mhs_kumpultugas/' . $tugasId . '/confirm_submit_ajax') . '\')" class="btn btn-success btn-sm">Upload</button> ';
+                $btn = '<button onclick="modalAction(\'' . url('/pengumpulan_tugas/' . $tugasId . '/show_ajax') . '\')" class="btn btn-info btn-sm">Detail</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/pengumpulan_tugas/' . $tugasId . '/confirm_accept_ajax') . '\')" class="btn btn-success btn-sm">Terima</button> ';
+                $btn .= '<button onclick="modalAction(\'' . url('/pengumpulan_tugas/' . $tugasId . '/confirm_denied_ajax') . '\')" class="btn btn-danger btn-sm">Tolak</button> ';
                 return $btn;
             })
             ->rawColumns(['aksi'])
             ->make(true);
     }
-
-    public function update_progress(Request $request, $id)
+    public function show_ajax(Request $request, string $id)
     {
-        Log::info('updateProgress called', ['id' => $id, 'request' => $request->all()]);
-        // Validate the progress input
-        $validated = $request->validate([
-            'progress' => 'required|numeric|between:0,100',
-        ]);
-
-        // Find the task (tugas) by the provided ID
-        $tugas = TugasMahasiswaModel::find($id);
-
-        // Check if the task exists
-        if (!$tugas) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Tugas tidak ditemukan',
-            ], 404);
-        }
-
-        // Update the progress value
-        // $tugas->progress = $request->input('progress');
-        $tugas->progress = $validated['progress'];
-        $tugas->save();
-
-        // Return a success response
-        return response()->json([
-            'status' => true,
-            'message' => 'Progres berhasil diperbarui',
-        ]);
-    }
-
-
-
-    public function listrequest(Request $request)
-    {
-        // Ambil ID mahasiswa login
-        $mhsId = auth()->user()->mahasiswa->mahasiswa_id;
-
-        // Ambil data request tugas hanya untuk mahasiswa login
-        $requesttugass = RequestModel::with(['tugas', 'pembuat', 'mahasiswa'])
-            ->where('mhs_id', $mhsId) // Filter berdasarkan mahasiswa yang login
-            ->get();
-
-        return DataTables::of($requesttugass)
-            ->addIndexColumn()
-            ->addColumn('pembuat', function ($requesttugas) {
-                if ($requesttugas->pembuat && in_array($requesttugas->pembuat->level_id, [1, 2, 3])) {
-                    return $requesttugas->pembuat->nama_pembuat;
-                }
-                return null;
-            })
-            ->make(true);
-    }
-
-    public function edit_ajax(Request $request, string $id)
-    {
-        $tugas = TugasMahasiswaModel::with(['tugas.user', 'tugas.pengumpulan'])->find($id);
+        // Retrieve the tugas data with its related user and kompetensi
+        $tugas = TugasMahasiswaModel::with(['tugas.user', 'tugas.kompetensi', 'mahasiswa'])->find($id);
 
         if (!$tugas) {
-            return response()->json(['status' => false, 'message' => 'Tugas tidak ditemukan'], 404);
+            return response()->json(['status' => false, 'message' => 'Pengumpulan tidak ditemukan'], 404);
         }
 
-        return view('mhs_view.pengumpulan.edit_ajax', compact('tugas'));
+        return view('pengumpulan.show_ajax', compact('tugas'));
     }
-    public function confirm_ajax(string $id)
+    public function accept_confirm_ajax(string $id)
     {
         // Find the task (tugaskompen) by ID
-        $tugas = TugasModel::find($id);
+        $tugass = TugasMahasiswaModel::find($id);
 
         // If task is found, return the confirmation view with the task data
-        if ($tugas) {
-            return view('mhs_view.list.confirm_ajax', ['tugas' => $tugas]);
+        if ($tugass) {
+            return view('pengumpulan.accept_confirm_ajax', ['tugass' => $tugass]);
         }
 
         // If task is not found, return a response indicating failure
@@ -148,29 +94,94 @@ class PengumpulanController extends Controller
             'message' => 'Tugas tidak ditemukan'
         ]);
     }
-    public function request_ajax(Request $request, $id)
+    public function denied_confirm_ajax(string $id)
     {
-        $tugas = TugasModel::find($id);
+        // Find the task (tugaskompen) by ID
+        $tugass = TugasMahasiswaModel::find($id);
 
-        if (!$tugas) {
-            return response()->json(['status' => false, 'message' => 'Tugas tidak ditemukan']);
+        // If task is found, return the confirmation view with the task data
+        if ($tugass) {
+            return view('pengumpulan.denied_confirm_ajax', ['tugass' => $tugass]);
         }
 
-        // Ambil mhs_id berdasarkan user_id dari mahasiswa yang sedang login
-        $mahasiswa = MahasiswaModel::where('user_id', auth()->user()->user_id)->first();
-
-        if (!$mahasiswa) {
-            return response()->json(['status' => false, 'message' => 'Data mahasiswa tidak ditemukan']);
-        }
-        // Simpan data request ke tabel `t_request`
-        RequestModel::create([
-            'tugas_id' => $tugas->tugas_id,
-            'mhs_id' => $mahasiswa->mahasiswa_id,
-            'tugas_pembuat_id' => $tugas->tugas_pembuat_id,
-            'status_request' => 'pending',
-            'tgl_request' => now(),
+        // If task is not found, return a response indicating failure
+        return response()->json([
+            'status' => false,
+            'message' => 'Tugas tidak ditemukan'
         ]);
+    }
+    public function accept_ajax(string $id)
+    {
+        // Find the task (tugaskompen) by ID
+        $tugasMahasiswa = TugasMahasiswaModel::find($id);
 
-        return response()->json(['status' => true, 'message' => 'Request berhasil diajukan']);
+        // If the task is found
+        if ($tugasMahasiswa) {
+            // Find the related TugasModel (the task)
+            $tugasModel = $tugasMahasiswa->tugas; // Assuming you have the relationship defined
+
+            // Check if the TugasModel is found
+            if ($tugasModel) {
+                // Update the tugas_status to 'D'
+                $tugasModel->update([
+                    'tugas_status' => 'D', // 'D' stands for 'Done' or 'Disetujui' (approved)
+                ]);
+
+                // Return success response
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Tugas berhasil diterima'
+                ]);
+            }
+
+            // If TugasModel is not found
+            return response()->json([
+                'status' => false,
+                'message' => 'Tugas model tidak ditemukan'
+            ]);
+        }
+
+        // If TugasMahasiswaModel is not found
+        return response()->json([
+            'status' => false,
+            'message' => 'Tugas mahasiswa tidak ditemukan'
+        ]);
+    }
+    public function denied_ajax(string $id)
+    {
+        // Find the task (tugaskompen) by ID
+        $tugasMahasiswa = TugasMahasiswaModel::find($id);
+
+        // If the task is found
+        if ($tugasMahasiswa) {
+            // Find the related TugasModel (the task)
+            $tugasModel = $tugasMahasiswa->tugas; // Assuming you have the relationship defined
+
+            // Check if the TugasModel is found
+            if ($tugasModel) {
+                // Update the tugas_status to 'D'
+                $tugasModel->update([
+                    'tugas_status' => 'F', // 'D' stands for 'Done' or 'Disetujui' (approved)
+                ]);
+
+                // Return success response
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Tugas berhasil ditolak'
+                ]);
+            }
+
+            // If TugasModel is not found
+            return response()->json([
+                'status' => false,
+                'message' => 'Tugas model tidak ditemukan'
+            ]);
+        }
+
+        // If TugasMahasiswaModel is not found
+        return response()->json([
+            'status' => false,
+            'message' => 'Tugas mahasiswa tidak ditemukan'
+        ]);
     }
 }

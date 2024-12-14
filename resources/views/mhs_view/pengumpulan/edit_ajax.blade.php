@@ -45,6 +45,17 @@
                                 <span id="progressValue">{{ $tugas->progress }}%</span>
                             </td>
                         </tr>
+                        <tr>
+                            <th class="text-right col-3">Deskripsi Progres :</th>
+                                <td class="col-9">
+                                    <textarea 
+                                        class="form-control" 
+                                        name="progress_deskripsi" 
+                                        id="progressDeskripsiInput" 
+                                        rows="3" 
+                                        placeholder="Masukkan deskripsi progres">{{ $tugas->progress_deskripsi }}</textarea>
+                                </td>
+                        </tr>
                     </table>
                 </div>
                 <div class="modal-footer">
@@ -63,6 +74,8 @@
                         min: 0, 
                         max: 100 
                     },
+                    progress_deskripsi: { required: true, maxlength: 255 }
+
                 },
                 submitHandler: function(form) {
                     $.ajax({
@@ -77,7 +90,7 @@
                                     title: 'Berhasil',
                                     text: response.message
                                 });
-                                tableTugasKompen.ajax.reload(); // Reload data table jika digunakan
+                                tablePengumpulan.ajax.reload(); // Reload data table jika digunakan
                             } else {
                                 $('.error-text').text('');
                                 $.each(response.msgField, function(prefix, val) {

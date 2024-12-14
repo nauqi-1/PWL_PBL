@@ -14,7 +14,6 @@ class TugasMahasiswaModel extends Model
     protected $fillable = [
         'tugas_id',
         'mahasiswa_id',
-        'status',
         'file_path',  // Tambahkan file_path ke fillable
         'progress',    // Tambahkan progres ke fillable
         'tanggal_disubmit',

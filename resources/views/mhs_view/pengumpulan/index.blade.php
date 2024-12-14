@@ -67,12 +67,13 @@
                 <table class="table table-bordered table-striped table-hover table-sm" id="table_statuspengumpulan">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nama</th>
+                            <th>No</th>
                             <th>Nama Tugas</th>
-                            <th>Tgl. Request</th>
+                            <th>Tenggat</th>
+                            <th>Tgl. Dikerjakan</th>
                             <th>Pembuat</th>
                             <th>Status</th>
+                            <th>Cetak</th>
                         </tr>
                     </thead>
                 </table>
@@ -145,7 +146,7 @@
                                 </div>
                             </div>
                             <small>
-                                ${progressValue}% Complete
+                                ${progressValue}% Selesai
                             </small>
                         </td>`;
                 }
@@ -196,7 +197,7 @@
         autoWidth: false,  // Disable auto width calculation by DataTables
         responsive: true, 
         ajax: {
-            url: "{{ url('mhs_listtugas/listrequest') }}",
+            url: "{{ url('mhs_kumpultugas/liststatuspengumpulan') }}",
             type: "POST", 
             dataType: "json",
         },
@@ -208,17 +209,20 @@
                 searchable: false
             },
             {
-                data: "mahasiswa.mahasiswa_nama",
-                className: "", 
-            },
-            {
                 data: "tugas.tugas_nama",
                 className: "nama-tugas",
                 orderable: true,
                 searchable: true
             },
             {
-                data: "tgl_request",
+                data: "tugas.tugas_tgl_deadline",
+                className: "", 
+                render: function(data) {
+                    return moment(data).format('DD MMMM YYYY HH:mm');
+                }
+            },
+            {
+                data: "tanggal_disubmit",
                 className: "", 
                 render: function(data) {
                     return moment(data).format('DD MMMM YYYY HH:mm');
@@ -231,22 +235,28 @@
                 searchable: false
             },
             {
-                data: "status_request",
+                data: "tugas.tugas_status",
                 className: "", 
                 orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
                     switch (data) {
-                        case 'rejected':
-                            return '<span class="badge badge-danger">Ditolak</span>';
-                        case 'pending':
+                        case 'S':
                             return '<span class="badge badge-warning">Pending</span>';
-                        case 'accepted':
-                            return '<span class="badge badge-success">Diterima</span>';
+                            case 'D':
+                                return '<span class="badge badge-success">Sukses</span>';
+                                case 'F':
+                            return '<span class="badge badge-danger">Ditolak</span>';
                         default:
                             return '<span class="badge badge-secondary">Unknown</span>';
                     }
                 }
+            },
+            {
+                data: "cetak",
+                className: "", 
+                orderable: false,
+                searchable: false
             }
         ]
     });

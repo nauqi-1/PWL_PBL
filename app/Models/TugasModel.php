@@ -21,7 +21,6 @@ class TugasModel extends Model
         'tugas_tgl_dibuat',
         'tugas_tgl_deadline',
         'tugas_pembuat_id',
-        'tugas_progress',
         'jenis_id',
         'kuota'
     ];
@@ -44,7 +43,7 @@ class TugasModel extends Model
 
     public function mahasiswa()
     {
-        return $this->belongsToMany(MahasiswaModel::class, 't_detail_mahasiswa', 'tugas_id', 'mahasiswa_id');
+        return $this->belongsToMany(MahasiswaModel::class, 't_tugas_mahasiswa', 'tugas_id', 'mahasiswa_id');
     }
     public function jenis(): BelongsTo
     {
