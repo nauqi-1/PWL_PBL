@@ -269,7 +269,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     });
-    Route::group(['prefix' => 'requesttugas', 'middleware' => 'authorize:ADM'], function () {
+    Route::group(['prefix' => 'requesttugas', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
         Route::get('/', [RequestTugasController::class, 'index']); //Menampilkan laman awal RequestTugas
         Route::post('/list', [RequestTugasController::class, 'list']); //menampilkan data RequestTugas dalam bentuk json untuk datatables.
 
