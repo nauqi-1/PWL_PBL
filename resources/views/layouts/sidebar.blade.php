@@ -41,13 +41,13 @@
             @if(Auth::user()->level->level_kode == 'ADM' || Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
 
             <li class="nav-item">
-                <a href="{{ url('/tugas_list') }}" class="nav-link {{ ($activeMenu == 'tugas_list') ? 'active' : '' }}">
+                <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugaskompen') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-tasks"></i>
                     <p>Daftar Tugas</p>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="{{ url('/request_list') }}" class="nav-link {{ ($activeMenu == 'request') ? 'active' : '' }}">
+                <a href="{{ url('/requesttugas') }}" class="nav-link {{ ($activeMenu == 'requesttugas') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-envelope-open-text"></i>
                     <p>Request Tugas</p>
                 </a>
@@ -125,6 +125,7 @@
             </li>
             
             <li class="nav-header">Data Transaksional</li>
+<!--
             <li class="nav-item">
                 <a href="{{ url('/tugaskompen') }}" class="nav-link {{ ($activeMenu == 'tugaskompen') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-tasks"></i>
@@ -137,6 +138,7 @@
                     <p>Request Tugas</p>
                 </a>
             </li>
+-->
             <li class="nav-item">
                 <a href="{{ url('/mahasiswa_alfa') }}" class="nav-link {{ ($activeMenu == 'mahasiswa_alfa') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-calendar"></i>
