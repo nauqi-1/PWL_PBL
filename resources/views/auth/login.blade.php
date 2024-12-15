@@ -84,6 +84,14 @@
                     username: { required: true, minlength: 4, maxlength: 20 },
                     password: { required: true, minlength: 6, maxlength: 20 }
                 },
+                messages: {
+                    username: {
+                        required: "Username harus diisi!.",
+                    },
+                    password: {
+                        required: "Password harus diisi!.",
+                    },
+                },
                 submitHandler: function(form) {
                     $.ajax({
                         url: form.action,
