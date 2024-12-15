@@ -89,4 +89,8 @@ class UserModel extends Authenticatable implements JWTSubject
             return '-';
         }
     }
+    public function notifications()
+    {
+        return $this->hasMany(NotificationsModel::class, 'penerima_notification', 'user_id');
+    }
 }

@@ -41,7 +41,32 @@
 
       
       <!-- Notifications Dropdown Menu -->
+      @php
+      $user = auth()->user();
+      $unreadCount = $user ? $user->notifications()->where('status_notification', 'unread')->count() : 0;
+      $notifications = $user ? $user->notifications()->orderBy('tgl_notification', 'desc')->take(10)->get() : [];
+      @endphp
       <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="far fa-bell"></i>
+            <span class="badge badge-warning navbar-badge">{{ $unreadCount }}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <span class="dropdown-item dropdown-header">{{ $unreadCount }} Notifications</span>
+            @foreach ($notifications as $notification)
+                <div class="dropdown-divider"></div>
+                <a href="{{ route('notification.redirect', ['id' => $notification->notification_id]) }}" 
+                  class="dropdown-item" onclick="markAsRead({{ $notification->notification_id }})">
+                    <i class="fas fa-info-circle mr-2"></i> {{ $notification->konten_notification }}
+                    <span class="float-right text-muted text-sm">{{ $notification->tgl_notification->diffForHumans() }}</span>
+                </a>
+            @endforeach
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+    </li>
+    
+      {{-- <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
           <span class="badge badge-warning navbar-badge">15</span>
@@ -66,7 +91,7 @@
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
-      </li>
+      </li> --}}
       
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">

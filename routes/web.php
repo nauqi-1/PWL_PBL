@@ -18,6 +18,7 @@ use App\Http\Controllers\MhslistTugasController;
 use App\Http\Controllers\MhsKumpulTugasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PengumpulanController;
+use App\Models\NotificationsModel;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -320,7 +321,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'mhs_kumpultugas', 'middleware' => 'authorize:MHS'], function () {
         Route::get('/', [MhsKumpulTugasController::class, 'index']); //Menampilkan laman awal MhsKumpulTugas
         Route::post('/list', [MhsKumpulTugasController::class, 'list']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
-        Route::post('/liststatuspengumpulan', [MhsKumpulTugasController::class, 'liststatuspengumpulan']); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
+        Route::post('/liststatuspengumpulan', [MhsKumpulTugasController::class, 'liststatuspengumpulan'])->name('liststatuspengumpulan'); //menampilkan data MhsKumpulTugas dalam bentuk json untuk datatables.
         Route::get('/{id}/edit_ajax', [MhsKumpulTugasController::class, 'edit_ajax']); //edit data 
         Route::get('/{id}/confirm_submit_ajax', [MhsKumpulTugasController::class, 'confirm_submit_ajax']); //edit data 
         Route::put('/{id}/update_progress', [MhsKumpulTugasController::class, 'update_progress']); //simpan data 
@@ -331,6 +332,7 @@ Route::middleware(['auth'])->group(function () {
     Route::group(['prefix' => 'pengumpulan_tugas', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
         Route::get('/', [PengumpulanController::class, 'index']); //Menampilkan laman awal PengumpulanController::post('/list', [PengumpulanController::class, 'list']); //menampilkan data PengumpulanController bentuk json untuk datatables.
         Route::post('/list', [PengumpulanController::class, 'list']);
+        Route::post('/listriwayat', [PengumpulanController::class, 'listriwayat']);
         Route::get('/{id}/show_ajax', [PengumpulanController::class, 'show_ajax']);
 
         Route::get('/{id}/confirm_accept_ajax', [PengumpulanController::class, 'accept_confirm_ajax']); //edit data 
@@ -339,6 +341,24 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{id}/denied_ajax', [PengumpulanController::class, 'denied_ajax']); //simpan data 
 
     });
+    Route::get('/notifications/{id}/redirect', function ($id) {
+        $notification = NotificationsModel::find($id);
+
+        if (!$notification || $notification->penerima_notification != auth()->id()) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        // Tentukan URL tujuan berdasarkan jenis notifikasi
+        switch ($notification->jenis_notification) {
+            case 'tugas diterima':
+                return redirect()->route('liststatuspengumpulan');
+            case 'request baru':
+                return redirect()->route('request.detail', ['id' => $notification->ref_id]);
+            default:
+                return redirect()->route('home'); // Default ke halaman utama
+        }
+    })->name('notification.redirect')->middleware('auth');
+
 
     Route::group(['prefix' => 'personal', 'middleware' => 'authorize:ADM, DSN, TDK'], function () {
         Route::get('/', [TugasController::class, 'index']);

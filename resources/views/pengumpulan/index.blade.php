@@ -57,7 +57,7 @@
                     </thead>
                 </table>
             </div>
-
+            
             <!-- Tab for riwayat Request -->
             <div class="tab-pane fade" id="data-riwayat-pengumpulan" role="tabpanel" aria-labelledby="data-riwayat-pengumpulan-tab">
                 @if(session('success'))
@@ -70,11 +70,12 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama</th>
                             <th>Nama Tugas</th>
-                            <th>Tgl. Request</th>
-                            <th>Pembuat</th>
+                            <th>Mahasiswa</th>
+                            <th>Tenggat</th>
+                            <th>Tgl Dikumpulkan</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                 </table>
@@ -100,7 +101,7 @@
     }
 
     var dataPengumpulan;
-    var tableStatusPengumpulan;
+    var tableRiwayatPengumpulan;
     $(document).ready(function() {
         // DataTables for Tugas Kompensasi
         dataPengumpulan = $('#table_pengumpulan').DataTable({
@@ -204,31 +205,15 @@
         });
 
     });
-    function updateProgress(tugasMahasiswaId, value) {
-    $.ajax({
-        url: `{{ url('mhs_kumpultugas/update-progress') }}/${tugasMahasiswaId}`,
-        type: 'PUT',
-        data: {
-            progress: value,
-            _token: '{{ csrf_token() }}' // CSRF token untuk keamanan
-        },
-        success: function(response) {
-            alert('Progress berhasil diperbarui!');
-        },
-        error: function(xhr) {
-            alert('Terjadi kesalahan. Coba lagi.');
-        }
-    });
-    }
 
     // DataTables for Status Request
     $(document).ready(function() {
-    tableStatusPengumpulan = $('#table_statuspengumpulan').DataTable({
+        tableRiwayatPengumpulan = $('#table_riwayatpengumpulan').DataTable({
         serverSide: true,
         autoWidth: false,  // Disable auto width calculation by DataTables
         responsive: true, 
         ajax: {
-            url: "{{ url('mhs_listtugas/listrequest') }}",
+            url: "{{ url('pengumpulan_tugas/listriwayat') }}",
             type: "POST", 
             dataType: "json",
         },
@@ -240,30 +225,32 @@
                 searchable: false
             },
             {
-                data: "mahasiswa.mahasiswa_nama",
-                className: "", 
-            },
-            {
                 data: "tugas.tugas_nama",
                 className: "nama-tugas",
                 orderable: true,
                 searchable: true
             },
             {
-                data: "tgl_request",
+                data: "mahasiswa.mahasiswa_nama",
+                className: "", 
+                orderable: true,
+                searchable: true
+            },
+            {
+                data: "tugas.tugas_tgl_deadline",
                 className: "", 
                 render: function(data) {
                     return moment(data).format('DD MMMM YYYY HH:mm');
                 }
             },
             {
-                data: "pembuat",
+                data: "tanggal_disubmit",
                 className: "", 
                 orderable: false,
                 searchable: false
             },
             {
-                data: "status_request",
+                data: "tugas.tugas_status",
                 className: "", 
                 orderable: false,
                 searchable: false,
@@ -279,9 +266,15 @@
                             return '<span class="badge badge-secondary">Unknown</span>';
                     }
                 }
+            },
+            {
+                data: "aksi",
+                className: "", 
+                orderable: false,
+                searchable: false
             }
-        ]
-    });
+            ]
+        });
     });
 </script>
 @endpush
