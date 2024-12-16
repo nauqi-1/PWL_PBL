@@ -11,6 +11,7 @@ use App\Models\LevelModel;
 use App\Models\RequestModel;
 use App\Models\MahasiswaModel;
 use App\Models\TugasJenisModel;
+use App\Models\NotificationsModel;
 use App\Models\TugasMahasiswaModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -218,6 +219,15 @@ class MhsKumpulTugasController extends Controller
                         'tugas_status' => $mahasiswaBelumSubmit === 0 ? 'S' : 'W', // 'S' jika semua selesai, 'W' jika masih ada yang belum
                     ]);
                 }
+                // Create notification
+                $pembuatNotifId = auth()->user()->user_id;
+                NotificationsModel::create([
+                    'jenis_notification' => 'kumpul tugas',
+                    'pembuat_notification' => $pembuatNotifId,
+                    'penerima_notification' => $tugasMahasiswa->user->user_id,
+                    'konten_notification' => 'Mahasiswa Mengumpulkan Tugas',
+                    'tgl_notification' => now(),
+                ]);
                 Log::info('Data berhasil diupdate', [
                     'file_path' => $filePath,
                     'status' => 'S',

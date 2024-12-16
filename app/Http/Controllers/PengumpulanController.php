@@ -200,6 +200,15 @@ class PengumpulanController extends Controller
                 $tugasModel->update([
                     'tugas_status' => 'F', // 'D' stands for 'Done' or 'Disetujui' (approved)
                 ]);
+                // Create notification
+                $pembuatNotifId = auth()->user()->user_id;
+                NotificationsModel::create([
+                    'jenis_notification' => 'tugas ditolak',
+                    'pembuat_notification' => $pembuatNotifId,
+                    'penerima_notification' => $tugasMahasiswa->mahasiswa->user->user_id,
+                    'konten_notification' => 'Tugas Anda ditolak.',
+                    'tgl_notification' => now(),
+                ]);
 
                 // Return success response
                 return response()->json([

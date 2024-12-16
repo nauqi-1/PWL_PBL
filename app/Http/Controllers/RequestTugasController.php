@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\TugasModel;
 use App\Models\TugasMahasiswaModel;
+use App\Models\NotificationsModel;
 use App\Models\RequestModel;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -106,6 +107,15 @@ class RequestTugasController extends Controller
                     'file_path' => null,   // Nullable, tidak perlu diisi
                     'progress' => 0,        // Default progres
                 ]);
+                // Create notification
+                $pembuatNotifId = auth()->user()->user_id;
+                NotificationsModel::create([
+                    'jenis_notification' => 'request diterima',
+                    'pembuat_notification' => $pembuatNotifId,
+                    'penerima_notification' => $requestData->mahasiswa->user->user_id,
+                    'konten_notification' => 'Request Anda diterima.',
+                    'tgl_notification' => now(),
+                ]);
 
                 // Periksa jika kuota penuh setelah menerima request ini
                 $acceptedCount++; // Tambahkan request yang baru saja diterima
@@ -140,13 +150,34 @@ class RequestTugasController extends Controller
 
     private function deny_remaining_requests(int $tugas_id)
     {
+        // Update semua request yang statusnya pending menjadi rejected
         RequestModel::where('tugas_id', $tugas_id)
             ->where('status_request', 'pending')
             ->update([
                 'status_request' => 'rejected',
                 'tgl_update_status' => now(),
             ]);
+
+        // Ambil semua user_id yang status_requestnya telah diubah menjadi rejected
+        $rejectedUsers = RequestModel::where('tugas_id', $tugas_id)
+            ->where('status_request', 'rejected')
+            ->pluck('user_id'); // Mengambil daftar user_id
+
+        // Ambil ID pembuat notifikasi
+        $pembuatNotifId = auth()->user()->user_id;
+
+        // Buat notifikasi untuk setiap user
+        foreach ($rejectedUsers as $userId) {
+            NotificationsModel::create([
+                'jenis_notification' => 'tugas ditolak',
+                'pembuat_notification' => $pembuatNotifId,
+                'penerima_notification' => $userId,
+                'konten_notification' => 'Tugas Anda ditolak.',
+                'tgl_notification' => now(),
+            ]);
+        }
     }
+
 
     public function denied_confirm_ajax(string $id)
     {
@@ -173,6 +204,15 @@ class RequestTugasController extends Controller
             $requestData->update([
                 'status_request' => 'rejected',
                 'tgl_update_status' => now(),
+            ]);
+            // Create notification
+            $pembuatNotifId = auth()->user()->user_id;
+            NotificationsModel::create([
+                'jenis_notification' => 'Request ditolak',
+                'pembuat_notification' => $pembuatNotifId,
+                'penerima_notification' => $requestData->mahasiswa->user->user_id,
+                'konten_notification' => 'Request Anda ditolak.',
+                'tgl_notification' => now(),
             ]);
 
             return response()->json([

@@ -11,6 +11,7 @@ use App\Models\LevelModel;
 use App\Models\RequestModel;
 use App\Models\MahasiswaModel;
 use App\Models\TugasJenisModel;
+use App\Models\NotificationsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -152,6 +153,15 @@ class MhslistTugasController extends Controller
             'tugas_pembuat_id' => $tugas->tugas_pembuat_id,
             'status_request' => 'pending',
             'tgl_request' => now(),
+        ]);
+        // Create notification
+        $pembuatNotifId = auth()->user()->user_id;
+        NotificationsModel::create([
+            'jenis_notification' => 'permintaan request',
+            'pembuat_notification' => $pembuatNotifId,
+            'penerima_notification' => $tugas->user->user_id,
+            'konten_notification' => 'Mahasiswa request Tugas.',
+            'tgl_notification' => now(),
         ]);
 
         return response()->json(['status' => true, 'message' => 'Request berhasil diajukan']);
