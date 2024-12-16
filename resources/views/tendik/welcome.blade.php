@@ -6,13 +6,13 @@
             <h3 class = "card-title"><strong>Dashboard</strong></h3>
             <div class = "card-tools"></div>
         </div>
-        <div class = "card-body">
+        <!--div class = "card-body">
             Rencananya akan dikasih daftar tugas terbuat, daftar request, daftar tugas yang dimanage dan statusnya.
-        </div>
+        </div-->
         <div>
             <!-- Main content -->
             <section class="content">
-                <div class="container-fluid">
+                <div class="container-fluid" style="padding-top: 17.5px">
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
                         <div class="col-lg-3 col-6">
