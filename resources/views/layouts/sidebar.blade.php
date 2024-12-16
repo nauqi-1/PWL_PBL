@@ -69,8 +69,8 @@
             <li class="nav-item">
                             <a href="{{ url('/mahasiswa') }}"
                                 class="nav-link {{ $activeMenu == 'mahasiswa' ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Mahasiswa</p>
+                                <i class="nav-icon far fa-user"></i>
+                                <p>Data Mahasiswa Kompen</p>
                             </a>
                         </li>
                         <li class="nav-item">
