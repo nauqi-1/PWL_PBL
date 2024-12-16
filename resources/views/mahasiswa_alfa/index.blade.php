@@ -75,7 +75,7 @@
         });
     }
 
-    var dataMahasiswa;
+    var dataMahasiswaAlfa;
 
     $(document).ready(function() {
         dataMahasiswaAlfa = $('#table_mahasiswa_alfa').DataTable({
@@ -119,6 +119,7 @@
                     orderable: false,
                     searchable: true
                 },
+                @if (!in_array(Auth::user()->level->level_kode, ['DSN', 'TDK']))
                 {
                     data: "aksi",
                     className: "",
@@ -126,17 +127,18 @@
                     orderable: false,
                     searchable: false
                 }
+                @endif
             ]
         });
 
         $('#periode_id').on('change',function() {
             dataMahasiswaAlfa.ajax.reload();
         });
+
         $('#mahasiswa_id').on('change',function() {
             dataMahasiswaAlfa.ajax.reload();
-        })
-
-
+        });
     });
 </script>
+
 @endpush
