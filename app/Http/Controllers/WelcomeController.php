@@ -66,10 +66,10 @@ class WelcomeController extends Controller
         //menghitung mhs alfa
         $totalMhsAlfa = DB::table('t_mahasiswa_alfa')->count();
 
-        // Mengambil data periode
+        //mengambil data periode
         $periods = DB::table('m_periode')->pluck('periode', 'periode_id');
 
-        // Menghitung jumlah mahasiswa alfa dan kompen per periodik
+        //menghitung jumlah mahasiswa alfa dan kompen per periodik
         $totalAlfaKompen = [];
         foreach ($periods as $periode_id => $periode) {
             $totalAlfa = DB::table('t_mahasiswa_alfa')
@@ -89,6 +89,60 @@ class WelcomeController extends Controller
             ];
         }
 
+        //menghitung total alfa per user mahasiswa
+        $totalAlfa = DB::table('t_mahasiswa_alfa')
+        ->join('m_mahasiswa', 't_mahasiswa_alfa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        //->join('m_user', 'm_mahasiswa.user_id', '=', 'm_user.user_id')
+        //->where('m_user.user_id', $user->user_id)
+        ->where('m_mahasiswa.user_id', '=', $user->user_id)
+        ->sum('t_mahasiswa_alfa.jumlah_alfa');
+
+        //menghitung total alfa lunas per user mahasiswa
+        $totalAlfaLunas = DB::table('t_mahasiswa_alfa')
+        ->join('m_mahasiswa', 't_mahasiswa_alfa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        ->where('m_mahasiswa.user_id', $user->user_id)
+        //->whereColumn('m_mahasiswa.mahasiswa_alfa_lunas', '>=', 't_mahasiswa_alfa.jumlah_alfa')
+        //->sum('t_mahasiswa_alfa.jumlah_alfa');
+        ->select(DB::raw('LEAST(SUM(t_mahasiswa_alfa.jumlah_alfa), m_mahasiswa.mahasiswa_alfa_lunas) AS total_alfa_lunas'))
+        ->groupBy('m_mahasiswa.mahasiswa_id', 'm_mahasiswa.mahasiswa_alfa_lunas')
+        ->value('total_alfa_lunas');
+        
+        //menghitung total alfa belum lunas per user mahasiswa
+        $totalAlfaHutang = DB::table('t_mahasiswa_alfa')
+        //->where('m_mahasiswa.user_id', $user->user_id)
+        ->join('m_mahasiswa', 't_mahasiswa_alfa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        ->where('m_mahasiswa.user_id', $user->user_id)
+        //->whereColumn('m_mahasiswa.mahasiswa_alfa_lunas', '<', 't_mahasiswa_alfa.jumlah_alfa')
+        //->whereColumn('t_mahasiswa_alfa.jumlah_alfa', '>', 'm_mahasiswa.mahasiswa_alfa_lunas')
+        //->sum(DB::raw('t_mahasiswa_alfa.jumlah_alfa - m_mahasiswa.mahasiswa_alfa_lunas'));
+        //->sum(DB::raw('(t_mahasiswa_alfa.jumlah_alfa - COALESCE(m_mahasiswa.mahasiswa_alfa_lunas, 0))'))
+        //->select(DB::raw('SUM(GREATEST(SUM(t_mahasiswa_alfa.jumlah_alfa) - m_mahasiswa.mahasiswa_alfa_lunas, 0)) as total_hutang'))
+        //->select(DB::raw('SUM(GREATEST(t_mahasiswa_alfa.jumlah_alfa - COALESCE(m_mahasiswa.mahasiswa_alfa_lunas, 0), 0)) as total_hutang'))
+        //->selectRaw('SUM(GREATEST(t_mahasiswa_alfa.jumlah_alfa - COALESCE(m_mahasiswa.mahasiswa_alfa_lunas, 0), 0)) as total_hutang')
+        ->select(DB::raw('GREATEST(SUM(t_mahasiswa_alfa.jumlah_alfa) - COALESCE(m_mahasiswa.mahasiswa_alfa_lunas, 0), 0) as total_hutang'))
+        ->groupBy('t_mahasiswa_alfa.mahasiswa_id') // Kelompokkan data berdasarkan mahasiswa_id
+        ->value('total_hutang');
+
+        //menentukan status UAS berdasarkan lunas/tidak lunasnya alfa
+        //$statusUAS = ($totalAlfaHutang > 0) ? 'Belum bisa<br>mengikuti!' : 'Sudah bisa<br>mengikuti!';
+        $statusUAS = ($totalAlfaHutang > 0) ? '<i class="fas fa-times"></i>' : '<i class="fas fa-check"></i>';
+
+        //menentukan warna small box berdasarkan status UAS
+        $warnaUAS = ($totalAlfaHutang > 0) ? 'bg-danger' : 'bg-success';
+
+        //menghitung total alfa per periode
+        $totalAlfaPeriode = DB::table('t_mahasiswa_alfa')
+        ->join('m_mahasiswa', 't_mahasiswa_alfa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        ->join('m_periode', 't_mahasiswa_alfa.periode_id', '=', 'm_periode.periode_id')
+        ->select(
+            'm_periode.periode',
+            DB::raw('SUM(t_mahasiswa_alfa.jumlah_alfa) as total_alfa'),
+            DB::raw('SUM(CASE WHEN m_mahasiswa.mahasiswa_alfa_lunas >= t_mahasiswa_alfa.jumlah_alfa THEN t_mahasiswa_alfa.jumlah_alfa ELSE 0 END) as total_lunas')
+        )
+        ->where('m_mahasiswa.user_id', $user->user_id)
+        ->groupBy('m_periode.periode')
+        ->get();
+
         switch($user->level_id) {
             case 1:
                 return view('welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalTugas' => $totalTugas, 'totalTugasUser' => $totalTugasUser, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasBulan' => $totalTugasBulan, 'totalTugasJenis' => $totalTugasJenis, 'totalRequest' => $totalRequest, 'totalMhsAlfa' => $totalMhsAlfa, 'totalAlfaKompen' => $totalAlfaKompen]);
@@ -97,7 +151,7 @@ class WelcomeController extends Controller
             case 3:
                 return view('tendik.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalTugasLevel' => $totalTugasLevel, 'totalTugasUser' => $totalTugasUser, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasBulan' => $totalTugasBulan, 'totalTugasJenis' => $totalTugasJenis, 'totalRequest' => $totalRequest]);
             case 4:
-                return view('mahasiswa.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu]);
+                return view('mahasiswa.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalAlfa' => $totalAlfa, 'totalAlfaLunas' => $totalAlfaLunas, 'totalAlfaHutang' => $totalAlfaHutang, 'statusUAS' => $statusUAS, 'warnaUAS' => $warnaUAS, 'totalAlfaPeriode' => $totalAlfaPeriode, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasJenis' => $totalTugasJenis]);
             
 
         }    
