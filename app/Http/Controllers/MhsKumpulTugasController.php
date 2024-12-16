@@ -257,4 +257,35 @@ class MhsKumpulTugasController extends Controller
             ], 500);
         }
     }
+
+    public function export_pdf($tugas_id)
+    {
+        // Fetch data by joining the necessary tables
+        $data = DB::table('t_tugas_mahasiswa as tm')
+            ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
+            ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
+            ->select(
+                'm.mahasiswa_nama',
+                'm.mahasiswa_nim',
+                'm.mahasiswa_kelas',
+                'm.mahasiswa_prodi',
+                't.tugas_nama',
+                't.tugas_bobot'
+            )
+            ->where('t.tugas_id', $tugas_id)
+            ->first();
+
+        // Check if data exists
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+
+        // Add current date
+        $data->current_date = now()->format('d F Y');
+
+        // Load the PDF view and pass the data
+        $pdf = Pdf::loadView('pengumpulan.export_pdf', ['data' => $data]);
+        $pdf->setPaper('a4', 'landscape'); 
+        return $pdf->stream('Surat Kompen '.date('Y-m-d H:i:s').'.pdf');
+    }
 }
