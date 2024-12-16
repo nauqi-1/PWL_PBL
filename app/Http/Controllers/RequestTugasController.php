@@ -112,7 +112,7 @@ class RequestTugasController extends Controller
                 NotificationsModel::create([
                     'jenis_notification' => 'request diterima',
                     'pembuat_notification' => $pembuatNotifId,
-                    'penerima_notification' => $requestData->mahasiswa->user->user_id,
+                    'penerima_notification' => $requestData->mahasiswa->user_id,
                     'konten_notification' => 'Request Anda diterima.',
                     'tgl_notification' => now(),
                 ]);
@@ -161,7 +161,7 @@ class RequestTugasController extends Controller
         // Ambil semua user_id yang status_requestnya telah diubah menjadi rejected
         $rejectedUsers = RequestModel::where('tugas_id', $tugas_id)
             ->where('status_request', 'rejected')
-            ->pluck('user_id'); // Mengambil daftar user_id
+            ->pluck('mhs_id'); // Mengambil daftar mhs_id
 
         // Ambil ID pembuat notifikasi
         $pembuatNotifId = auth()->user()->user_id;
@@ -210,7 +210,7 @@ class RequestTugasController extends Controller
             NotificationsModel::create([
                 'jenis_notification' => 'Request ditolak',
                 'pembuat_notification' => $pembuatNotifId,
-                'penerima_notification' => $requestData->mahasiswa->user->user_id,
+                'penerima_notification' => $requestData->mahasiswa->user_id,
                 'konten_notification' => 'Request Anda ditolak.',
                 'tgl_notification' => now(),
             ]);
