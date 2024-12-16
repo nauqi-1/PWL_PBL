@@ -112,6 +112,7 @@
     <div class="footer">
         <p>Ka. Program Studi</p>
         <br><br>
+        @if($data->mahasiswa_prodi == 'SIB')
         <p><strong>Hendra Pradibta, S.E., M.Sc.</strong></p>
         <p>NIP: 19835212000641003</p>
     </div>

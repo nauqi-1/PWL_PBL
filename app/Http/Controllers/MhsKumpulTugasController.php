@@ -258,10 +258,12 @@ class MhsKumpulTugasController extends Controller
         }
     }
 
-    public function export_pdf($tugas_id)
+    public function export_pdf($id)
     {
-        // Fetch data by joining the necessary tables
-        $mahasiswa_id = Auth::id();
+        // Get the currently authenticated user's mahasiswa_id
+        $mahasiswa_id = Auth::user()->mahasiswa_id; // Ensure 'mahasiswa_id' exists in the Auth user session.
+
+        // Fetch tugas and mahasiswa details using tugas_mahasiswa_id and mahasiswa_id
         $data = DB::table('t_tugas_mahasiswa as tm')
             ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
             ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
@@ -273,8 +275,8 @@ class MhsKumpulTugasController extends Controller
                 't.tugas_nama',
                 't.tugas_bobot'
             )
-            ->where('t.tugas_id', $tugas_id)
-            ->where('m.mahasiswa_id', $mahasiswa_id) 
+            ->where('tm.tugas_mahasiswa_id', $id) // Match the tugas_mahasiswa_id
+            ->where('m.mahasiswa_id', $mahasiswa_id) // Ensure it belongs to the logged-in mahasiswa
             ->first();
 
         // Check if data exists
@@ -282,12 +284,13 @@ class MhsKumpulTugasController extends Controller
             return redirect()->back()->with('error', 'Data tidak ditemukan.');
         }
 
-        // Add current date
+        // Add the current date to the data
         $data->current_date = now()->format('d F Y');
 
-        // Load the PDF view and pass the data
-        $pdf = Pdf::loadView('pengumpulan.export_pdf', ['data' => $data]);
-        $pdf->setPaper('a4', 'landscape'); 
-        return $pdf->stream('Surat Kompen '.date('Y-m-d H:i:s').'.pdf');
+        // Generate the PDF using the 'pdf.document' view
+        $pdf = PDF::loadView('pdf.document', ['data' => $data]);
+
+        // Return the PDF for download
+        return $pdf->download('tugas_kompensasi_presensi.pdf');
     }
 }
