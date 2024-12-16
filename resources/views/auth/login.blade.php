@@ -16,10 +16,10 @@
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 </head>
 <body class="hold-transition login-page">
-    <div class="login-box">
+    <div class="login-box" style="min-width: 360px; width: 400px; max-width: 400px;">
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
-                <a href="{{ url('/') }}" class="h1"><b>Sistem Kompensasi</b></a>
+                <a href="{{ url('/') }}" class="h1"><b>Sistem Kompensasi JTI Polinema</b></a>
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Masukkan Username dan Password.</p>
@@ -43,7 +43,7 @@
                         </div>
                         <small id="error-password" class="error-text text-danger"></small>
                     </div>
-                    <div class=" text-center">
+                    <div class=" text-center mb-3">
                         <span>Butuh bantuan?</span><a href="{{ route('register')}}"> Manual</a>
                         
                     </div>
