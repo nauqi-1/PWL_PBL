@@ -276,7 +276,7 @@ class MhsKumpulTugasController extends Controller
                 't.tugas_bobot'
             )
             ->where('tm.tugas_mahasiswa_id', $id) // Match the tugas_mahasiswa_id
-            ->where('m.mahasiswa_id', $mahasiswa_id) // Ensure it belongs to the logged-in mahasiswa
+            //->where('m.mahasiswa_id', $mahasiswa_id) // Ensure it belongs to the logged-in mahasiswa
             ->first();
 
         // Check if data exists
