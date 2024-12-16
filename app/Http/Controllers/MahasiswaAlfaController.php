@@ -55,8 +55,8 @@ class MahasiswaAlfaController extends Controller
         if ($request->mahasiswa_id) {
             $alfas->where('mahasiswa_id', $request->mahasiswa_id);
         }
-
-        if (Auth::user()->level->level_kode == 'ADM'){return DataTables::of($alfas)
+        if (Auth::user()->level->level_kode == 'ADM'){
+        return DataTables::of($alfas)
             ->addIndexColumn()
             ->addColumn('aksi', function ($alfa) {
                 $btn = '<button onclick="modalAction(\'' . url('/mahasiswa_alfa/' . $alfa->mahasiswa_alfa_id . '/edit_ajax') . '\')" class="btn btn-warning btn-sm">Edit</button> ';
@@ -65,10 +65,16 @@ class MahasiswaAlfaController extends Controller
             })
             ->rawColumns(['aksi'])
             ->make(true);
+        } elseif (Auth::user()->level->level_kode != 'ADM'){
+            return DataTables::of($alfas)
+            ->addIndexColumn()
+            ->addColumn('aksi', function ($alfa) {
+                $btn = '<button onclick="modalAction(\'' . url('/mahasiswa_alfa/' . $alfa->mahasiswa_alfa_id . '/show_ajax') . '\')" class="btn btn-warning btn-sm">Detail</button> ';
+                return $btn;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
         }
-        return DataTables::of($alfas)
-        ->addIndexColumn()
-        ->make(true);
     }
     public function create_ajax() {
         $periode = PeriodeModel::select('periode_id', 'periode') -> get();

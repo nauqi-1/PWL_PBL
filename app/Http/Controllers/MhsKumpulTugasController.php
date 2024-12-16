@@ -288,7 +288,7 @@ class MhsKumpulTugasController extends Controller
         $data->current_date = now()->format('d F Y');
 
         // Generate the PDF using the 'pdf.document' view
-        $pdf = PDF::loadView('pdf.document', ['data' => $data]);
+        $pdf = PDF::loadView('pengumpulan.export_pdf', ['data' => $data]);
 
         // Return the PDF for download
         return $pdf->download('tugas_kompensasi_presensi.pdf');

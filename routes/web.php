@@ -162,6 +162,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{id}/show_ajax', [MahasiswaAlfaController::class, 'show_ajax']);
         Route::get('/', [MahasiswaAlfaController::class, 'index']);
         Route::post('/list', [MahasiswaAlfaController::class, 'list']);
+        Route::get('/export_excel', [MahasiswaAlfaController::class, 'export_excel']);
     });
 
     Route::group(['prefix' => 'mahasiswa_alfa', 'middleware' => 'authorize:ADM'], function () {
@@ -181,7 +182,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/import', [MahasiswaAlfaController::class, 'import']);
         Route::post('/import_ajax', [MahasiswaAlfaController::class, 'import_ajax']);
-        Route::get('/export_excel', [MahasiswaAlfaController::class, 'export_excel']);
+        //Route::get('/export_excel', [MahasiswaAlfaController::class, 'export_excel']);
         Route::get('/export_pdf', [MahasiswaAlfaController::class, 'export_pdf']);
     });
 
