@@ -97,7 +97,7 @@ class MhsKumpulTugasController extends Controller
                 // Check if tugas_status is 'D' (Done) and return the link/button with dynamic URL
                 if ($tugasMahasiswa->tugas->tugas_status == 'D') {
                     // Generate the URL dynamically using route() or url() helper
-                    $url = url("mhs_tugaskumpul/{$tugasMahasiswa->tugas_mahasiswa_id}/export_pdf");
+                    $url = url("mhs_kumpultugas/{$tugasMahasiswa->tugas_mahasiswa_id}/export_pdf");
                     return '<a href="' . $url . '" class="btn btn-primary" target="_blank">Cetak</a>';
                 }
                 return ''; // Return empty if status is not 'D'
