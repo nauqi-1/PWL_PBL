@@ -30,8 +30,12 @@ class TugasController extends Controller
 
     public function show(TugasModel $tugas)
     {
-        return TugasModel::find($tugas);
+        // Memuat relasi 'jenis' untuk mendapatkan data jenis_nama
+        $tugas->load('jenis');
+        // Langsung kembalikan data tugas sebagai respons JSON
+        return response()->json($tugas);
     }
+
 
     public function update(Request $request, TugasModel $tugas)
     {
