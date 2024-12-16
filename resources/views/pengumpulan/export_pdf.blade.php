@@ -86,7 +86,13 @@
         <div class="header">
             <img src="logo.png" alt="Logo">
             <h1>KEMENTRIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI</h1>
+            @if($data->mahasiswa_prodi == 'SIB')
             <h2>Program Studi Sistem Informasi Bisnis</h2>
+            @elseif ($data->mahasiswa_prodi == 'TI')
+            <h2>Program Studi Teknik Informatika</h2>
+            @elseif ($data->mahasiswa_prodi == 'PPLS')
+            <h2>Program Studi Pengembangan Piranti Lunak Situs</h2>
+            @endif
             <p>Politeknik Negeri Malang</p>
             <p>Telp. 0341-404424</p>
         </div>
@@ -97,8 +103,8 @@
         <div class="field"><strong>Nama Mahasiswa:</strong> {{ $data->mahasiswa_nama }}</div>
         <div class="field"><strong>NIM:</strong> {{ $data->mahasiswa_nim }}</div>
         <div class="field"><strong>Kelas:</strong> {{$data->mahasiswa_prodi}} {{ $data->mahasiswa_kelas }}</div>
-        <div class="field"><strong>Nama Tugas:</strong> {{ $data->tugas_nama }}</div>
-        <div class="field"><strong>Bobot Tugas:</strong> {{ $data->tugas_bobot }} Jam</div>
+        <div class="field"><strong>Pekerjaan:</strong> {{ $data->tugas_nama }}</div>
+        <div class="field"><strong>Jumlah Jam:</strong> {{ $data->tugas_bobot }} Jam</div>
 
         <p>Malang, {{ $data->current_date }}</p>
     </div>

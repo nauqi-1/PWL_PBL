@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Illuminate\Support\Facades\Auth;
 
 class MhsKumpulTugasController extends Controller
 {
@@ -261,6 +261,7 @@ class MhsKumpulTugasController extends Controller
     public function export_pdf($tugas_id)
     {
         // Fetch data by joining the necessary tables
+        $mahasiswa_id = Auth::id();
         $data = DB::table('t_tugas_mahasiswa as tm')
             ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
             ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
@@ -273,6 +274,7 @@ class MhsKumpulTugasController extends Controller
                 't.tugas_bobot'
             )
             ->where('t.tugas_id', $tugas_id)
+            ->where('m.mahasiswa_id', $mahasiswa_id) 
             ->first();
 
         // Check if data exists
