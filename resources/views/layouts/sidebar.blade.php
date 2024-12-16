@@ -65,6 +65,22 @@
                     </a>
                 </li>
             @endif
+            @if (Auth::user()->level->level_kode == 'DSN' || Auth::user()->level->level_kode == 'TDK')
+            <li class="nav-item">
+                            <a href="{{ url('/mahasiswa') }}"
+                                class="nav-link {{ $activeMenu == 'mahasiswa' ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Mahasiswa</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                    <a href="{{ url('/mahasiswa_alfa') }}"
+                        class="nav-link {{ $activeMenu == 'mahasiswa_alfa' ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-calendar"></i>
+                        <p>Data Alfa Periodik</p>
+                    </a>
+                </li>
+            @endif
             @if (Auth::user()->level->level_kode == 'ADM')
                 <li class="nav-header">Data Master</li>
 

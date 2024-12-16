@@ -51,7 +51,9 @@
                     <th>Nama Mahasiswa</th>
                     <th>Jumlah Jam Alfa</th>
                     <th>Periode</th>
+                    @if(Auth::user()->level->level_kode == 'ADM')
                     <th>Aksi</th>
+                    @endif
                 </tr>
             </thead>
         </table>

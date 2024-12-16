@@ -111,15 +111,19 @@ Route::middleware(['auth'])->group(function () {
 
 
     });
-
-    Route::group(['prefix' => 'mahasiswa', 'middleware' => 'authorize:ADM'], function () {
+    Route::group(['prefix' => 'mahasiswa', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
         Route::get('/', [MahasiswaController::class, 'index']); //Menampilkan laman awal Kompetensi
-        Route::post('/list', [MahasiswaController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.
+        Route::post('/list', [MahasiswaController::class, 'list']); 
+        Route::get('/{id}/show_ajax', [MahasiswaController::class, 'show_ajax']);
+    });
+    Route::group(['prefix' => 'mahasiswa', 'middleware' => 'authorize:ADM'], function () {
+        //Route::get('/', [MahasiswaController::class, 'index']); //Menampilkan laman awal Kompetensi
+        //Route::post('/list', [MahasiswaController::class, 'list']); //menampilkan data Kompetensi dalam bentuk json untuk datatables.
 
         Route::get('/create_ajax', [MahasiswaController::class, 'create_ajax']); //Buat data Kompetensi w ajax
         Route::post('/ajax', [MahasiswaController::class, 'store_ajax']); //menyimpan data Kompetensi baru w ajax
 
-        Route::get('/{id}/show_ajax', [MahasiswaController::class, 'show_ajax']);
+        //Route::get('/{id}/show_ajax', [MahasiswaController::class, 'show_ajax']);
 
         Route::get('/{id}/edit_ajax', [MahasiswaController::class, 'edit_ajax']); //edit data Kompetensi dengan ajax
         Route::put('/{id}/update_ajax', [MahasiswaController::class, 'update_ajax']); //menyimpan perubahan data dengan ajax
@@ -154,14 +158,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/export_excel', [AdminController::class, 'export_excel']);
         Route::get('/export_pdf', [AdminController::class, 'export_pdf']);
     });
-    Route::group(['prefix' => 'mahasiswa_alfa', 'middleware' => 'authorize:ADM'], function () {
+    Route::group(['prefix' => 'mahasiswa_alfa', 'middleware' => 'authorize:ADM,DSN,TDK'], function () {
+        Route::get('/{id}/show_ajax', [MahasiswaAlfaController::class, 'show_ajax']);
         Route::get('/', [MahasiswaAlfaController::class, 'index']);
         Route::post('/list', [MahasiswaAlfaController::class, 'list']);
+    });
+
+    Route::group(['prefix' => 'mahasiswa_alfa', 'middleware' => 'authorize:ADM'], function () {
+        //Route::get('/', [MahasiswaAlfaController::class, 'index']);
+        //Route::post('/list', [MahasiswaAlfaController::class, 'list']);
 
         Route::get('/create_ajax', [MahasiswaAlfaController::class, 'create_ajax']);
         Route::post('/ajax', [MahasiswaAlfaController::class, 'store_ajax']);
 
-        Route::get('/{id}/show_ajax', [MahasiswaAlfaController::class, 'show_ajax']);
+        //Route::get('/{id}/show_ajax', [MahasiswaAlfaController::class, 'show_ajax']);
 
         Route::get('/{id}/edit_ajax', [MahasiswaAlfaController::class, 'edit_ajax']);
         Route::put('/{id}/update_ajax', [MahasiswaAlfaController::class, 'update_ajax']);

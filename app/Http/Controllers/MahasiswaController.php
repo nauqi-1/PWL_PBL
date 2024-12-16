@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\MahasiswaModel;
@@ -60,7 +61,8 @@ class MahasiswaController extends Controller
             $mahasiswas->where($filters);
         }
         
-        return DataTables::of($mahasiswas)
+        if (Auth::user()->level->level_kode == 'ADM'){
+            return DataTables::of($mahasiswas)
         ->addIndexColumn()  
         ->addColumn('aksi', function ($mahasiswa) { 
                    $btn = '<button onclick="modalAction(\''.url('/mahasiswa/' . $mahasiswa->mahasiswa_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> ';
@@ -71,6 +73,17 @@ class MahasiswaController extends Controller
         }) 
         ->rawColumns(['aksi'])
         ->make(true);
+    } elseif (Auth::user()->level->level_kode == 'DSN'||Auth::user()->level->level_kode == 'TDK'){
+        return DataTables::of($mahasiswas)
+    ->addIndexColumn()  
+    ->addColumn('aksi', function ($mahasiswa) { 
+               $btn = '<button onclick="modalAction(\''.url('/mahasiswa/' . $mahasiswa->mahasiswa_id . '/show_ajax').'\')" class="btn btn-info btn-sm">Detail</button> ';
+               
+                return $btn; 
+    }) 
+    ->rawColumns(['aksi'])
+    ->make(true);
+}
     }
 
     public function create_ajax() {
