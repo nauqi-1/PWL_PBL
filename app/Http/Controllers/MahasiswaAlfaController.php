@@ -197,8 +197,7 @@ class MahasiswaAlfaController extends Controller
                 // Get jumlah_alfa for this mahasiswa and periode
                 $jumlah_alfa = $mahasiswa_alfa->where('mahasiswa_id', $mahasiswa->mahasiswa_id)
                                               ->where('periode_id', $periode->periode_id)
-                                              ->pluck('jumlah_alfa')
-                                              ->first();
+                                              ->sum('jumlah_alfa');
                 $jumlah_alfa = $jumlah_alfa ?? 0; // Default to 0 if no record
                 $sheet->setCellValue($colIndex . $rowNum, $jumlah_alfa); 
                 $totalJumlahAlfa += $jumlah_alfa; // Sum total jumlah_alfa for each row
