@@ -84,12 +84,12 @@
             @if (Auth::user()->level->level_kode == 'ADM')
                 <li class="nav-header">Data Master</li>
 
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a href="{{ url('/level') }}" class="nav-link {{ $activeMenu == 'level' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-layer-group"></i>
                         <p>Level User</p>
                     </a>
-                </li>
+                </li>-->
                 <li class="nav-item has-treeview {{ $activeMenu == 'user' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ $activeMenu == 'user' ? 'active' : '' }}">
                         <i class="nav-icon far fa-user"></i>
@@ -173,13 +173,13 @@
                         <p>Data Alfa Periodik</p>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a href="{{ url('/tugas_mahasiswa') }}"
                         class="nav-link {{ $activeMenu == 'tugas_mahasiswa' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-briefcase"></i>
                         <p>Data Pekerja Tugas</p>
                     </a>
-                </li>
+                </li>-->
             @endif
 
 

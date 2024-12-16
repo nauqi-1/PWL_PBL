@@ -7,7 +7,7 @@
         <div class="card-tools">
             <button onclick="modalAction('{{ url('/mahasiswa_alfa/import') }}')" class="btn btn-info">Import Data</button>
             <a href="{{ url('/mahasiswa_alfa/export_excel') }}" class="btn btn-primary"><i class="fa fa-file-excel"></i> Export Excel</a>
-            <a href="{{ url('/mahasiswa_alfa/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a>
+            <!-- <a href="{{ url('/mahasiswa_alfa/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export PDF </a> -->
             <button onclick="modalAction('{{ url('/mahasiswa_alfa/create_ajax') }}')" class="btn btn-success"><i class="fa fa-plus"></i>Tambah</button>
         </div>
     </div>
@@ -119,7 +119,6 @@
                     orderable: false,
                     searchable: true
                 },
-                @if (!in_array(Auth::user()->level->level_kode, ['DSN', 'TDK']))
                 {
                     data: "aksi",
                     className: "",
@@ -127,7 +126,6 @@
                     orderable: false,
                     searchable: false
                 }
-                @endif
             ]
         });
 

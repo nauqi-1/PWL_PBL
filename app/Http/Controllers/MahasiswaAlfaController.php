@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Auth;
-
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class MahasiswaAlfaController extends Controller
 {
@@ -65,6 +66,9 @@ class MahasiswaAlfaController extends Controller
             ->rawColumns(['aksi'])
             ->make(true);
         }
+        return DataTables::of($alfas)
+        ->addIndexColumn()
+        ->make(true);
     }
     public function create_ajax() {
         $periode = PeriodeModel::select('periode_id', 'periode') -> get();
@@ -148,4 +152,82 @@ class MahasiswaAlfaController extends Controller
         }
     }
     }
+    
+    public function export_excel() {
+        // Get all unique periods (columns)
+        $periodes = PeriodeModel::orderBy('periode_id')->get();
+        $mahasiswa_alfa = MahasiswaAlfaModel::with(['mahasiswa'])
+            ->select('mahasiswa_id', 'periode_id', 'jumlah_alfa')
+            ->get();
+    
+        // Create the spreadsheet and set the active sheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+    
+        // === HEADER ROW (First Row) ===
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama Mahasiswa');
+    
+        // Dynamic headers for each period
+        $colIndex = 'C'; // Column C starts after A (No) and B (Nama Mahasiswa)
+        foreach ($periodes as $periode) {
+            $sheet->setCellValue($colIndex . '1', 'Periode ' . $periode->periode);
+            $colIndex++;
+        }
+        $sheet->setCellValue($colIndex . '1', 'Total'); // Last column is 'Total'
+    
+        // === DATA ROWS (Starts from 2nd row) ===
+        $mahasiswaList = MahasiswaModel::orderBy('mahasiswa_nama')->get();
+        $rowNum = 2;
+        $no = 1;
+    
+        foreach ($mahasiswaList as $mahasiswa) {
+            $sheet->setCellValue('A' . $rowNum, $no); // Row number
+            $sheet->setCellValue('B' . $rowNum, $mahasiswa->mahasiswa_nama); // Mahasiswa name
+    
+            $totalJumlahAlfa = 0; 
+            $colIndex = 'C'; // Start from column C again
+            foreach ($periodes as $periode) {
+                // Get jumlah_alfa for this mahasiswa and periode
+                $jumlah_alfa = $mahasiswa_alfa->where('mahasiswa_id', $mahasiswa->mahasiswa_id)
+                                              ->where('periode_id', $periode->periode_id)
+                                              ->pluck('jumlah_alfa')
+                                              ->first();
+                $jumlah_alfa = $jumlah_alfa ?? 0; // Default to 0 if no record
+                $sheet->setCellValue($colIndex . $rowNum, $jumlah_alfa); 
+                $totalJumlahAlfa += $jumlah_alfa; // Sum total jumlah_alfa for each row
+                $colIndex++;
+            }
+            $sheet->setCellValue($colIndex . $rowNum, $totalJumlahAlfa); // Total jumlah_alfa for this mahasiswa
+            $rowNum++;
+            $no++;
+        }
+    
+        // === AUTO-SIZE COLUMNS ===
+        foreach (range('A', $colIndex) as $columnID) {
+            $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+    
+        // === SET SHEET TITLE ===
+        $sheet->setTitle('Data Alfa Periodik');
+    
+        // === EXPORT FILE AS XLSX ===
+        $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+        $filename = 'Data_Alfa_Periodik_' . date('Y-m-d_His') . '.xlsx';
+    
+        // === HEADERS FOR DOWNLOAD ===
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        header('Expires: Mon, 22 Aug 2025 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+    
+        // Save to output
+        $writer->save('php://output');
+        exit;
+    }
+    
+    
 }
