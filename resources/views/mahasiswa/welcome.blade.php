@@ -136,7 +136,7 @@
 
         <!-- STACKED BAR CHART -->
         <section class="col-lg-6 connectedSortable">
-            <div class="card card-danger" style="max-width: 675px;">
+            <div class="card card-warning" style="max-width: 675px;">
                 <div class="card-header">
                     <h3 class="card-title">
                         <i class="fas fa-chart-bar mr-1"></i>
@@ -181,14 +181,14 @@
             });
         }
         // Data grafik Status Tugas
-        const totalTugasStatus = @json($totalTugasStatus);
+        const tugasStatusMhs = @json($tugasStatusMhs);
 
         // Membuat format untuk Chart.js
         const labelTugasStatus = ["Working", "Submitted", "Done"];
         const dataTugasStatus = [
-            totalTugasStatus["W"] || 0,
-            totalTugasStatus["S"] || 0,
-            totalTugasStatus["D"] || 0
+            tugasStatusMhs["W"] || 0,
+            tugasStatusMhs["S"] || 0,
+            tugasStatusMhs["D"] || 0
         ];
 
         // Konfigurasi Grafik Status Tugas
@@ -209,9 +209,9 @@
         });
 
         // Data untuk Grafik Jenis Tugas
-        const totalTugasJenis = @json($totalTugasJenis);
-        const labelTugasJenis = Object.keys(totalTugasJenis);
-        const dataTugasJenis = Object.values(totalTugasJenis);
+        const tugasJenisMhs = @json($tugasJenisMhs);
+        const labelTugasJenis = Object.keys(tugasJenisMhs);
+        const dataTugasJenis = Object.values(tugasJenisMhs);
 
         // Konfigurasi Grafik Jenis Tugas
         const ctx3 = document.getElementById('jenis-chart-canvas').getContext('2d');
@@ -252,12 +252,12 @@
                 labels: labels,
                 datasets: [{
                         label: 'Jumlah Alfa',
-                        data: totalAlfa,
+                        data: dataAlfa,
                         backgroundColor: 'rgba(255, 99, 132, 0.6)',
                     },
                     {
                         label: 'Jumlah Kompen',
-                        data: totalKompen,
+                        data: dataKompen,
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                     },
                 ],
@@ -272,7 +272,7 @@
                 },
                 scales: {
                     x: {
-                        stacked: true,
+                        //stacked: true,
                         title: {
                             display: true,
                             text: 'Periode',
@@ -283,7 +283,7 @@
                         },
                     },
                     y: {
-                        stacked: true,
+                        //stacked: true,
                         title: {
                             display: true,
                             text: 'Jumlah Alfa & Kompen',
@@ -292,7 +292,7 @@
                                 weight: 'bold',
                             }
                         },
-                        //beginAtZero: true,
+                        beginAtZero: true,
                     },
                 },
             },

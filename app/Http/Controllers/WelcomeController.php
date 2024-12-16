@@ -41,7 +41,7 @@ class WelcomeController extends Controller
         ->orderBy(DB::raw('MONTH(tugas_tgl_dibuat)'))
         ->pluck('count', 'month');
 
-        //menghitung tugas per jenis
+        //menghitung tugas per jenis (pembuat tugas)
         $totalTugasJenis = DB::table('t_tugas_jenis')
         ->where('tugas_pembuat_id', $user->user_id)
         ->leftJoin('t_tugas', 't_tugas_jenis.jenis_id', '=', 't_tugas.jenis_id')
@@ -50,12 +50,32 @@ class WelcomeController extends Controller
         ->pluck('total', 't_tugas_jenis.jenis_nama')
         ->toArray();
 
-        //menghitung tugas per status
+        //menghitung tugas per jenis (mahasiswa)
+        $tugasJenisMhs = DB::table('t_tugas_jenis')
+        ->leftJoin('t_tugas', 't_tugas_jenis.jenis_id', '=', 't_tugas.jenis_id')
+        ->leftJoin('t_tugas_mahasiswa', 't_tugas.tugas_id', '=', 't_tugas_mahasiswa.tugas_id')
+        ->leftJoin('m_mahasiswa', 't_tugas_mahasiswa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        ->where('m_mahasiswa.user_id', $user->user_id)
+        ->select('t_tugas_jenis.jenis_nama', DB::raw('COUNT(t_tugas.tugas_id) as total'))
+        ->groupBy('t_tugas_jenis.jenis_nama')
+        ->pluck('total', 't_tugas_jenis.jenis_nama')
+        ->toArray();
+
+        //menghitung tugas per status (pembuat tugas)
         $totalTugasStatus = DB::table('t_tugas')
         ->where('tugas_pembuat_id', $user->user_id)
         ->select(DB::raw("tugas_status, COUNT(*) as count"))
         ->groupBy('tugas_status')
         ->pluck('count', 'tugas_status');
+
+        //menghitung tugas per status (mahasiswa)
+        $tugasStatusMhs = DB::table('t_tugas_mahasiswa')
+        ->join('m_mahasiswa', 't_tugas_mahasiswa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        ->join('t_tugas', 't_tugas_mahasiswa.tugas_id', '=', 't_tugas.tugas_id')
+        ->where('m_mahasiswa.user_id', $user->user_id)
+        ->select(DB::raw("t_tugas.tugas_status, COUNT(*) as count"))
+        ->groupBy('t_tugas.tugas_status')
+        ->pluck('count', 't_tugas.tugas_status');
 
         //menghitung request tugas
         $totalRequest = DB::table('t_request')
@@ -64,7 +84,11 @@ class WelcomeController extends Controller
         ->count();
 
         //menghitung mhs alfa
-        $totalMhsAlfa = DB::table('t_mahasiswa_alfa')->count();
+        $totalMhsAlfa = DB::table('t_mahasiswa_alfa')
+        ->join('m_mahasiswa', 't_mahasiswa_alfa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
+        ->distinct('m_mahasiswa.mahasiswa_nama')
+        ->count('m_mahasiswa.mahasiswa_nama');
+        //->count();
 
         //mengambil data periode
         $periods = DB::table('m_periode')->pluck('periode', 'periode_id');
@@ -74,12 +98,22 @@ class WelcomeController extends Controller
         foreach ($periods as $periode_id => $periode) {
             $totalAlfa = DB::table('t_mahasiswa_alfa')
                 ->where('periode_id', $periode_id)
-                ->count();
+                ->distinct('t_mahasiswa_alfa.mahasiswa_id')
+                ->count('t_mahasiswa_alfa.mahasiswa_id');
 
             $totalKompen = DB::table('t_mahasiswa_alfa')
                 ->join('m_mahasiswa', 't_mahasiswa_alfa.mahasiswa_id', '=', 'm_mahasiswa.mahasiswa_id')
                 ->where('t_mahasiswa_alfa.periode_id', $periode_id)
-                ->whereColumn('t_mahasiswa_alfa.jumlah_alfa', '=', 'm_mahasiswa.mahasiswa_alfa_lunas')
+                ->select(
+                    't_mahasiswa_alfa.mahasiswa_id',
+                    DB::raw('SUM(t_mahasiswa_alfa.jumlah_alfa) as total_alfa'),
+                    'm_mahasiswa.mahasiswa_alfa_lunas'
+                )
+                //->groupBy('t_mahasiswa_alfa.mahasiswa_id')
+                //->havingRaw('SUM(t_mahasiswa_alfa.jumlah_alfa) <= MAX(m_mahasiswa.mahasiswa_alfa_lunas)')
+                ->groupBy('t_mahasiswa_alfa.mahasiswa_id', 'm_mahasiswa.mahasiswa_alfa_lunas')
+                ->havingRaw('SUM(t_mahasiswa_alfa.jumlah_alfa) <= m_mahasiswa.mahasiswa_alfa_lunas')
+                //->whereColumn('t_mahasiswa_alfa.jumlah_alfa', '=', 'm_mahasiswa.mahasiswa_alfa_lunas')
                 ->count();
 
             $totalAlfaKompen[] = [
@@ -151,7 +185,7 @@ class WelcomeController extends Controller
             case 3:
                 return view('tendik.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalTugasLevel' => $totalTugasLevel, 'totalTugasUser' => $totalTugasUser, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasBulan' => $totalTugasBulan, 'totalTugasJenis' => $totalTugasJenis, 'totalRequest' => $totalRequest]);
             case 4:
-                return view('mahasiswa.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalAlfa' => $totalAlfa, 'totalAlfaLunas' => $totalAlfaLunas, 'totalAlfaHutang' => $totalAlfaHutang, 'statusUAS' => $statusUAS, 'warnaUAS' => $warnaUAS, 'totalAlfaPeriode' => $totalAlfaPeriode, 'totalTugasStatus' =>$totalTugasStatus, 'totalTugasJenis' => $totalTugasJenis]);
+                return view('mahasiswa.welcome', ['breadcrumb' => $breadcrumb, 'activeMenu' => $activemenu, 'totalAlfa' => $totalAlfa, 'totalAlfaLunas' => $totalAlfaLunas, 'totalAlfaHutang' => $totalAlfaHutang, 'statusUAS' => $statusUAS, 'warnaUAS' => $warnaUAS, 'totalAlfaPeriode' => $totalAlfaPeriode, 'tugasStatusMhs' =>$tugasStatusMhs, 'tugasJenisMhs' => $tugasJenisMhs]);
             
 
         }    

@@ -380,7 +380,7 @@
                 },
                 scales: {
                     x: {
-                        stacked: true,
+                        //stacked: true,
                         title: {
                             display: true,
                             text: 'Periode',
@@ -391,7 +391,7 @@
                         },
                     },
                     y: {
-                        stacked: true,
+                        //stacked: true,
                         title: {
                             display: true,
                             text: 'Jumlah Mahasiswa',
