@@ -300,7 +300,7 @@ public function export_pdf($id)
 
     $data->pembuat_nip = match ($level_id) {
         1 => $pembuat->admin->admin_nip ?? '-',
-        2 => $pembuat->dosen->dosen_nip ?? '-',
+        2 => $pembuat->dosen->dosen_nip ?? '-', 
         3 => $pembuat->tendik->tendik_nip ?? '-',
         default => '-',
     };
