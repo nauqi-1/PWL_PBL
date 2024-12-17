@@ -307,7 +307,7 @@ public function export_pdf($id)
 
     // Add the current date to the data
     $data->current_date = now()->format('d F Y');
-
+dd($data);
     // Generate the PDF using the 'pdf.document' view
     $pdf = Pdf::loadView('pengumpulan.export_pdf', ['data' => $data]);
     $pdf->setPaper('a4', 'landscape'); // Set paper size and orientation
