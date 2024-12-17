@@ -265,46 +265,47 @@ class MhsKumpulTugasController extends Controller
 
     // Fetch tugas and mahasiswa details using tugas_mahasiswa_id and mahasiswa_id
     $data = DB::table('t_tugas_mahasiswa as tm')
-        ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
-        ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
-        ->join('m_user as u', 't.tugas_pembuat_id', '=', 'u.user_id') // Join m_user to get the level_id
-        ->leftJoin('m_admin as a', function($join) {
-            $join->on('a.user_id', '=', 'u.user_id')->where('u.level_id', '=', 1);
-        })
-        ->leftJoin('m_dosen as d', function($join) {
-            $join->on('d.user_id', '=', 'u.user_id')->where('u.level_id', '=', 2);
-        })
-        ->leftJoin('m_tendik as tnd', function($join) {
-            $join->on('tnd.user_id', '=', 'u.user_id')->where('u.level_id', '=', 3);
-        })
-        ->select(
-            'm.mahasiswa_nama',
-            'm.mahasiswa_nim',
-            'm.mahasiswa_kelas',
-            'm.mahasiswa_prodi',
-            't.tugas_nama',
-            't.tugas_bobot',
-            DB::raw('
-                CASE 
-                    WHEN u.level_id = 1 THEN a.admin_nama
-                    WHEN u.level_id = 2 THEN d.dosen_nama
-                    WHEN u.level_id = 3 THEN tnd.tendik_nama
-                    ELSE "Tidak Diketahui"
-                END as pengajar_nama
-            '),
-            DB::raw('
-                CASE 
-                    WHEN u.level_id = 1 THEN a.admin_nip
-                    WHEN u.level_id = 2 THEN d.dosen_nip
-                    WHEN u.level_id = 3 THEN tnd.tendik_nip
-                    ELSE "-"
-                END as pengajar_nip
-            '),
-            DB::raw('CURRENT_DATE() as current_date'), // Fixed the syntax for CURRENT_DATE()
-            't.tugas_pembuat_id' // Get the pembuat_id in case it's needed
-        )
-        ->where('tm.tugas_mahasiswa_id', $id) 
-        ->first();
+    ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
+    ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
+    ->join('m_user as u', 't.tugas_pembuat_id', '=', 'u.user_id')
+    ->leftJoin('m_admin as a', function($join) {
+        $join->on('a.user_id', '=', 'u.user_id')->where('u.level_id', '=', 1);
+    })
+    ->leftJoin('m_dosen as d', function($join) {
+        $join->on('d.user_id', '=', 'u.user_id')->where('u.level_id', '=', 2);
+    })
+    ->leftJoin('m_tendik as tnd', function($join) {
+        $join->on('tnd.user_id', '=', 'u.user_id')->where('u.level_id', '=', 3);
+    })
+    ->select(
+        'm.mahasiswa_nama',
+        'm.mahasiswa_nim',
+        'm.mahasiswa_kelas',
+        'm.mahasiswa_prodi',
+        't.tugas_nama',
+        't.tugas_bobot',
+        't.tugas_pembuat_id', // Ensure tugas_pembuat_id is included
+        DB::raw('
+            CASE 
+                WHEN u.level_id = 1 THEN a.admin_nama
+                WHEN u.level_id = 2 THEN d.dosen_nama
+                WHEN u.level_id = 3 THEN tnd.tendik_nama
+                ELSE "Tidak Diketahui"
+            END as pengajar_nama
+        '),
+        DB::raw('
+            CASE 
+                WHEN u.level_id = 1 THEN a.admin_nip
+                WHEN u.level_id = 2 THEN d.dosen_nip
+                WHEN u.level_id = 3 THEN tnd.tendik_nip
+                ELSE "-"
+            END as pengajar_nip
+        '),
+        DB::raw('CURRENT_DATE() as current_date') // Fixed: CURRENT_DATE() instead of CURRENT_DATE
+    )
+    ->where('tm.tugas_mahasiswa_id', $id) 
+    ->first();
+
 
     // Check if data exists
     if ($data) {
