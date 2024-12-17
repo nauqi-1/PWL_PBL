@@ -30,7 +30,7 @@ Route::post('/logout', \App\Http\Controllers\Api\LogoutController::class)->name(
 
 Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update']);
 
-
+Route::put('/tugas-mahasiswa/{mahasiswa_id}', [TugasController::class, 'tugas_mahasiswa']);
 //Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'user'], function () {
         Route::get('/', [UserController::class, 'index']);

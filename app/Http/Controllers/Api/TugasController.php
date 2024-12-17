@@ -53,6 +53,27 @@ class TugasController extends Controller
         // Langsung kembalikan data tugas sebagai respons JSON
         return response()->json($tugas);
     }
+    public function tugas_mahasiswa($mahasiswa_id)
+{
+    // Ambil daftar tugas yang diambil oleh mahasiswa_id
+    $daftarTugas = DB::table('t_tugas_mahasiswa')
+        ->join('t_tugas', 't_tugas_mahasiswa.tugas_id', '=', 't_tugas.tugas_id') // Join ke tabel t_tugas
+        ->select(
+            't_tugas.tugas_id',
+            't_tugas.tugas_nama',
+            't_tugas.tugas_desc',
+            't_tugas.tugas_bobot',
+            't_tugas_mahasiswa.progress',
+            't_tugas_mahasiswa.progress_deskripsi',
+            't_tugas_mahasiswa.tanggal_disubmit'
+        )
+        ->where('t_tugas_mahasiswa.mahasiswa_id', $mahasiswa_id) // Filter berdasarkan mahasiswa_id
+        ->get();
+
+    // Return daftar tugas
+    return response()->json($daftarTugas);
+}
+
     public function getTaskById($id)
     {
         $task = TugasModel::with('kompetensi')->find($id);
