@@ -263,74 +263,60 @@ class MhsKumpulTugasController extends Controller
         // Get the currently authenticated user's mahasiswa_id
         $mahasiswa_id = Auth::user()->mahasiswa_id; // Ensure 'mahasiswa_id' exists in the Auth user session.
 
-        // Fetch tugas and mahasiswa details using tugas_mahasiswa_id and mahasiswa_id
-        $data = DB::table('t_tugas_mahasiswa as tm')
-    ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
-    ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
-    ->join('m_user as u', 't.tugas_pembuat_id', '=', 'u.user_id') // Join m_user to get the level_id
-    ->leftJoin('m_admin as a', function($join) {
-        $join->on('a.user_id', '=', 'u.user_id')->where('u.level_id', '=', 1);
-    })
-    ->leftJoin('m_dosen as d', function($join) {
-        $join->on('d.user_id', '=', 'u.user_id')->where('u.level_id', '=', 2);
-    })
-    ->leftJoin('m_tendik as tnd', function($join) {
-        $join->on('tnd.user_id', '=', 'u.user_id')->where('u.level_id', '=', 3);
-    })
-    ->select(
-        'm.mahasiswa_nama',
-        'm.mahasiswa_nim',
-        'm.mahasiswa_kelas',
-        'm.mahasiswa_prodi',
-        't.tugas_nama',
-        't.tugas_bobot',
-        DB::raw('
-            CASE 
-                WHEN u.level_id = 1 THEN a.admin_nama
-                WHEN u.level_id = 2 THEN d.dosen_nama
-                WHEN u.level_id = 3 THEN tnd.tendik_nama
-                ELSE "Tidak Diketahui"
-            END as pengajar_nama
-        '),
-        DB::raw('
-            CASE 
-                WHEN u.level_id = 1 THEN a.admin_nip
-                WHEN u.level_id = 2 THEN d.dosen_nip
-                WHEN u.level_id = 3 THEN tnd.tendik_nip
-                ELSE "-"
-            END as pengajar_nip
-        '),
-        DB::raw('CURRENT_DATE as current_date') // Get current date
-    )
-    ->where('tm.tugas_mahasiswa_id', $id) 
-    ->first();
+    // Fetch tugas and mahasiswa details using tugas_mahasiswa_id and mahasiswa_id
+    $data = DB::table('t_tugas_mahasiswa as tm')
+        ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
+        ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
+        ->join('m_user as u', 't.tugas_pembuat_id', '=', 'u.user_id') // Join m_user to get the level_id
+        ->leftJoin('m_admin as a', function($join) {
+            $join->on('a.user_id', '=', 'u.user_id')->where('u.level_id', '=', 1);
+        })
+        ->leftJoin('m_dosen as d', function($join) {
+            $join->on('d.user_id', '=', 'u.user_id')->where('u.level_id', '=', 2);
+        })
+        ->leftJoin('m_tendik as tnd', function($join) {
+            $join->on('tnd.user_id', '=', 'u.user_id')->where('u.level_id', '=', 3);
+        })
+        ->select(
+            'm.mahasiswa_nama',
+            'm.mahasiswa_nim',
+            'm.mahasiswa_kelas',
+            'm.mahasiswa_prodi',
+            't.tugas_nama',
+            't.tugas_bobot',
+            DB::raw('
+                CASE 
+                    WHEN u.level_id = 1 THEN a.admin_nama
+                    WHEN u.level_id = 2 THEN d.dosen_nama
+                    WHEN u.level_id = 3 THEN tnd.tendik_nama
+                    ELSE "Tidak Diketahui"
+                END as pengajar_nama
+            '),
+            DB::raw('
+                CASE 
+                    WHEN u.level_id = 1 THEN a.admin_nip
+                    WHEN u.level_id = 2 THEN d.dosen_nip
+                    WHEN u.level_id = 3 THEN tnd.tendik_nip
+                    ELSE "-"
+                END as pengajar_nip
+            '),
+            DB::raw('CURRENT_DATE() as current_date'), // Fixed the syntax for CURRENT_DATE()
+            't.tugas_pembuat_id' // Get the pembuat_id in case it's needed
+        )
+        ->where('tm.tugas_mahasiswa_id', $id) 
+        ->first();
 
-
-if ($data) {
-    $pembuat = DB::table('m_user')->where('user_id', $data->tugas_pembuat_id)->first();
-    
-    if ($pembuat) {
-        if ($pembuat->level_id == 1) { // Admin
-            $admin = DB::table('m_admin')->where('user_id', $pembuat->user_id)->select('admin_nama', 'admin_nip')->first();
-            if ($admin) {
-                $data->pembuat_nama = $admin->admin_nama;
-                $data->pembuat_nip = $admin->admin_nip;
-            }
-        } elseif ($pembuat->level_id == 2) { // Dosen
-            $dosen = DB::table('m_dosen')->where('user_id', $pembuat->user_id)->select('dosen_nama', 'dosen_nip')->first();
-            if ($dosen) {
-                $data->pembuat_nama = $dosen->dosen_nama;
-                $data->pembuat_nip = $dosen->dosen_nip;
-            }
-        } elseif ($pembuat->level_id == 3) { // Tendik
-            $tendik = DB::table('m_tendik')->where('user_id', $pembuat->user_id)->select('tendik_nama', 'tendik_nip')->first();
-            if ($tendik) {
-                $data->pembuat_nama = $tendik->tendik_nama;
-                $data->pembuat_nip = $tendik->tendik_nip;
-            }
+    // Check if data exists
+    if ($data) {
+        // Determine the level of the pembuat (admin, dosen, tendik) and set the pembuat_nama and pembuat_nip
+        if ($data->pengajar_nama && $data->pengajar_nip) {
+            $data->pembuat_nama = $data->pengajar_nama;
+            $data->pembuat_nip = $data->pengajar_nip;
+        } else {
+            $data->pembuat_nama = "Tidak Diketahui";
+            $data->pembuat_nip = "-";
         }
     }
-}
         // Check if data exists
         if (!$data) {
             return redirect()->back()->with('error', 'Data tidak ditemukan.');
