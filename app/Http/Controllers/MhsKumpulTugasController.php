@@ -258,80 +258,68 @@ class MhsKumpulTugasController extends Controller
         }
     }
 
-    public function export_pdf($id)
-    {
-        // Get the currently authenticated user's mahasiswa_id
-        $mahasiswa_id = Auth::user()->mahasiswa_id; // Ensure 'mahasiswa_id' exists in the Auth user session.
+    
+public function export_pdf($id)
+{
+    // Get the currently authenticated user's mahasiswa_id
+    $mahasiswa_id = Auth::user()->mahasiswa_id;
 
-    // Fetch tugas and mahasiswa details using tugas_mahasiswa_id and mahasiswa_id
-    $data = DB::table('t_tugas_mahasiswa as tm')
-    ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
-    ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
-    ->join('m_user as u', 't.tugas_pembuat_id', '=', 'u.user_id')
-    ->leftJoin('m_admin as a', function($join) {
-        $join->on('a.user_id', '=', 'u.user_id')->where('u.level_id', '=', 1);
-    })
-    ->leftJoin('m_dosen as d', function($join) {
-        $join->on('d.user_id', '=', 'u.user_id')->where('u.level_id', '=', 2);
-    })
-    ->leftJoin('m_tendik as tnd', function($join) {
-        $join->on('tnd.user_id', '=', 'u.user_id')->where('u.level_id', '=', 3);
-    })
-    ->select(
-        'm.mahasiswa_nama',
-        'm.mahasiswa_nim',
-        'm.mahasiswa_kelas',
-        'm.mahasiswa_prodi',
-        't.tugas_nama',
-        't.tugas_bobot',
-        't.tugas_pembuat_id', // Ensure tugas_pembuat_id is included
-        DB::raw('
-            CASE 
-                WHEN u.level_id = 1 THEN a.admin_nama
-                WHEN u.level_id = 2 THEN d.dosen_nama
-                WHEN u.level_id = 3 THEN tnd.tendik_nama
-                ELSE "Tidak Diketahui"
-            END as pengajar_nama
-        '),
-        DB::raw('
-            CASE 
-                WHEN u.level_id = 1 THEN a.admin_nip
-                WHEN u.level_id = 2 THEN d.dosen_nip
-                WHEN u.level_id = 3 THEN tnd.tendik_nip
-                ELSE "-"
-            END as pengajar_nip
-        '),
-        DB::raw('CURRENT_DATE() as current_date') // Fixed: CURRENT_DATE() instead of CURRENT_DATE
-    )
-    ->where('tm.tugas_mahasiswa_id', $id) 
+    // Fetch the required data using Eloquent relationships
+    $data = TugasMahasiswa::with([
+        'mahasiswa',
+        'tugas',
+        'tugas.pembuat' => function ($query) {
+            $query->with([
+                'admin' => function ($q) {
+                    $q->where('level_id', 1);
+                },
+                'dosen' => function ($q) {
+                    $q->where('level_id', 2);
+                },
+                'tendik' => function ($q) {
+                    $q->where('level_id', 3);
+                }
+            ]);
+        },
+    ])
+    ->where('tugas_mahasiswa_id', $id)
     ->first();
 
-
     // Check if data exists
-    if ($data) {
-        // Determine the level of the pembuat (admin, dosen, tendik) and set the pembuat_nama and pembuat_nip
-        if ($data->pengajar_nama && $data->pengajar_nip) {
-            $data->pembuat_nama = $data->pengajar_nama;
-            $data->pembuat_nip = $data->pengajar_nip;
-        } else {
-            $data->pembuat_nama = "Tidak Diketahui";
-            $data->pembuat_nip = "-";
-        }
+    if (!$data) {
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
     }
-        // Check if data exists
-        if (!$data) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan.');
-        }
 
-        // Add the current date to the data
-        $data->current_date = now()->format('d F Y');
+    // Extract related data
+    $mahasiswa = $data->mahasiswa;
+    $tugas = $data->tugas;
+    $pembuat = $tugas->pembuat;
 
-        // Generate the PDF using the 'pdf.document' view
-        $pdf = Pdf::loadView('pengumpulan.export_pdf', ['data' => $data]);
-        $pdf->setPaper('a4', 'landscape'); //set ukuran kertas dan orientasi
-        $pdf->setOption("isRemoteEnabled", true); //set true jika ada gambar dari url
-        $pdf->render();
+    // Determine the level and set pembuat details
+    $level_id = $pembuat->level_id ?? null;
+    $data->pembuat_nama = match ($level_id) {
+        1 => $pembuat->admin->admin_nama ?? 'Tidak Diketahui',
+        2 => $pembuat->dosen->dosen_nama ?? 'Tidak Diketahui',
+        3 => $pembuat->tendik->tendik_nama ?? 'Tidak Diketahui',
+        default => 'Tidak Diketahui',
+    };
 
-        return $pdf->stream('Berita Acara Kompensasi ' . date('Y-m-d H:i:s') . 'pdf');
-    }
+    $data->pembuat_nip = match ($level_id) {
+        1 => $pembuat->admin->admin_nip ?? '-',
+        2 => $pembuat->dosen->dosen_nip ?? '-',
+        3 => $pembuat->tendik->tendik_nip ?? '-',
+        default => '-',
+    };
+
+    // Add the current date to the data
+    $data->current_date = now()->format('d F Y');
+
+    // Generate the PDF using the 'pdf.document' view
+    $pdf = Pdf::loadView('pengumpulan.export_pdf', ['data' => $data]);
+    $pdf->setPaper('a4', 'landscape'); // Set paper size and orientation
+    $pdf->setOption("isRemoteEnabled", true); // Set true if images are from URLs
+    $pdf->render();
+
+    return $pdf->stream('Berita Acara Kompensasi ' . date('Y-m-d H:i:s') . '.pdf');
+}
 }
