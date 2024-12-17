@@ -265,7 +265,7 @@ public function export_pdf($id)
     $mahasiswa_id = Auth::user()->mahasiswa_id;
 
     // Fetch the required data using Eloquent relationships
-    $data = TugasMahasiswa::with([
+    $data = TugasMahasiswaModel::with([
         'mahasiswa',
         'tugas',
         'tugas.pembuat' => function ($query) {
