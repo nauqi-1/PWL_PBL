@@ -1,110 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
+            font-family: "Times New Roman", Times, serif;
+            margin: 6px 20px 5px 20px;
+            line-height: 15px;
         }
 
-        .document {
-            width: 80%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .header {
+        td,
+        th {
+            padding: 4px 3px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        .d-block {
+            display: block;
+        }
+
+        img.image {
+            width: auto;
+            height: 80px;
+            max-width: 150px;
+            max-height: 150px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
             text-align: center;
-            border-bottom: 2px solid #000;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
         }
 
-        .header img {
-            height: 60px;
-            float: left;
+        .p-1 {
+            padding: 5px 1px 5px 1px;
         }
 
-        .header h1 {
-            font-size: 18px;
-            margin: 0;
+        .font-10 {
+            font-size: 10pt;
         }
 
-        .header h2 {
-            font-size: 16px;
-            margin: 5px 0;
+        .font-11 {
+            font-size: 11pt;
         }
 
-        .header p {
-            font-size: 14px;
+        .font-12 {
+            font-size: 12pt;
         }
 
-        .content {
-            font-size: 14px;
-            line-height: 1.6;
+        .font-13 {
+            font-size: 13pt;
         }
 
-        .content .field {
-            display: flex;
-            margin-bottom: 10px;
+        .border-bottom-header {
+            border-bottom: 1px solid;
         }
 
-        .content .field label {
-            width: 150px;
-            font-weight: bold;
-        }
-
-        .content .field span {
-            flex: 1;
-        }
-
-        .footer {
-            margin-top: 20px;
-        }
-
-        .footer .signature {
-            float: right;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .footer .signature p {
-            margin: 0;
+        .border-all,
+        .border-all th,
+        .border-all td {
+            border: 1px solid;
         }
     </style>
 </head>
 <body>
     <div class="document">
-        <div class="header">
-            <img src="logo.png" alt="Logo">
-            <h1>KEMENTRIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI</h1>
-            @if($data->mahasiswa_prodi == 'SIB')
-            <h2>Program Studi Sistem Informasi Bisnis</h2>
-            @elseif ($data->mahasiswa_prodi == 'TI')
-            <h2>Program Studi Teknik Informatika</h2>
-            @elseif ($data->mahasiswa_prodi == 'PPLS')
-            <h2>Program Studi Pengembangan Piranti Lunak Situs</h2>
-            @endif
-            <p>Politeknik Negeri Malang</p>
-            <p>Telp. 0341-404424</p>
-        </div>
+    <table class="border-bottom-header">
+        <tr>
+            <td width="15%" class="text-center"><img src="{{ asset('images/polinema-logo.png')
+}}"></td>
+            <td width="85%">
+                <span class="text-center d-block font-11 font-bold mb-1">KEMENTERIAN
+                    PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</span>
+                <span class="text-center d-block font-13 font-bold mb-1">POLITEKNIK NEGERI
+                    MALANG</span>
+                <span class="text-center d-block font-10">Jl. Soekarno-Hatta No. 9 Malang
+                    65141</span>
+                <span class="text-center d-block font-10">Telepon (0341) 404424 Pes. 101-
+                    105, 0341-404420, Fax. (0341) 404420</span>
+                <span class="text-center d-block font-10">Laman: www.polinema.ac.id</span>
+            </td>
+        </tr>
+    </table>
 
         <div class="content">
-        <h4><strong>BERITA ACARA KOMPENSASI PRESENSI</strong></h4>
+        <h3>BERITA ACARA KOMPENSASI PRESENSI</h3>
+        <div class="field"><strong>Nama Pengajar    :</strong> {{ $data->pengajar_nama }}</div>
+        <div class="field"><strong>NIP              :</strong> {{ $data->pengajar_nip }}</div>
         <p>Memberikan rekomendasi kepada:</p>
-        <div class="field"><strong>Nama Mahasiswa:</strong> {{ $data->mahasiswa_nama }}</div>
-        <div class="field"><strong>NIM:</strong> {{ $data->mahasiswa_nim }}</div>
-        <div class="field"><strong>Kelas:</strong> {{$data->mahasiswa_prodi}} {{ $data->mahasiswa_kelas }}</div>
-        <div class="field"><strong>Pekerjaan:</strong> {{ $data->tugas_nama }}</div>
-        <div class="field"><strong>Jumlah Jam:</strong> {{ $data->tugas_bobot }} Jam</div>
+        <div class="field"><strong>Nama Mahasiswa   :</strong> {{ $data->mahasiswa_nama }}</div>
+        <div class="field"><strong>NIM              :</strong> {{ $data->mahasiswa_nim }}</div>
+        <div class="field"><strong>Kelas            :</strong> {{$data->mahasiswa_prodi}} {{ $data->mahasiswa_kelas }}</div>
+        <div class="field"><strong>Pekerjaan        :</strong> {{ $data->tugas_nama }}</div>
+        <div class="field"><strong>Jumlah Jam       :</strong> {{ $data->tugas_bobot }} Jam</div>
 
         <p>Malang, {{ $data->current_date }}</p>
     </div>

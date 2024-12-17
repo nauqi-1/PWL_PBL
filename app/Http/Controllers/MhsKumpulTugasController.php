@@ -265,20 +265,72 @@ class MhsKumpulTugasController extends Controller
 
         // Fetch tugas and mahasiswa details using tugas_mahasiswa_id and mahasiswa_id
         $data = DB::table('t_tugas_mahasiswa as tm')
-            ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
-            ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
-            ->select(
-                'm.mahasiswa_nama',
-                'm.mahasiswa_nim',
-                'm.mahasiswa_kelas',
-                'm.mahasiswa_prodi',
-                't.tugas_nama',
-                't.tugas_bobot'
-            )
-            ->where('tm.tugas_mahasiswa_id', $id) // Match the tugas_mahasiswa_id
-            //->where('m.mahasiswa_id', $mahasiswa_id) // Ensure it belongs to the logged-in mahasiswa
-            ->first();
+    ->join('m_mahasiswa as m', 'tm.mahasiswa_id', '=', 'm.mahasiswa_id')
+    ->join('t_tugas as t', 'tm.tugas_id', '=', 't.tugas_id')
+    ->join('m_user as u', 't.tugas_pembuat_id', '=', 'u.user_id') // Join m_user to get the level_id
+    ->leftJoin('m_admin as a', function($join) {
+        $join->on('a.user_id', '=', 'u.user_id')->where('u.level_id', '=', 1);
+    })
+    ->leftJoin('m_dosen as d', function($join) {
+        $join->on('d.user_id', '=', 'u.user_id')->where('u.level_id', '=', 2);
+    })
+    ->leftJoin('m_tendik as tnd', function($join) {
+        $join->on('tnd.user_id', '=', 'u.user_id')->where('u.level_id', '=', 3);
+    })
+    ->select(
+        'm.mahasiswa_nama',
+        'm.mahasiswa_nim',
+        'm.mahasiswa_kelas',
+        'm.mahasiswa_prodi',
+        't.tugas_nama',
+        't.tugas_bobot',
+        DB::raw('
+            CASE 
+                WHEN u.level_id = 1 THEN a.admin_nama
+                WHEN u.level_id = 2 THEN d.dosen_nama
+                WHEN u.level_id = 3 THEN tnd.tendik_nama
+                ELSE "Tidak Diketahui"
+            END as pengajar_nama
+        '),
+        DB::raw('
+            CASE 
+                WHEN u.level_id = 1 THEN a.admin_nip
+                WHEN u.level_id = 2 THEN d.dosen_nip
+                WHEN u.level_id = 3 THEN tnd.tendik_nip
+                ELSE "-"
+            END as pengajar_nip
+        '),
+        DB::raw('CURRENT_DATE as current_date') // Get current date
+    )
+    ->where('tm.tugas_mahasiswa_id', $id) 
+    ->first();
 
+
+if ($data) {
+    $pembuat = DB::table('m_user')->where('user_id', $data->tugas_pembuat_id)->first();
+    
+    if ($pembuat) {
+        if ($pembuat->level_id == 1) { // Admin
+            $admin = DB::table('m_admin')->where('user_id', $pembuat->user_id)->select('admin_nama', 'admin_nip')->first();
+            if ($admin) {
+                $data->pembuat_nama = $admin->admin_nama;
+                $data->pembuat_nip = $admin->admin_nip;
+            }
+        } elseif ($pembuat->level_id == 2) { // Dosen
+            $dosen = DB::table('m_dosen')->where('user_id', $pembuat->user_id)->select('dosen_nama', 'dosen_nip')->first();
+            if ($dosen) {
+                $data->pembuat_nama = $dosen->dosen_nama;
+                $data->pembuat_nip = $dosen->dosen_nip;
+            }
+        } elseif ($pembuat->level_id == 3) { // Tendik
+            $tendik = DB::table('m_tendik')->where('user_id', $pembuat->user_id)->select('tendik_nama', 'tendik_nip')->first();
+            if ($tendik) {
+                $data->pembuat_nama = $tendik->tendik_nama;
+                $data->pembuat_nip = $tendik->tendik_nip;
+            }
+        }
+    }
+}
         // Check if data exists
         if (!$data) {
             return redirect()->back()->with('error', 'Data tidak ditemukan.');
@@ -288,9 +340,11 @@ class MhsKumpulTugasController extends Controller
         $data->current_date = now()->format('d F Y');
 
         // Generate the PDF using the 'pdf.document' view
-        $pdf = PDF::loadView('pengumpulan.export_pdf', ['data' => $data]);
+        $pdf = Pdf::loadView('pengumpulan.export_pdf', ['data' => $data]);
+        $pdf->setPaper('a4', 'landscape'); //set ukuran kertas dan orientasi
+        $pdf->setOption("isRemoteEnabled", true); //set true jika ada gambar dari url
+        $pdf->render();
 
-        // Return the PDF for download
-        return $pdf->download('tugas_kompensasi_presensi.pdf');
+        return $pdf->stream('Berita Acara Kompensasi ' . date('Y-m-d H:i:s') . 'pdf');
     }
 }
