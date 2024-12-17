@@ -108,7 +108,7 @@
         <p>Malang, {{ $data->current_date }}</p>
     </div>
 
-    <div class="footer" style="display: flex; justify-content: space-between;">
+    <div class="footer" style="display: flex; justify-content: space-between; align-items: flex-start">
 
     <!-- Column 1: Ka. Program Studi -->
     <div style="text-align: center; width: 45%;">
