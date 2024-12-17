@@ -269,17 +269,7 @@ public function export_pdf($id)
         'mahasiswa',
         'tugas',
         'tugas.user' => function ($query) {
-            $query->with([
-                'admin' => function ($q) {
-                    $q->where('level_id', 1);
-                },
-                'dosen' => function ($q) {
-                    $q->where('level_id', 2);
-                },
-                'tendik' => function ($q) {
-                    $q->where('level_id', 3);
-                }
-            ]);
+            $query->with(['admin', 'dosen', 'tendik']);
         },
     ])
     ->where('tugas_mahasiswa_id', $id)
@@ -322,4 +312,5 @@ public function export_pdf($id)
 
     return $pdf->stream('Berita Acara Kompensasi ' . date('Y-m-d H:i:s') . '.pdf');
 }
+
 }
