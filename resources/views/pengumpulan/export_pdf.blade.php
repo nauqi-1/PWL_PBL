@@ -110,7 +110,7 @@
 
     <div class="footer" style="display: flex; justify-content: space-between; align-items: flex-start">
 
-    <!-- Column 1: Ka. Program Studi -->
+    <!-- Column 1: Ka. Program Studi --> <!--
     <div style="text-align: center; width: 45%;">
         <p>Ka. Program Studi</p>
         <br><br>
@@ -126,15 +126,44 @@
         @endif
     </div>
 
-    <!-- Column 2: Yang memberikan rekomendasi -->
+    
     <div style="text-align: center; width: 45%;">
         <p>Yang memberikan rekomendasi</p>
         <br><br>
         <p><strong>{{ $data->pembuat_nama }}</strong></p>
         <p>NIP: {{ $data->pembuat_nip }}</p>
-    </div>
+    </div> -->
 
 </div>
+
+<table>
+    <tr>
+        <td width="45%">
+            <div style="text-align: center; width: 45%;">
+        <p>Ka. Program Studi</p>
+        <br><br>
+        @if($data->mahasiswa->mahasiswa_prodi == 'SIB')
+            <p><strong>Hendra Pradibta, S.E., M.Sc.</strong></p>
+            <p>NIP: 19835212000641003</p>
+        @elseif($data->mahasiswa->mahasiswa_prodi == 'TI')
+            <p><strong>Ely Setyo Astuti, ST., MT., Dr.</strong></p>
+            <p>NIP: 197605152009122001</p>
+        @elseif($data->mahasiswa->mahasiswa_prodi == 'PPLS')
+            <p><strong>Pramana Yoga Saputra, S.Kom., MMT.</strong></p>
+            <p>NIP: 198805042015041001</p>
+        @endif
+    </div>
+</td>
+<td width="45%">
+<div style="text-align: center; width: 45%;">
+        <p>Yang memberikan rekomendasi</p>
+        <br><br>
+        <p><strong>{{ $data->pembuat_nama }}</strong></p>
+        <p>NIP: {{ $data->pembuat_nip }}</p>
+    </div>
+</td>
+    </tr>
+</table>
 
     
 </body>
