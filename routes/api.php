@@ -28,7 +28,7 @@ Route::post('/logout', \App\Http\Controllers\Api\LogoutController::class)->name(
 Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update']);
 
 
-Route::middleware('auth:api')->group(function () {
+//Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'user'], function () {
         Route::get('/', [UserController::class, 'index']);
         Route::post('/', [UserController::class, 'store']);
@@ -86,4 +86,5 @@ Route::middleware('auth:api')->group(function () {
         Route::put('/{tendik}', [TendikController::class, 'update']);
         Route::delete('/{tendik}', [TendikController::class, 'destroy']);
     });
-});
+
+

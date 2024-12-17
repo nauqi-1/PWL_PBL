@@ -268,7 +268,7 @@ public function export_pdf($id)
     $data = TugasMahasiswaModel::with([
         'mahasiswa',
         'tugas',
-        'tugas.pembuat' => function ($query) {
+        'tugas.user' => function ($query) {
             $query->with([
                 'admin' => function ($q) {
                     $q->where('level_id', 1);
@@ -293,7 +293,7 @@ public function export_pdf($id)
     // Extract related data
     $mahasiswa = $data->mahasiswa;
     $tugas = $data->tugas;
-    $pembuat = $tugas->pembuat;
+    $pembuat = $tugas->user;
 
     // Determine the level and set pembuat details
     $level_id = $pembuat->level_id ?? null;
