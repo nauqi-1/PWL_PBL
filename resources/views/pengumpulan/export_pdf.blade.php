@@ -95,7 +95,8 @@
     </table>
 
     <div class="content">
-        <h4>BERITA ACARA KOMPENSASI PRESENSI</h4>
+        <h4 class="text-center">BERITA ACARA KOMPENSASI PRESENSI</h4>
+        
         <div class="field"><strong>Nama Pengajar    :</strong> {{ $data->pembuat_nama }}</div>
         <div class="field"><strong>NIP              :</strong> {{ $data->pembuat_nip }}</div>
         <p>Memberikan rekomendasi kepada:</p>
