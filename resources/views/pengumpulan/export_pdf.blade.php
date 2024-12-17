@@ -95,7 +95,7 @@
     </table>
 
     <div class="content">
-        <h3>BERITA ACARA KOMPENSASI PRESENSI</h3>
+        <h4>BERITA ACARA KOMPENSASI PRESENSI</h4>
         <div class="field"><strong>Nama Pengajar    :</strong> {{ $data->pembuat_nama }}</div>
         <div class="field"><strong>NIP              :</strong> {{ $data->pembuat_nip }}</div>
         <p>Memberikan rekomendasi kepada:</p>
@@ -111,13 +111,13 @@
     <div class="footer">
         <p>Ka. Program Studi</p>
         <br><br>
-        @if($data->mahasiswa_prodi == 'SIB')
+        @if($data->mahasiswa->mahasiswa_prodi == 'SIB')
         <p><strong>Hendra Pradibta, S.E., M.Sc.</strong></p>
         <p>NIP: 19835212000641003</p>
-        @elseif($data->mahasiswa_prodi == 'TI')
+        @elseif($data->mahasiswa->mahasiswa_prodi == 'TI')
         <p><strong>Ely Setyo Astuti, ST., MT., Dr.</strong></p>
         <p>NIP: 197605152009122001</p>
-        @elseif($data->mahasiswa_prodi == 'PPLS')
+        @elseif($data->mahasiswa->mahasiswa_prodi == 'PPLS')
         <p><strong>Pramana Yoga Saputra, S.Kom., MMT.</strong></p>
         <p>NIP: 198805042015041001</p>
         @endif
