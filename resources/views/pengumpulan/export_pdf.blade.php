@@ -94,16 +94,16 @@
         </tr>
     </table>
 
-        <div class="content">
+    <div class="content">
         <h3>BERITA ACARA KOMPENSASI PRESENSI</h3>
-        <div class="field"><strong>Nama Pengajar    :</strong> {{ $data->pengajar_nama }}</div>
-        <div class="field"><strong>NIP              :</strong> {{ $data->pengajar_nip }}</div>
+        <div class="field"><strong>Nama Pengajar    :</strong> {{ $data->pembuat_nama }}</div>
+        <div class="field"><strong>NIP              :</strong> {{ $data->pembuat_nip }}</div>
         <p>Memberikan rekomendasi kepada:</p>
-        <div class="field"><strong>Nama Mahasiswa   :</strong> {{ $data->mahasiswa_nama }}</div>
-        <div class="field"><strong>NIM              :</strong> {{ $data->mahasiswa_nim }}</div>
-        <div class="field"><strong>Kelas            :</strong> {{$data->mahasiswa_prodi}} {{ $data->mahasiswa_kelas }}</div>
-        <div class="field"><strong>Pekerjaan        :</strong> {{ $data->tugas_nama }}</div>
-        <div class="field"><strong>Jumlah Jam       :</strong> {{ $data->tugas_bobot }} Jam</div>
+        <div class="field"><strong>Nama Mahasiswa   :</strong> {{ $data->mahasiswa->mahasiswa_nama }}</div>
+        <div class="field"><strong>NIM              :</strong> {{ $data->mahasiswa->mahasiswa_nim }}</div>
+        <div class="field"><strong>Kelas            :</strong> {{$data->mahasiswa->mahasiswa_prodi}} {{ $data->mahasiswa->mahasiswa_kelas }}</div>
+        <div class="field"><strong>Pekerjaan        :</strong> {{ $data->tugas->tugas_nama }}</div>
+        <div class="field"><strong>Jumlah Jam       :</strong> {{ $data->tugas->tugas_bobot }} Jam</div>
 
         <p>Malang, {{ $data->current_date }}</p>
     </div>
