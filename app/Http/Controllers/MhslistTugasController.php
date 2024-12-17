@@ -147,13 +147,15 @@ class MhslistTugasController extends Controller
             return response()->json(['status' => false, 'message' => 'Data mahasiswa tidak ditemukan']);
         }
         // Simpan data request ke tabel `t_request`
-        RequestModel::create([
+        $newRequest = RequestModel::create([
             'tugas_id' => $tugas->tugas_id,
             'mhs_id' => $mahasiswa->mahasiswa_id,
             'tugas_pembuat_id' => $tugas->tugas_pembuat_id,
             'status_request' => 'pending',
             'tgl_request' => now(),
         ]);
+        // Dapatkan `request_id` dari request yang baru dibuat
+        $newRequestId = $newRequest->id_request;
         // Create notification
         $pembuatNotifId = auth()->user()->user_id;
         NotificationsModel::create([
@@ -162,8 +164,11 @@ class MhslistTugasController extends Controller
             'penerima_notification' => $tugas->user->user_id,
             'konten_notification' => 'Mahasiswa request Tugas.',
             'tgl_notification' => now(),
-        ]);
+            'ref_id' => $newRequestId,
 
+        ]);
+        // Log the newRequestId
+        Log::info('New Request ID:', ['newRequestId' => $newRequestId]);
         return response()->json(['status' => true, 'message' => 'Request berhasil diajukan']);
     }
 }

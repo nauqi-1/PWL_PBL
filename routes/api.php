@@ -7,6 +7,9 @@ use App\Http\Controllers\Api\PengumpulanController;
 use App\Http\Controllers\Api\TendikController;
 use App\Http\Controllers\Api\TugasController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\JenisController;
+use App\Http\Controllers\Api\NotifikasiController;
+use App\Http\Controllers\Api\RequestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +40,29 @@ Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update']);
         Route::delete('/{user}', [UserController::class, 'destroy']);
         Route::get('/find_mahasiswa/{user}', [UserController::class, 'find_mahasiswa']);
         Route::get('/find_dosen/{user}', [UserController::class, 'find_dosen']);
+    });
+    Route::group(['prefix' => 'jenis'], function () {
+        Route::get('/', [JenisController::class, 'index']);
+        Route::post('/', [JenisController::class, 'store']);
+        Route::get('/{jenis}', [JenisController::class, 'show']);
+        Route::put('/{jenis}', [JenisController::class, 'update']);
+        Route::delete('/{jenis}', [JenisController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'notifikasi'], function () {
+        Route::get('/', [NotifikasiController::class, 'index']);
+        Route::post('/', [NotifikasiController::class, 'store']);
+        Route::get('/{notifikasi}', [NotifikasiController::class, 'show']);
+        Route::put('/{notifikasi}', [NotifikasiController::class, 'update']);
+        Route::delete('/{notifikasi}', [NotifikasiController::class, 'destroy']);
+    });
+    Route::group(['prefix' => 'request'], function () {
+        Route::get('/', [RequestController::class, 'index']);
+        Route::post('/', [RequestController::class, 'store']);
+        Route::get('/{request}', [RequestController::class, 'show']);
+        Route::put('/accept_ajax', [RequestController::class, 'accept_ajax']); //simpan data 
+        Route::put('/denied_ajax', [RequestController::class, 'denied_ajax']); //simpan data 
+
+        Route::delete('/{request}', [RequestController::class, 'destroy']);
     });
     Route::group(['prefix' => 'tugas'], function () {
         Route::get('/', [TugasController::class, 'index']);

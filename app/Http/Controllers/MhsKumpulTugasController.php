@@ -219,6 +219,8 @@ class MhsKumpulTugasController extends Controller
                         'tugas_status' => $mahasiswaBelumSubmit === 0 ? 'S' : 'W', // 'S' jika semua selesai, 'W' jika masih ada yang belum
                     ]);
                 }
+                // Dapatkan `request_id` dari request yang baru dibuat
+                $tugasMahasiswaId = $tugasMahasiswa->tugas_mahasiswa_id;
                 // Create notification
                 $pembuatNotifId = auth()->user()->user_id;
                 NotificationsModel::create([
@@ -227,6 +229,8 @@ class MhsKumpulTugasController extends Controller
                     'penerima_notification' => $tugasMahasiswa->user->user_id,
                     'konten_notification' => 'Mahasiswa Mengumpulkan Tugas',
                     'tgl_notification' => now(),
+                    'ref_id' => $tugasMahasiswaId,
+
                 ]);
                 Log::info('Data berhasil diupdate', [
                     'file_path' => $filePath,
